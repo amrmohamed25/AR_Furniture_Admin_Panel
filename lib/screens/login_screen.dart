@@ -12,6 +12,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  // var font=;
   var emailController = TextEditingController();
   var passwordController = TextEditingController();
   bool isPassword = true;
@@ -23,7 +24,10 @@ class _LoginScreenState extends State<LoginScreen> {
         listener:(context,state){},
         builder:(context,state){return Scaffold(
           appBar: AppBar(
-            backgroundColor: Colors.white,
+            title: TextButton(onPressed:(){
+
+        },child: Text("Lem 3afshk",style: TextStyle(fontFamily: "Montserrat",fontSize: 20,color: Colors.black),),)
+            ,backgroundColor: Colors.white,
             elevation: 0,
           ),
           body: Center(
