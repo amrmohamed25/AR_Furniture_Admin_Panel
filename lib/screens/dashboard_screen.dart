@@ -5,7 +5,8 @@ import '../constants.dart';
 
 class DashboardScreen extends StatefulWidget {
   @override
-  const DashboardScreen({Key? key}) : super(key: key);
+  Widget orderscreen;
+   DashboardScreen(this.orderscreen);
 
   @override
   State<DashboardScreen> createState() => _DashboardScreen();
@@ -196,9 +197,12 @@ class _DashboardScreen extends State<DashboardScreen> {
               Expanded(
                 flex:6,
                 child: Container(
-                  color: backgroundColor,
+                  //color: backgroundColor,
+                  child: widget.orderscreen
+
+
                 ),
-              ),
+             ),
             ],
           ),
         ),
