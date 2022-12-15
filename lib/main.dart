@@ -1,3 +1,4 @@
+import 'package:ar_furniture_admin_panel/screens/category_screen.dart';
 import 'package:ar_furniture_admin_panel/screens/login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -23,7 +24,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const  LoginScreen(),
+      home: const  CategoryScreen(),
     );
   }
 }
