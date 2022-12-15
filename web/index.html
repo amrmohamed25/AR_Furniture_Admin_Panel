@@ -54,5 +54,26 @@
       });
     });
   </script>
+
+  <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15/firebase-app.js";
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15/firebase-auth.js";
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15/firebase-firestore.js";
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15/firebase-database.js";
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15/firebase-storage.js";
+      const firebaseConfig = {
+        apiKey: "AIzaSyA0IxEAsjwA94Im4FLw_SU3U7ctvNIQ-qY",
+        authDomain: "ar-furniture-7fb69.firebaseapp.com",
+        databaseURL: "https://ar-furniture-7fb69-default-rtdb.firebaseio.com",
+        projectId: "ar-furniture-7fb69",
+        storageBucket: "ar-furniture-7fb69.appspot.com",
+        messagingSenderId: "290504032259",
+        appId: "1:290504032259:web:13f87a0645776fab7e8e36",
+        measurementId: "G-QJ1ZFPD3S7"
+      };
+
+
+      const app=initializeApp(firebaseConfig);
+    </script>
 </body>
 </html>
