@@ -1,6 +1,6 @@
-import 'package:ar_furniture_admin_panel/screens/category_screen.dart';
 import 'package:ar_furniture_admin_panel/screens/dashboard_screen.dart';
 import 'package:ar_furniture_admin_panel/screens/login.dart';
+import 'package:ar_furniture_admin_panel/screens/order_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const  CategoryScreen(),
+      home: const  OrderScreen(),
     );
   }
 }
