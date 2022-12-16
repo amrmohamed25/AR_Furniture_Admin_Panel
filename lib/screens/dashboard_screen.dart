@@ -4,9 +4,13 @@ import 'package:flutter/material.dart';
 import '../constants.dart';
 
 class DashboardScreen extends StatefulWidget {
+  // @override
+  // Widget orderscreen;
+  //  DashboardScreen(this.orderscreen);
+
   @override
-  Widget orderscreen;
-   DashboardScreen(this.orderscreen);
+  Widget FurnitureScreen;
+  DashboardScreen(this.FurnitureScreen);
 
   @override
   State<DashboardScreen> createState() => _DashboardScreen();
@@ -198,7 +202,8 @@ class _DashboardScreen extends State<DashboardScreen> {
                 flex:6,
                 child: Container(
                   //color: backgroundColor,
-                  child: widget.orderscreen
+                  // child: widget.orderscreen
+                  child: widget.FurnitureScreen,
 
 
                 ),

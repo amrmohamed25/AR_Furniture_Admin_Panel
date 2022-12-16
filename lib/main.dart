@@ -1,4 +1,5 @@
 import 'package:ar_furniture_admin_panel/screens/dashboard_screen.dart';
+import 'package:ar_furniture_admin_panel/screens/furniture_screen.dart';
 import 'package:ar_furniture_admin_panel/screens/login.dart';
 import 'package:ar_furniture_admin_panel/screens/order_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -25,7 +26,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const  OrderScreen(),
+      home: const  FurnitureScreen(),
     );
   }
 }
