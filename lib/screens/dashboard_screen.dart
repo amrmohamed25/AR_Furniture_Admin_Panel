@@ -5,7 +5,7 @@ import '../constants.dart';
 
 class DashboardScreen extends StatefulWidget {
   @override
-  Widget orderscreen;
+   Widget orderscreen;
    DashboardScreen(this.orderscreen);
 
   @override
@@ -113,9 +113,9 @@ class _DashboardScreen extends State<DashboardScreen> {
 
           child: Row(
             children: [
-              Expanded(
-                flex: 1,
-                child: Container(
+
+                 Container(
+                    width:200,
                     color: secondaryColor,
                     child: Column(
                       children: [
@@ -125,11 +125,14 @@ class _DashboardScreen extends State<DashboardScreen> {
                               size: 18,
                             ),
                             SizedBox(width: 20,),
-                            Text(
-                              "Admin Dashboard",
-                              style: TextStyle(color:Colors.black,fontSize: 15,fontWeight: FontWeight.bold),
-                              textAlign: TextAlign.start,
+                            Expanded(
+                              flex: 1,
+                              child: Text(
+                                "Admin Dashboard",
+                                style: TextStyle(color:Colors.black,fontSize: 15,fontWeight: FontWeight.bold),
+                                textAlign: TextAlign.start,
 
+                              ),
                             ),
                             Row()
                           ],
@@ -193,10 +196,11 @@ class _DashboardScreen extends State<DashboardScreen> {
 
                     )
                 ),
-              ),
+
               Expanded(
-                flex:6,
+                flex:4,
                 child: Container(
+                    width:MediaQuery.of(context).size.width*0.8,
                   //color: backgroundColor,
                   child: widget.orderscreen
 
