@@ -11,7 +11,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
-    options: const FirebaseOptions(apiKey: "AIzaSyA0IxEAsjwA94Im4FLw_SU3U7ctvNIQ-qY", appId: "1:290504032259:web:13f87a0645776fab7e8e36", messagingSenderId: "290504032259", projectId: "ar-furniture-7fb69")
+    options: const FirebaseOptions(apiKey: "AIzaSyA0IxEAsjwA94Im4FLw_SU3U7ctvNIQ-qY", appId: "1:290504032259:web:13f87a0645776fab7e8e36", messagingSenderId: "290504032259", projectId: "ar-furniture-7fb69"
+    ,storageBucket: "gs://ar-furniture-7fb69.appspot.com")
   );
   runApp(const MyApp());
 }
