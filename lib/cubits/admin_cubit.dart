@@ -6,17 +6,21 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../models/order_model.dart';
 import '../screens/add_furniture_screen.dart';
 
 class AdminCubit extends Cubit<AdminStates>{
   AdminCubit():super(InitialAdminState());
 
   List<Map<String,dynamic>> categories=[];
+  List<OrderModel> orders=[];
 
   getAllData()async{
     emit(LoadingAllData());
     await getCategories();
+   // await getOrders();
     emit(LoadedAllData());
+
   }
 
   getCategories()async{
@@ -80,4 +84,28 @@ class AdminCubit extends Cubit<AdminStates>{
     emit(UploadingFurnitureSuccessState());
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("$furnitureName added successfully")));
   }
+
+  getOrders()async{
+    emit(LoadingOrderState());
+    await FirebaseFirestore.instance.collection("order").get().then((value) {
+
+      value.docs.forEach((element) {
+        orders.add(OrderModel.fromJson(element.data()));
+      });
+      emit(LoadedOrderState());
+    });
+
+
+
+
+
+
+
+  }
+
+
+
+
+
+
 }
