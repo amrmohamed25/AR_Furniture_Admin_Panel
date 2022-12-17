@@ -15,7 +15,7 @@ class AdminCubit extends Cubit<AdminStates>{
 
   getAllData()async{
     emit(LoadingAllData());
-    await getCategories();
+    // await getCategories();
     emit(LoadedAllData());
   }
 
