@@ -46,7 +46,6 @@ class _DashboardScreen extends State<DashboardScreen> {
                        Icons.dashboard,
                        color: Colors.black,
                        size: 10,
-
                      ),
                      title: Text(
                        "Dashboard",
@@ -83,7 +82,6 @@ class _DashboardScreen extends State<DashboardScreen> {
                      ),
                    ),
                  ],
-
                )
            ),
            appBar: AppBar(
@@ -110,90 +108,91 @@ class _DashboardScreen extends State<DashboardScreen> {
          )
           , desktop:   Scaffold(
         body: SafeArea(
-
           child: Row(
             children: [
-
                  Container(
                     width:200,
+                    height: double.infinity,
                     color: secondaryColor,
-                    child: Column(
-                      children: [
-                        DrawerHeader(child:Row(
-                          children: [
-                            FlutterLogo(
-                              size: 18,
-                            ),
-                            SizedBox(width: 20,),
-                            Expanded(
-                              flex: 1,
-                              child: Text(
-                                "Admin Dashboard",
-                                style: TextStyle(color:Colors.black,fontSize: 15,fontWeight: FontWeight.bold),
-                                textAlign: TextAlign.start,
-
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          DrawerHeader(child:Row(
+                            children: [
+                              FlutterLogo(
+                                size: 18,
                               ),
+                              SizedBox(width: 20,),
+                              Expanded(
+                                flex: 1,
+                                child: Text(
+                                  "Admin Dashboard",
+                                  style: TextStyle(color:Colors.black,fontSize: 15,fontWeight: FontWeight.bold),
+                                  textAlign: TextAlign.start,
+
+                                ),
+                              ),
+                              Row()
+                            ],
+                          ),),
+                          // Row(
+                          //     mainAxisAlignment:
+                          //     MainAxisAlignment.center,
+                          //     children: [
+                          //       DrawerHeader(child:FlutterLogo(
+                          //         size: 17,
+                          //       ),),
+                          //       Text(
+                          //         "Furniture",
+                          //         style: TextStyle(color:Colors.black,fontSize: 17),
+                          //         textAlign: TextAlign.start,
+                          //
+                          //       ),
+                          //
+                          //     ]),
+                          ListTile(
+                            onTap: (){},
+                            horizontalTitleGap: 0.0,
+                            leading: Icon(
+                              Icons.dashboard,
+                              color: Colors.black,
+
                             ),
-                            Row()
-                          ],
-                        ),),
-                        // Row(
-                        //     mainAxisAlignment:
-                        //     MainAxisAlignment.center,
-                        //     children: [
-                        //       DrawerHeader(child:FlutterLogo(
-                        //         size: 17,
-                        //       ),),
-                        //       Text(
-                        //         "Furniture",
-                        //         style: TextStyle(color:Colors.black,fontSize: 17),
-                        //         textAlign: TextAlign.start,
-                        //
-                        //       ),
-                        //
-                        //     ]),
-                        ListTile(
-                          onTap: (){},
-                          horizontalTitleGap: 0.0,
-                          leading: Icon(
-                            Icons.dashboard,
-                            color: Colors.black,
+                            title: Text(
+                              "Dashboard",
+                              style: TextStyle(color:Colors.black,fontSize: 15),
 
+                            ),
                           ),
-                          title: Text(
-                            "Dashboard",
-                            style: TextStyle(color:Colors.black,fontSize: 15),
+                          ListTile(
+                            onTap: (){},
+                            horizontalTitleGap: 0.0,
+                            leading: Icon(
+                              Icons.category,
+                              color: Colors.black,
 
+                            ),
+                            title: Text(
+                              "Category",
+                              style: TextStyle(color:Colors.black,fontSize: 15),
+                            ),
                           ),
-                        ),
-                        ListTile(
-                          onTap: (){},
-                          horizontalTitleGap: 0.0,
-                          leading: Icon(
-                            Icons.category,
-                            color: Colors.black,
+                          ListTile(
+                            onTap: (){},
+                            horizontalTitleGap: 0.0,
+                            leading: Icon(
+                              Icons.shopping_cart,
+                              color: Colors.black,
 
+                            ),
+                            title: Text(
+                              "Orders",
+                              style: TextStyle(color:Colors.black,fontSize: 15),
+                            ),
                           ),
-                          title: Text(
-                            "Category",
-                            style: TextStyle(color:Colors.black,fontSize: 15),
-                          ),
-                        ),
-                        ListTile(
-                          onTap: (){},
-                          horizontalTitleGap: 0.0,
-                          leading: Icon(
-                            Icons.shopping_cart,
-                            color: Colors.black,
+                        ],
 
-                          ),
-                          title: Text(
-                            "Orders",
-                            style: TextStyle(color:Colors.black,fontSize: 15),
-                          ),
-                        ),
-                      ],
-
+                      ),
                     )
                 ),
 
