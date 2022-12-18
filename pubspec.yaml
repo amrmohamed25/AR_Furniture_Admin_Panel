@@ -41,6 +41,7 @@ dependencies:
   firebase_storage: ^11.0.7
   firebase_auth: ^4.2.0
   flutter_bloc: ^8.1.1
+  file_picker: ^5.2.4
 
 
 
