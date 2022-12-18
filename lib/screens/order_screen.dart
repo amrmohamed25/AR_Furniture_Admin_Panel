@@ -22,18 +22,46 @@ class OrderScreen extends StatefulWidget {
 
 class _OrderScreen extends State<OrderScreen> {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+
   // List <OrderModel> orders = [ OrderModel(orderId: "2", uid:" uid", userName: "userName", time: Timestamp(5,9), appartmentNumber: "2", area: "area", buildingNumber: "buildingNumber", floorNumber: "floorNumber", mobileNumber: "mobileNumber", streetName: "streetName", order:{})
   //   ,
   //   OrderModel(orderId: "2", uid:" uid", userName: "userName", time: Timestamp(5,9), appartmentNumber: "2", area: "area", buildingNumber: "buildingNumber", floorNumber: "floorNumber", mobileNumber: "mobileNumber", streetName: "streetName", order:{})
   // ];
 
+
+  var scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Setup the listener.
+    scrollController.addListener(() {
+      if (scrollController.position.atEdge) {
+        bool isTop = scrollController.position.pixels == 0;
+        if (isTop) {
+          print('At the top');
+        } else {
+          print('At the bottom');
+        }
+      }
+    });
+  }
+
+
+
+
   @override
   Widget build(BuildContext context) {
+
     return BlocConsumer<AdminCubit, AdminStates>(
         listener: (context, state) {},
         builder: (context, state) {
           if (state is LoadingOrderState)
             return Scaffold(body: Center(child: CircularProgressIndicator()));
+          // var tableRow = new TableRow(
+          //     BlocProvider.of<AdminCubit>(context)
+          //         .orders);
           return DashboardScreen(
             // return Scaffold(
             //   appBar: AppBar(
@@ -112,7 +140,7 @@ class _OrderScreen extends State<OrderScreen> {
                           borderRadius: BorderRadius.circular(20),
                           child: Center(
                             child: Container(
-                              height: MediaQuery.of(context).size.height/2,
+                              height: MediaQuery.of(context).size.height / 2,
                               alignment: Alignment.center,
                               // margin: EdgeInsets.all(10),
                               // decoration: BoxDecoration(
@@ -123,112 +151,155 @@ class _OrderScreen extends State<OrderScreen> {
                               child: SizedBox(
                                 width: double.infinity,
                                 child: SingleChildScrollView(
-                                  scrollDirection: Axis.vertical,
-                                  child: DataTable(
-                                    //border: TableBorder.symmetric(outside: BorderSide(width: 1)),
-                                    // decoration: BoxDecoration(
-                                    //    border: Border.all(color: Colors.grey.shade400),
-                                    //    borderRadius: BorderRadius.circular(10.0),
-                                    //    ),
-                                    columns: [
-                                      DataColumn(
-                                        label: Text(
-                                          'Order id',
-                                          style: TextStyle(
-                                              fontStyle: FontStyle.italic),
-                                        ),
+                                   controller: scrollController,
+
+                                  // child: PaginatedDataTable(
+                                  //   onRowsPerPageChanged: (perPage) {},
+                                  //   rowsPerPage: 10,
+                                  //   //border: TableBorder.symmetric(outside: BorderSide(width: 1)),
+                                  //   // decoration: BoxDecoration(
+                                  //   //    border: Border.all(color: Colors.grey.shade400),
+                                  //   //    borderRadius: BorderRadius.circular(10.0),
+                                  //   //    ),
+                                  //   columns: <DataColumn>[
+                                  //     DataColumn(
+                                  //       label: Text(
+                                  //         'Order id',
+                                  //         style: TextStyle(
+                                  //             fontStyle: FontStyle.italic),
+                                  //       ),
+                                  //     ),
+                                  //     DataColumn(
+                                  //       label: Text(
+                                  //         'User name',
+                                  //         style: TextStyle(
+                                  //             fontStyle: FontStyle.italic),
+                                  //       ),
+                                  //     ),
+                                  //     DataColumn(
+                                  //       label: Text(
+                                  //         'time',
+                                  //         style: TextStyle(
+                                  //             fontStyle: FontStyle.italic),
+                                  //       ),
+                                  //     ),
+                                  //     DataColumn(
+                                  //       label: Text(
+                                  //         'Order details',
+                                  //         style: TextStyle(
+                                  //             fontStyle: FontStyle.italic),
+                                  //       ),
+                                  //     ),
+                                  //   ],
+                                  //   source: tableRow,
+                                  // ),
+
+                                 child: DataTable(
+                                  // border: TableBorder.symmetric(outside: BorderSide(width: 1)),
+                                   // decoration: BoxDecoration(
+                                   //  border: Border.all(color: Colors.grey.shade400),
+                                   //    borderRadius: BorderRadius.circular(10.0),
+                                   //   ),
+                                  columns: [
+                                   DataColumn(
+                                      label: Text(
+                                        'Order id',
+                                        style: TextStyle(
+                                            fontStyle: FontStyle.italic),
                                       ),
-                                      DataColumn(
-                                        label: Text(
-                                          'User name',
-                                          style: TextStyle(
-                                              fontStyle: FontStyle.italic),
-                                        ),
+                                    ),
+                                    DataColumn(
+                                      label: Text(
+                                        'User name',
+                                        style: TextStyle(
+                                            fontStyle: FontStyle.italic),
                                       ),
-                                      DataColumn(
-                                        label: Text(
-                                          'time',
-                                          style: TextStyle(
-                                              fontStyle: FontStyle.italic),
-                                        ),
+                                    ),
+                                    DataColumn(
+                                      label: Text(
+                                        'time',
+                                        style: TextStyle(
+                                            fontStyle: FontStyle.italic),
                                       ),
-                                      DataColumn(
-                                        label: Text(
-                                          'Order details',
-                                          style: TextStyle(
-                                              fontStyle: FontStyle.italic),
-                                        ),
+                                    ),
+                                    DataColumn(
+                                      label: Text(
+                                        'Order details',
+                                        style: TextStyle(
+                                            fontStyle: FontStyle.italic),
                                       ),
-                                    ],
-                                    rows: List.generate(
-                                        BlocProvider.of<AdminCubit>(context)
-                                            .orders
-                                            .length,
-                                        (index) => orderDataRow(
-                                            BlocProvider.of<AdminCubit>(context)
-                                                .orders[index])),
-                                    // DataRow(
-                                    //   cells: [
-                                    //     DataCell(Text('Janine')),
-                                    //     DataCell(Text('43')),
-                                    //     DataCell(Text('43')),
-                                    //
-                                    //
-                                    //     DataCell(
-                                    //       Row(
-                                    //         children: [
-                                    //           OutlinedButton(
-                                    //               style: ElevatedButton.styleFrom(
-                                    //
-                                    //                   side: BorderSide(
-                                    //                       width: 2,
-                                    //                       color: Colors.black),
-                                    //                   shape: RoundedRectangleBorder(
-                                    //                       borderRadius:
-                                    //                       BorderRadius.circular(15))),
-                                    //               onPressed: () {},
-                                    //               child: Text("Details",
-                                    //                   style: TextStyle(
-                                    //                       color: secondaryColor))),
-                                    //         ],
-                                    //       ),
-                                    //
-                                    //     ),
-                                    //   ],
-                                    // ),
-                                    // DataRow(
-                                    //   cells: [
-                                    //     DataCell(Text('Janine')),
-                                    //     DataCell(Text('43')),
-                                    //     DataCell(Text('43')),
-                                    //
-                                    //     DataCell(
-                                    //       Row(
-                                    //         children: [
-                                    //           OutlinedButton(
-                                    //               style: ElevatedButton.styleFrom(
-                                    //
-                                    //                   side: BorderSide(
-                                    //                       width: 2, color: Colors.black),
-                                    //                   shape: RoundedRectangleBorder(
-                                    //                       borderRadius:
-                                    //                       BorderRadius.circular(15))),
-                                    //               onPressed: () {},
-                                    //               child: Text("Details",
-                                    //                   style: TextStyle(color: secondaryColor))),
-                                    //         ],
-                                    //       ),
-                                    //
-                                    //     ),
-                                    //   ],
-                                    // ),
-                                  ),
+                                    ),
+                                  ],
+                                  rows: List.generate(
+                                      BlocProvider.of<AdminCubit>(context)
+                                          .orders
+                                          .length,
+                                      (index) => orderDataRow(
+                                          BlocProvider.of<AdminCubit>(context)
+                                              .orders[index])),
                                 ),
+                                //   // DataRow(
+                                //   //   cells: [
+                                //   //     DataCell(Text('Janine')),
+                                //   //     DataCell(Text('43')),
+                                //   //     DataCell(Text('43')),
+                                //   //
+                                //   //
+                                //   //     DataCell(
+                                //   //       Row(
+                                //   //         children: [
+                                //   //           OutlinedButton(
+                                //   //               style: ElevatedButton.styleFrom(
+                                //   //
+                                //   //                   side: BorderSide(
+                                //   //                       width: 2,
+                                //   //                       color: Colors.black),
+                                //   //                   shape: RoundedRectangleBorder(
+                                //   //                       borderRadius:
+                                //   //                       BorderRadius.circular(15))),
+                                //   //               onPressed: () {},
+                                //   //               child: Text("Details",
+                                //   //                   style: TextStyle(
+                                //   //                       color: secondaryColor))),
+                                //   //         ],
+                                //   //       ),
+                                //   //
+                                //   //     ),
+                                //   //   ],
+                                //   // ),
+                                //   // DataRow(
+                                //   //   cells: [
+                                //   //     DataCell(Text('Janine')),
+                                //   //     DataCell(Text('43')),
+                                //   //     DataCell(Text('43')),
+                                //   //
+                                //   //     DataCell(
+                                //   //       Row(
+                                //   //         children: [
+                                //   //           OutlinedButton(
+                                //   //               style: ElevatedButton.styleFrom(
+                                //   //
+                                //   //                   side: BorderSide(
+                                //   //                       width: 2, color: Colors.black),
+                                //   //                   shape: RoundedRectangleBorder(
+                                //   //                       borderRadius:
+                                //   //                       BorderRadius.circular(15))),
+                                //   //               onPressed: () {},
+                                //   //               child: Text("Details",
+                                //   //                   style: TextStyle(color: secondaryColor))),
+                                //   //         ],
+                                //   //       ),
+                                //   //
+                                //   //     ),
+                                //   //   ],
+                                //   // ),
+                                // ),
                               ),
                             ),
                           ),
                         ),
-                      )
+                      ),
+                      ),
                     ]),
               ),
             ),
@@ -304,3 +375,29 @@ class _OrderScreen extends State<OrderScreen> {
     );
   }
 }
+
+// class TableRow extends DataTableSource {
+//    List<OrderModel> data;
+//    TableRow(this.data);
+//  // List<OrderModel> orders=[OrderModel(orderId: "orderId", uid: "uid", userName: "userName", time: Timestamp(3,7), appartmentNumber: "appartmentNumber", area: "area", buildingNumber: "buildingNumber", floorNumber: "floorNumber", mobileNumber: "mobileNumber", streetName: "streetName", order: {})];
+//
+//   @override
+//   DataRow? getRow(int index) {
+//     List<OrderModel> order = this.data;
+//     return DataRow.byIndex(index: index, cells: [
+//       //DataCell(Text(order.)),
+//       DataCell(Text("Cell $index")),
+//       DataCell(Text("Cell $index")),
+//       DataCell(Text("Cell $index")),
+//     ]);
+//   }
+//
+//   @override
+//   bool get isRowCountApproximate => true;
+//
+//   @override
+//   int get rowCount => data.length;
+//
+//   @override
+//   int get selectedRowCount => 0;
+// }
