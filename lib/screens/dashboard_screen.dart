@@ -8,7 +8,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../constants.dart';
 
 class DashboardScreen extends StatefulWidget {
-  @override
   Widget screen;
 
   DashboardScreen(this.screen);
@@ -99,8 +98,6 @@ class _DashboardScreen extends State<DashboardScreen> {
                   ),
                   ListTile(
                     onTap: () {
-                      print("mmmmm");
-                      BlocProvider.of<AdminCubit>(context).getOrders();
                       Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -135,6 +132,7 @@ class _DashboardScreen extends State<DashboardScreen> {
                   flex: 2,
                   child: Container(
                     color: backgroundColor,
+                    child: widget.screen,
                   ),
                 ),
               ],
@@ -225,8 +223,6 @@ class _DashboardScreen extends State<DashboardScreen> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => OrderScreen()));
-
-
                             },
                             horizontalTitleGap: 0.0,
                             leading: Icon(
@@ -241,14 +237,10 @@ class _DashboardScreen extends State<DashboardScreen> {
                           ),
                           ListTile(
                             onTap: () {
-                              print("mmmmm");
-                              BlocProvider.of<AdminCubit>(context).getOrders();
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => FurnitureScreen()));
-
-
                             },
                             horizontalTitleGap: 0.0,
                             leading: Icon(
@@ -258,7 +250,7 @@ class _DashboardScreen extends State<DashboardScreen> {
                             title: Text(
                               "Furniture",
                               style:
-                              TextStyle(color: Colors.black, fontSize: 15),
+                                  TextStyle(color: Colors.black, fontSize: 15),
                             ),
                           ),
                         ],

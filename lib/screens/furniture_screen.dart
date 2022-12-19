@@ -55,7 +55,10 @@ class FurnitureScreenState extends State<FurnitureScreen> {
           }
           ;
 
-          return DashboardScreen(
+          return state is LoadingFurnitureState
+          ?  Center(
+            child: CircularProgressIndicator(),
+          ):  DashboardScreen(
             Align(
               alignment: Alignment.topCenter,
               child: SingleChildScrollView(
@@ -77,8 +80,6 @@ class FurnitureScreenState extends State<FurnitureScreen> {
                         ),
                       ),
                     ),
-
-
                     Container(
                       // margin: EdgeInsets.only(top: 2.0),
                       height: MediaQuery.of(context).size.height / 7,
@@ -118,7 +119,7 @@ class FurnitureScreenState extends State<FurnitureScreen> {
                                         ],
                                         borderRadius: BorderRadius.circular(
                                             MediaQuery.of(context).size.width /
-                                                2),
+                                                2.5),
                                         color: secondaryColor),
                                     child: Padding(
                                       padding: const EdgeInsets.all(8),
@@ -164,116 +165,124 @@ class FurnitureScreenState extends State<FurnitureScreen> {
                                 ));
                           }),
                     ),
-                    SizedBox(height: MediaQuery.of(context).size.height / 20),
+                    SizedBox(height: MediaQuery.of(context).size.height / 28),
                     Center(
                       child: Container(
                         alignment: Alignment.center,
                         width: MediaQuery.of(context).size.width / 1.4,
                         height: MediaQuery.of(context).size.height / 1.5,
                         decoration: BoxDecoration(
-                          // color:primaryColor
-                        ),
+                            // color:primaryColor
+                            ),
                         child: SingleChildScrollView(
                           controller: _scrollController,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              ElevatedButton(
-                                onPressed: (
-                      ) {Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => AddFurnitureScreen()));},
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
                                 child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-
+                                  // mainAxisAlignment: MainAxisAlignment.end,
+                                  mainAxisSize: MainAxisSize.max,
                                   children: [
-                                    Text('Add Furniture'), // <-- Text
-                                    SizedBox(
-                                      width: 5,
-                                    ),
-                                    Icon( // <-- Icon
-                                      Icons.add,
-                                      size: 24.0,
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    AddFurnitureScreen()));
+                                      },
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: [
+                                          Text('Add Furniture'), // <-- Text
+                                          SizedBox(
+                                            width: 5,
+                                          ),
+                                          Icon(
+                                            // <-- Icon
+                                            Icons.add,
+                                            size: 24.0,
+                                          ),
+                                        ],
+                                      ),
+                                      style: ElevatedButton.styleFrom(
+                                        primary: secondaryColor,
+                                      ),
                                     ),
                                   ],
                                 ),
-
-                                style: ElevatedButton.styleFrom(
-                                  primary:  secondaryColor ,
-                                ),
                               ),
-                            ],
-                          ),
-                              SizedBox(height:10),
-                              DataTable(
-                                //border: TableBorder.symmetric(outside: BorderSide(width: 1)),
-                                decoration: BoxDecoration(
-                                  border:
-                                      Border.all(color: Colors.grey.shade400),
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
-                                columns: const [
-                                  DataColumn(
-                                    label: Text(
-                                      'Furniture ID',
-                                      style: TextStyle(
-                                          fontStyle: FontStyle.italic),
-                                    ),
+                              SizedBox(height: 10),
+                              SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: DataTable(
+                                  //border: TableBorder.symmetric(outside: BorderSide(width: 1)),
+                                  decoration: BoxDecoration(
+                                    border:
+                                        Border.all(color: Colors.grey.shade400),
+                                    borderRadius: BorderRadius.circular(10.0),
                                   ),
-                                  DataColumn(
-                                    label: Text(
-                                      'Name',
-                                      style: TextStyle(
-                                          fontStyle: FontStyle.italic),
+                                  columns: const [
+                                    DataColumn(
+                                      label: Text(
+                                        'Furniture ID',
+                                        style: TextStyle(
+                                            fontStyle: FontStyle.italic),
+                                      ),
                                     ),
-                                  ),
-                                  DataColumn(
-                                    label: Text(
-                                      'Available Colors',
-                                      style: TextStyle(
-                                          fontStyle: FontStyle.italic),
+                                    DataColumn(
+                                      label: Text(
+                                        'Name',
+                                        style: TextStyle(
+                                            fontStyle: FontStyle.italic),
+                                      ),
                                     ),
-                                  ),
-                                  DataColumn(
-                                    label: Text(
-                                      'Price',
-                                      style: TextStyle(
-                                          fontStyle: FontStyle.italic),
+                                    DataColumn(
+                                      label: Text(
+                                        'Available Colors',
+                                        style: TextStyle(
+                                            fontStyle: FontStyle.italic),
+                                      ),
                                     ),
-                                  ),
-                                  DataColumn(
-                                    label: Text(
-                                      'Available quantity',
-                                      style: TextStyle(
-                                          fontStyle: FontStyle.italic),
+                                    DataColumn(
+                                      label: Text(
+                                        'Price',
+                                        style: TextStyle(
+                                            fontStyle: FontStyle.italic),
+                                      ),
                                     ),
-                                  ),
-                                  DataColumn(
-                                    label: Text(
-                                      'Actions',
-                                      style: TextStyle(
-                                          fontStyle: FontStyle.italic),
+                                    DataColumn(
+                                      label: Text(
+                                        'Available quantity',
+                                        style: TextStyle(
+                                            fontStyle: FontStyle.italic),
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                    DataColumn(
+                                      label: Text(
+                                        'Actions',
+                                        style: TextStyle(
+                                            fontStyle: FontStyle.italic),
+                                      ),
+                                    ),
+                                  ],
 
-                                rows: List.generate(
-                                    filteredFurniture.length,
-                                    (index) => FurnitureDataRow(
-                                        filteredFurniture[index])),
+                                  rows: List.generate(
+                                      filteredFurniture.length,
+                                      (index) => FurnitureDataRow(
+                                          filteredFurniture[index])),
+                                ),
                               ),
                               filteredFurniture.length < 10
                                   ? SizedBox(
-                                      height: 10,
+                                      height: 15,
                                     )
                                   : Container(),
                               filteredFurniture.length < 10
                                   ? Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      mainAxisSize: MainAxisSize.max,
                                       children: [
                                         Padding(
                                           padding:

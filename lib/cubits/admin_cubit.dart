@@ -123,6 +123,7 @@ class AdminCubit extends Cubit<AdminStates> {
         shared: shared,
         ratings: {});
     print(furnitureModel.shared.first.image);
+
     await FirebaseFirestore.instance
         .collection("category")
         .doc(furnitureCategory)
@@ -130,7 +131,9 @@ class AdminCubit extends Cubit<AdminStates> {
         .doc(doc)
         .set(furnitureModel.toMap());
     print("Done");
+    furnitureList.add(furnitureModel);
     emit(UploadingFurnitureSuccessState());
+
     ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("$furnitureName added successfully")));
   }
