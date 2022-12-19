@@ -63,7 +63,7 @@ class FurnitureScreenState extends State<FurnitureScreen> {
             searchR = [...filteredFurniture];
           }
 
-          return state is LoadingFurnitureState
+          return state is LoadingAllData
           ?  Center(
             child: CircularProgressIndicator(),
           ):  DashboardScreen(
