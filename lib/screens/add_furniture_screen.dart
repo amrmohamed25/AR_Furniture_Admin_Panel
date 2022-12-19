@@ -1,10 +1,8 @@
-import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:ar_furniture_admin_panel/constants.dart';
 import 'package:ar_furniture_admin_panel/cubits/admin_cubit.dart';
 import 'package:ar_furniture_admin_panel/cubits/admin_states.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -73,7 +71,7 @@ class _AddFurnitureScreenState extends State<AddFurnitureScreen> {
     }if (filePicker != null) {
       setState(() {
         shared.file = filePicker!.files.first.bytes!;
-        shared.urlController.text = filePicker!.files.first.name;
+        shared.urlController.text = filePicker.files.first.name;
       });
 
       print(shared.urlController.text);
@@ -89,7 +87,7 @@ class _AddFurnitureScreenState extends State<AddFurnitureScreen> {
   Widget build(BuildContext context) {
     return BlocConsumer<AdminCubit, AdminStates>(
       listener: (context, state) {
-        if (state is LoadedAllData) {
+        if (state is! LoadingAllData && value!="") {
           value = BlocProvider.of<AdminCubit>(context).categories.last["name"];
         }
         if(state is UploadingFurnitureSuccessState){

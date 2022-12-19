@@ -130,6 +130,7 @@ class AdminCubit extends Cubit<AdminStates> {
         .doc(doc)
         .set(furnitureModel.toMap());
     print("Done");
+    furnitureList.add(furnitureModel);
     emit(UploadingFurnitureSuccessState());
     ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("$furnitureName added successfully")));
@@ -246,5 +247,103 @@ class AdminCubit extends Cubit<AdminStates> {
 
     emit(LoadedFurnitureState());
     print(furnitureList.length);
+  }
+
+  updateFurniture(BuildContext context, {required FurnitureModel oldFurniture,required String furnitureName, required FileOrURL model, required String furnitureDescription, required List<SharedProperties> myShared}) async{
+    emit(UpdatingFurnitureInProgressState());
+    bool doesExistInFirestore = false;
+    await FirebaseFirestore.instance
+        .collection("category")
+        .doc(oldFurniture.category)
+        .collection("furniture")
+        .where("name", isEqualTo: furnitureName)
+        .get()
+        .catchError((error) {
+      emit(UpdatedFurnitureErrorState());
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("$furnitureName already exists")));
+      doesExistInFirestore = true;
+    });
+    if (doesExistInFirestore == true) {
+      return;
+    }
+    // String modelLink="";
+print("yarb");
+    print(oldFurniture.model.startsWith("https://firebasestorage"));
+
+      //TODO :COMMENT kol l t7t w agrb da bs
+      if(oldFurniture.model.startsWith("https://firebasestorage")){
+        print("hleh");
+        try{
+          await FirebaseStorage.instance.refFromURL(oldFurniture.model).delete();
+        }catch(e){}
+      }
+    if (model.file != null) {
+      await FirebaseStorage.instance.ref(
+          'furniture/${oldFurniture.category}/${oldFurniture.furnitureId}_${model.urlController.text}')
+          .putData(model.file!)
+          .then((p0) async {
+        String url = await p0.ref.getDownloadURL();
+        model.urlController.text = url;
+        print(url);
+      });
+    }
+    List<SharedModel> shared = [];
+    for (int i = 0; i < myShared.length; i++) {
+      print(myShared[i].image.urlController.text);
+      if(myShared[i].image.file!=null){ //Will upload to server
+        if(i<oldFurniture.shared.length){ //checking if shared exist
+          if(oldFurniture.shared[i].image.startsWith("https://firebasestorage")){ //if shared is stored in firebase
+            await FirebaseStorage.instance.refFromURL(oldFurniture.shared[i].image).delete();
+          }
+        }
+        await FirebaseStorage.instance.ref(
+            'furniture/${oldFurniture.category}/${oldFurniture.furnitureId}_${myShared[i].image.urlController.text}')
+            .putData(myShared[i].image.file!)
+            .then((p0) async {
+          String url = await p0.ref.getDownloadURL();
+          myShared[i].image.urlController.text = url;
+          print(url);
+        });
+
+      }else{
+        if(i<oldFurniture.shared.length){ //checking if shared exist
+          if(oldFurniture.shared[i].image.startsWith("https://firebasestorage") && oldFurniture.shared[i].image!=myShared[i].image.urlController.text){ //if shared is stored in firebase
+            await FirebaseStorage.instance.refFromURL(oldFurniture.shared[i].image).delete();
+          }
+        }
+      }
+      shared.add(SharedModel(
+          color: myShared[i].color.text,
+          colorName: myShared[i].colorName.text,
+          image: myShared[i].image.urlController.text,
+          price: myShared[i].price.text,
+          quantity: myShared[i].quantity.text,
+          discount: myShared[i].discount.text));
+    }
+    oldFurniture.name=furnitureName;
+    oldFurniture.description=furnitureDescription;
+    oldFurniture.model=model.urlController.text;
+    oldFurniture.shared=shared;
+    // FurnitureModel furnitureModel = FurnitureModel(
+    //     description: furnitureDescription,
+    //     furnitureId: doc,
+    //     name: furnitureName,
+    //     model: model.urlController.text,
+    //     category: furnitureCategory,
+    //     shared: shared,
+    //     ratings: {});
+    // print(furnitureModel.shared.first.image);
+    await FirebaseFirestore.instance
+        .collection("category")
+        .doc(oldFurniture.category)
+        .collection("furniture")
+        .doc(oldFurniture.furnitureId)
+        .set(oldFurniture.toMap());
+    // print("Done");
+    // furnitureList.add(furnitureModel);
+    emit(UpdatedFurnitureSuccessState());
+    ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("$furnitureName updated successfully")));
   }
 }

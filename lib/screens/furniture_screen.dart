@@ -4,6 +4,7 @@ import 'package:ar_furniture_admin_panel/models/furniture_model.dart';
 import 'package:ar_furniture_admin_panel/responsive.dart';
 import 'package:ar_furniture_admin_panel/screens/add_furniture_screen.dart';
 import 'package:ar_furniture_admin_panel/screens/dashboard_screen.dart';
+import 'package:ar_furniture_admin_panel/screens/edit_furniture_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -357,6 +358,7 @@ class FurnitureScreenState extends State<FurnitureScreen> {
               InkWell(
                 child: const Icon(Icons.edit),
                 onTap: () {
+                  Navigator.push(context,MaterialPageRoute(builder: (context)=>EditFurnitureScreen(furniture)));
                   //action code when clicked
                   print("The icon edit is clicked");
                 },
