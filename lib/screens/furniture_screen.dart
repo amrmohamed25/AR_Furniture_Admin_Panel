@@ -2,6 +2,7 @@ import 'package:ar_furniture_admin_panel/constants.dart';
 import 'package:ar_furniture_admin_panel/cubits/admin_states.dart';
 import 'package:ar_furniture_admin_panel/models/furniture_model.dart';
 import 'package:ar_furniture_admin_panel/responsive.dart';
+import 'package:ar_furniture_admin_panel/screens/add_furniture_screen.dart';
 import 'package:ar_furniture_admin_panel/screens/dashboard_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -58,7 +59,6 @@ class FurnitureScreenState extends State<FurnitureScreen> {
             Align(
               alignment: Alignment.topCenter,
               child: SingleChildScrollView(
-                controller:  _scrollController,
                 child: Column(
                   children: [
                     Center(
@@ -78,27 +78,7 @@ class FurnitureScreenState extends State<FurnitureScreen> {
                       ),
                     ),
 
-                      // ElevatedButton(
-                      //   onPressed: () {},
-                      //   child: Row(
-                      //     mainAxisSize: MainAxisSize.min,
-                      //
-                      //     children: [
-                      //       Text('Add Furniture'), // <-- Text
-                      //       SizedBox(
-                      //         width: 5,
-                      //       ),
-                      //       Icon( // <-- Icon
-                      //         Icons.add,
-                      //         size: 24.0,
-                      //       ),
-                      //     ],
-                      //   ),
-                      //
-                      //   style: ElevatedButton.styleFrom(
-                      //     primary:  primaryColor ,
-                      //   ),
-                      // ),
+
                     Container(
                       // margin: EdgeInsets.only(top: 2.0),
                       height: MediaQuery.of(context).size.height / 7,
@@ -188,57 +168,143 @@ class FurnitureScreenState extends State<FurnitureScreen> {
                     Center(
                       child: Container(
                         alignment: Alignment.center,
-                        child: SizedBox(
-                          width: MediaQuery.of(context).size.width / 1.3,
-                          child: DataTable(
-                            //border: TableBorder.symmetric(outside: BorderSide(width: 1)),
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.grey.shade400),
-                              borderRadius: BorderRadius.circular(10.0),
-                            ),
-                            columns: const [
-                              DataColumn(
-                                label: Text(
-                                  'Furniture ID',
-                                  style: TextStyle(fontStyle: FontStyle.italic),
+                        width: MediaQuery.of(context).size.width / 1.4,
+                        height: MediaQuery.of(context).size.height / 1.5,
+                        decoration: BoxDecoration(
+                          // color:primaryColor
+                        ),
+                        child: SingleChildScrollView(
+                          controller: _scrollController,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              ElevatedButton(
+                                onPressed: (
+                      ) {Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => AddFurnitureScreen()));},
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+
+                                  children: [
+                                    Text('Add Furniture'), // <-- Text
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    Icon( // <-- Icon
+                                      Icons.add,
+                                      size: 24.0,
+                                    ),
+                                  ],
                                 ),
-                              ),
-                              DataColumn(
-                                label: Text(
-                                  'Name',
-                                  style: TextStyle(fontStyle: FontStyle.italic),
-                                ),
-                              ),
-                              DataColumn(
-                                label: Text(
-                                  'Available Colors',
-                                  style: TextStyle(fontStyle: FontStyle.italic),
-                                ),
-                              ),
-                              DataColumn(
-                                label: Text(
-                                  'Price',
-                                  style: TextStyle(fontStyle: FontStyle.italic),
-                                ),
-                              ),
-                              DataColumn(
-                                label: Text(
-                                  'Available quantity',
-                                  style: TextStyle(fontStyle: FontStyle.italic),
-                                ),
-                              ),
-                              DataColumn(
-                                label: Text(
-                                  'Actions',
-                                  style: TextStyle(fontStyle: FontStyle.italic),
+
+                                style: ElevatedButton.styleFrom(
+                                  primary:  secondaryColor ,
                                 ),
                               ),
                             ],
+                          ),
+                              SizedBox(height:10),
+                              DataTable(
+                                //border: TableBorder.symmetric(outside: BorderSide(width: 1)),
+                                decoration: BoxDecoration(
+                                  border:
+                                      Border.all(color: Colors.grey.shade400),
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                columns: const [
+                                  DataColumn(
+                                    label: Text(
+                                      'Furniture ID',
+                                      style: TextStyle(
+                                          fontStyle: FontStyle.italic),
+                                    ),
+                                  ),
+                                  DataColumn(
+                                    label: Text(
+                                      'Name',
+                                      style: TextStyle(
+                                          fontStyle: FontStyle.italic),
+                                    ),
+                                  ),
+                                  DataColumn(
+                                    label: Text(
+                                      'Available Colors',
+                                      style: TextStyle(
+                                          fontStyle: FontStyle.italic),
+                                    ),
+                                  ),
+                                  DataColumn(
+                                    label: Text(
+                                      'Price',
+                                      style: TextStyle(
+                                          fontStyle: FontStyle.italic),
+                                    ),
+                                  ),
+                                  DataColumn(
+                                    label: Text(
+                                      'Available quantity',
+                                      style: TextStyle(
+                                          fontStyle: FontStyle.italic),
+                                    ),
+                                  ),
+                                  DataColumn(
+                                    label: Text(
+                                      'Actions',
+                                      style: TextStyle(
+                                          fontStyle: FontStyle.italic),
+                                    ),
+                                  ),
+                                ],
 
-                            rows: List.generate(
-                                filteredFurniture.length,
-                                (index) =>
-                                    FurnitureDataRow(filteredFurniture[index])),
+                                rows: List.generate(
+                                    filteredFurniture.length,
+                                    (index) => FurnitureDataRow(
+                                        filteredFurniture[index])),
+                              ),
+                              filteredFurniture.length < 10
+                                  ? SizedBox(
+                                      height: 10,
+                                    )
+                                  : Container(),
+                              filteredFurniture.length < 10
+                                  ? Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(left: 10),
+                                          child: ElevatedButton(
+                                            onPressed: () async {
+                                              await getMoreFurniture();
+                                            },
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Text('Load more'), // <-- Text
+                                                SizedBox(
+                                                  width: 5,
+                                                ),
+                                                Icon(
+                                                  // <-- Icon
+                                                  Icons.refresh,
+                                                  size: 24.0,
+                                                ),
+                                              ],
+                                            ),
+                                            style: ElevatedButton.styleFrom(
+                                              primary: secondaryColor,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  : Container(),
+                            ],
                           ),
                         ),
                       ),
@@ -318,9 +384,9 @@ class FurnitureScreenState extends State<FurnitureScreen> {
     );
   }
 
-  Future<void> getMoreFurniture() async {
+  getMoreFurniture() async {
     print("hna");
     await BlocProvider.of<AdminCubit>(context)
-        .getFurniture(FurnitureScreen.selectedCategoryName, limit: 3);
+        .getFurniture(FurnitureScreen.selectedCategoryName, limit: 5);
   }
 }

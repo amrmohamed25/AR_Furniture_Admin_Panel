@@ -25,7 +25,7 @@ class AdminCubit extends Cubit<AdminStates> {
       print("testtttttttttttttt");
       print(categories[i]["name"]);
 
-      await getFurniture(categories[i]["name"], limit: 10);
+      await getFurniture(categories[i]["name"], limit: 6);
     }
     // await getOrders();
     emit(LoadedAllData());
