@@ -12,6 +12,10 @@ class LoadingOrderState extends AdminStates{}
 
 class LoadedOrderState extends AdminStates{}
 
+class LoadingFurnitureState extends AdminStates{}
+
+class LoadedFurnitureState extends AdminStates{}
+
 class UploadingFurnitureInProgressState extends AdminStates{}
 
 class UploadingFurnitureSuccessState extends AdminStates{}

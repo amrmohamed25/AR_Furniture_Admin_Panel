@@ -1,5 +1,6 @@
 import 'package:ar_furniture_admin_panel/cubits/admin_cubit.dart';
 import 'package:ar_furniture_admin_panel/responsive.dart';
+import 'package:ar_furniture_admin_panel/screens/furniture_screen.dart';
 import 'package:ar_furniture_admin_panel/screens/order_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -93,6 +94,26 @@ class _DashboardScreen extends State<DashboardScreen> {
                     ),
                     title: Text(
                       "Orders",
+                      style: TextStyle(color: Colors.black, fontSize: 12),
+                    ),
+                  ),
+                  ListTile(
+                    onTap: () {
+                      print("mmmmm");
+                      BlocProvider.of<AdminCubit>(context).getOrders();
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => FurnitureScreen()));
+                    },
+                    horizontalTitleGap: 0.0,
+                    leading: Icon(
+                      Icons.event_seat,
+                      color: Colors.black,
+                      size: 12,
+                    ),
+                    title: Text(
+                      "Furniture",
                       style: TextStyle(color: Colors.black, fontSize: 12),
                     ),
                   ),
@@ -216,6 +237,28 @@ class _DashboardScreen extends State<DashboardScreen> {
                               "Orders",
                               style:
                                   TextStyle(color: Colors.black, fontSize: 15),
+                            ),
+                          ),
+                          ListTile(
+                            onTap: () {
+                              print("mmmmm");
+                              BlocProvider.of<AdminCubit>(context).getOrders();
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => FurnitureScreen()));
+
+
+                            },
+                            horizontalTitleGap: 0.0,
+                            leading: Icon(
+                              Icons.event_seat,
+                              color: Colors.black,
+                            ),
+                            title: Text(
+                              "Furniture",
+                              style:
+                              TextStyle(color: Colors.black, fontSize: 15),
                             ),
                           ),
                         ],
