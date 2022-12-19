@@ -9,6 +9,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../cubits/admin_cubit.dart';
 
+
+List<FurnitureModel> filteredFurniture = [];
+
 class FurnitureScreen extends StatefulWidget {
   static String selectedCategoryName = "";
   static int selectedCategoryIndex = 0;
@@ -20,8 +23,9 @@ class FurnitureScreen extends StatefulWidget {
 
 class FurnitureScreenState extends State<FurnitureScreen> {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-  List<FurnitureModel> filteredFurniture = [];
+  List<FurnitureModel> searchR = filteredFurniture;
   ScrollController _scrollController = ScrollController();
+  TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
@@ -43,17 +47,21 @@ class FurnitureScreenState extends State<FurnitureScreen> {
     return BlocConsumer<AdminCubit, AdminStates>(
         listener: (context, state) {},
         builder: (context, state) {
-          filteredFurniture = BlocProvider.of<AdminCubit>(context)
-              .furnitureList
-              .where((element) =>
-                  element.category == FurnitureScreen.selectedCategoryName)
-              .toList();
-          if (FurnitureScreen.selectedCategoryIndex == 0) {
-            FurnitureScreen.selectedCategoryName =
-                BlocProvider.of<AdminCubit>(context)
-                    .categories[FurnitureScreen.selectedCategoryIndex]["name"];
+          if(searchR.isEmpty || _searchController.text.toLowerCase() == '') {
+            filteredFurniture = BlocProvider.of<AdminCubit>(context)
+                .furnitureList
+                .where((element) =>
+            element.category == FurnitureScreen.selectedCategoryName)
+                .toList();
+            if (FurnitureScreen.selectedCategoryIndex == 0) {
+              FurnitureScreen.selectedCategoryName =
+              BlocProvider.of<AdminCubit>(context)
+                  .categories[FurnitureScreen.selectedCategoryIndex]["name"];
+            };
           }
-          ;
+          if(searchR.isEmpty || _searchController.text.toLowerCase() == '') {
+            searchR = [...filteredFurniture];
+          }
 
           return state is LoadingFurnitureState
           ?  Center(
@@ -185,6 +193,55 @@ class FurnitureScreenState extends State<FurnitureScreen> {
                                   // mainAxisAlignment: MainAxisAlignment.end,
                                   mainAxisSize: MainAxisSize.max,
                                   children: [
+                                    Expanded(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(10.0),
+                                        child: TextField(
+                                          controller: _searchController,
+                                          cursorColor: primaryColor,
+                                          decoration: InputDecoration(
+                                            enabledBorder: OutlineInputBorder(
+                                              borderSide: const BorderSide(color: Colors.white),
+                                              borderRadius: BorderRadius.circular(25.7),
+                                            ),
+                                            focusedBorder: OutlineInputBorder(
+                                              borderSide: const BorderSide(color: Colors.white),
+                                              borderRadius: BorderRadius.circular(25.7),
+                                            ),
+                                            hintText: 'What are you looking for?',
+                                            prefixIcon: const Icon(
+                                              Icons.search,
+                                              color: Colors.black,
+                                              size: 25,
+                                            ),
+                                            filled: true,
+                                            fillColor: Colors.white,
+                                            contentPadding: const EdgeInsets.only(
+                                                left: 14.0, bottom: 5.0, top: 5.0),
+                                          ),
+                                          onChanged: (value) async {
+                                            // filter search item by name
+                                            await searchItem(value);
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: primaryColor,
+                                      ),
+                                      child: IconButton(
+                                        icon: const Icon(Icons.filter_list, color: Colors.white, size: 25,),
+                                        onPressed: () async{
+                                          // filter
+                                          // apply filter
+                                        },
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
                                     ElevatedButton(
                                       onPressed: () {
                                         Navigator.push(
@@ -269,18 +326,17 @@ class FurnitureScreenState extends State<FurnitureScreen> {
                                     ),
                                   ],
 
-                                  rows: List.generate(
-                                      filteredFurniture.length,
-                                      (index) => FurnitureDataRow(
-                                          filteredFurniture[index])),
-                                ),
+                                rows: List.generate(
+                                    searchR.length,
+                                    (index) => FurnitureDataRow(
+                                        searchR[index])),
                               ),
-                              filteredFurniture.length < 10
+                              searchR.length < 10
                                   ? SizedBox(
                                       height: 15,
                                     )
                                   : Container(),
-                              filteredFurniture.length < 10
+                              searchR.length < 10
                                   ? Row(
                                       mainAxisSize: MainAxisSize.max,
                                       children: [
@@ -393,9 +449,54 @@ class FurnitureScreenState extends State<FurnitureScreen> {
     );
   }
 
+  Future<void> searchItem (String query) async {
+    if (query != ''){
+      final input = query.toLowerCase();
+      List<FurnitureModel> suggestions = filteredFurniture.where((fur) {
+        final searchTitle = fur.name.toLowerCase();
+        return searchTitle.contains(input);
+      }).toList();
+      if (suggestions.length < 4){
+        //suggestions = await addMoreData(suggestions,input);
+      }
+      setState(() {
+        searchR = [...suggestions];
+      });
+      print("dataaaaaaaaaaaaaaaaaaaaaa");
+
+      searchR.forEach((element) {
+        print(element.name);
+      });
+
+      print("end dataaaaaaaaaaaa");
+    } else{
+      setState(() {
+        searchR = [...filteredFurniture];
+      });
+    }
+  }
+
   getMoreFurniture() async {
-    print("hna");
-    await BlocProvider.of<AdminCubit>(context)
-        .getFurniture(FurnitureScreen.selectedCategoryName, limit: 5);
+    int furnitureCount = filteredFurniture.length;
+    await BlocProvider.of<AdminCubit>(context).getFurniture(FurnitureScreen.selectedCategoryName, limit: 5);
+    filteredFurniture = BlocProvider.of<AdminCubit>(context)
+        .furnitureList
+        .where((element) =>
+    element.category == FurnitureScreen.selectedCategoryName)
+        .toList();
+    if (FurnitureScreen.selectedCategoryIndex == 0) {
+      FurnitureScreen.selectedCategoryName =
+      BlocProvider.of<AdminCubit>(context)
+          .categories[FurnitureScreen.selectedCategoryIndex]["name"];
+    };
+    if (furnitureCount != filteredFurniture.length && _searchController.text.toLowerCase() != '') {
+      print("ana da5el search itemmmmmmmmmm");
+      searchItem(_searchController.text.toLowerCase());
+      print("ana 5last search itemmmmmmmm");
+    }else if (furnitureCount != filteredFurniture.length || _searchController.text.toLowerCase() == '') {
+      setState(() {
+        searchR = [...filteredFurniture];
+      });
+    }
   }
 }
