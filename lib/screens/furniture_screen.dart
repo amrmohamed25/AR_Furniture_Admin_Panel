@@ -193,6 +193,32 @@ class FurnitureScreenState extends State<FurnitureScreen> {
                                   // mainAxisAlignment: MainAxisAlignment.end,
                                   mainAxisSize: MainAxisSize.max,
                                   children: [
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    AddFurnitureScreen()));
+                                      },
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: [
+                                          Text('Add Furniture'), // <-- Text
+                                          SizedBox(
+                                            width: 5,
+                                          ),
+                                          Icon(
+                                            // <-- Icon
+                                            Icons.add,
+                                            size: 24.0,
+                                          ),
+                                        ],
+                                      ),
+                                      style: ElevatedButton.styleFrom(
+                                        primary: secondaryColor,
+                                      ),
+                                    ),
                                     Expanded(
                                       child: Padding(
                                         padding: const EdgeInsets.all(10.0),
@@ -241,32 +267,6 @@ class FurnitureScreenState extends State<FurnitureScreen> {
                                     ),
                                     const SizedBox(
                                       width: 10,
-                                    ),
-                                    ElevatedButton(
-                                      onPressed: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    AddFurnitureScreen()));
-                                      },
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.max,
-                                        children: [
-                                          Text('Add Furniture'), // <-- Text
-                                          SizedBox(
-                                            width: 5,
-                                          ),
-                                          Icon(
-                                            // <-- Icon
-                                            Icons.add,
-                                            size: 24.0,
-                                          ),
-                                        ],
-                                      ),
-                                      style: ElevatedButton.styleFrom(
-                                        primary: secondaryColor,
-                                      ),
                                     ),
                                   ],
                                 ),
@@ -330,7 +330,7 @@ class FurnitureScreenState extends State<FurnitureScreen> {
                                     searchR.length,
                                     (index) => FurnitureDataRow(
                                         searchR[index])),
-                              ),
+                              ),),
                               searchR.length < 10
                                   ? SizedBox(
                                       height: 15,
