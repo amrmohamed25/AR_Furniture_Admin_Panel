@@ -31,6 +31,7 @@ class FurnitureScreenState extends State<FurnitureScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    print(FurnitureScreen.selectedCategoryName);
     _scrollController.addListener(() async {
       print("Listenerrrrr");
       if (_scrollController.position.atEdge) {
@@ -44,20 +45,29 @@ class FurnitureScreenState extends State<FurnitureScreen> {
 
   @override
   Widget build(BuildContext) {
+    print("Building out");
+    // if (FurnitureScreen.selectedCategoryIndex == -1) {
+    //   FurnitureScreen.selectedCategoryName =
+    //   BlocProvider.of<AdminCubit>(context)
+    //       .categories[0]["name"];
+    //   BlocProvider.of<AdminCubit>(context)
+    //       .emit(LoadedFurnitureState());
+    //
+    // };
     return BlocConsumer<AdminCubit, AdminStates>(
-        listener: (context, state) {},
+        listener: (context, state) {
+
+        },
         builder: (context, state) {
+          print("Building in");
+
           if(searchR.isEmpty || _searchController.text.toLowerCase() == '') {
             filteredFurniture = BlocProvider.of<AdminCubit>(context)
                 .furnitureList
                 .where((element) =>
             element.category == FurnitureScreen.selectedCategoryName)
                 .toList();
-            if (FurnitureScreen.selectedCategoryIndex == 0) {
-              FurnitureScreen.selectedCategoryName =
-              BlocProvider.of<AdminCubit>(context)
-                  .categories[FurnitureScreen.selectedCategoryIndex]["name"];
-            };
+
           }
           if(searchR.isEmpty || _searchController.text.toLowerCase() == '') {
             searchR = [...filteredFurniture];
@@ -211,7 +221,7 @@ class FurnitureScreenState extends State<FurnitureScreen> {
                                           Icon(
                                             // <-- Icon
                                             Icons.add,
-                                            size: 24.0,
+                                            size: 12,
                                           ),
                                         ],
                                       ),
@@ -357,7 +367,7 @@ class FurnitureScreenState extends State<FurnitureScreen> {
                                                 Icon(
                                                   // <-- Icon
                                                   Icons.refresh,
-                                                  size: 24.0,
+                                                  size: 12.0,
                                                 ),
                                               ],
                                             ),
