@@ -387,17 +387,21 @@ class FurnitureScreenState extends State<FurnitureScreen> {
     String prices = "";
     String quantities = "";
     for (int i = 0; i < furniture.shared.length - 1; i++) {
-      availableColors = furniture.shared[i].colorName + ",";
+      availableColors = availableColors + furniture.shared[i].colorName + ",";
+      print("in for" +availableColors);
     }
+
     availableColors = availableColors +
         furniture.shared[furniture.shared.length - 1].colorName;
+    print("after for" +availableColors);
     for (int i = 0; i < furniture.shared.length - 1; i++) {
-      prices = "EGP" + furniture.shared[i].price + ",";
+
+      prices = prices +"EGP" + furniture.shared[i].price + ",";
     }
     prices =
         prices + "EGP" + furniture.shared[furniture.shared.length - 1].price;
     for (int i = 0; i < furniture.shared.length - 1; i++) {
-      quantities = furniture.shared[i].quantity + ",";
+      quantities = quantities + furniture.shared[i].quantity + ",";
     }
     quantities =
         quantities + furniture.shared[furniture.shared.length - 1].quantity;
