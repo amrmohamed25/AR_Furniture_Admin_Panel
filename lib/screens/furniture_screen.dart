@@ -76,283 +76,372 @@ class FurnitureScreenState extends State<FurnitureScreen> {
           return state is LoadingAllData
           ?  Center(
             child: CircularProgressIndicator(),
-          ):  DashboardScreen(
-            Align(
-              alignment: Alignment.topCenter,
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Center(
-                      child: Container(
-                        alignment: Alignment.center,
-                        width: MediaQuery.of(context).size.width / 5,
-                        height: MediaQuery.of(context).size.height / 9,
-                        margin: const EdgeInsets.all(10),
-                        child: const Text(
-                          'Furniture',
-                          style: TextStyle(
-                              fontFamily: "Montserrat",
-                              fontSize: 20,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      // margin: EdgeInsets.only(top: 2.0),
-                      height: MediaQuery.of(context).size.height / 7,
-                      child: ListView.builder(
-                          itemCount: BlocProvider.of<AdminCubit>(context)
-                              .categories
-                              .length,
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder: (context, index) {
-                            return Container(
-                                margin: const EdgeInsets.all(10),
-                                child: InkWell(
-                                  onTap: () {
-                                    setState(() {
-                                      FurnitureScreen.selectedCategoryName =
-                                          BlocProvider.of<AdminCubit>(context)
-                                              .categories[index]["name"];
-
-                                      FurnitureScreen.selectedCategoryIndex =
-                                          index;
-                                    });
-                                  },
-                                  child: Container(
-                                    margin: const EdgeInsets.all(10),
-                                    width:
-                                        MediaQuery.of(context).size.width / 5.2,
-                                    decoration: BoxDecoration(
-                                        boxShadow: [
-                                          BoxShadow(
-                                            blurRadius: 3,
-                                            color: index ==
-                                                    FurnitureScreen
-                                                        .selectedCategoryIndex
-                                                ? primaryColor
-                                                : backgroundColor,
-                                          )
-                                        ],
-                                        borderRadius: BorderRadius.circular(
-                                            MediaQuery.of(context).size.width /
-                                                2.5),
-                                        color: secondaryColor),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8),
-                                      child: Column(
-                                        children: [
-                                          Expanded(
-                                              child: CircleAvatar(
-                                            radius: MediaQuery.of(context)
-                                                    .size
-                                                    .width /
-                                                9,
-                                            backgroundColor: Colors.grey[300],
-                                            // radius: 10,
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(2.0),
-                                              child: Image.network(
-                                                BlocProvider.of<AdminCubit>(
-                                                        context)
-                                                    .categories[index]["image"],
-                                                fit: BoxFit.fill,
-                                              ),
-                                            ),
-                                          )),
-                                          const SizedBox(
-                                            height: 5,
-                                          ),
-                                          Text(
-                                            BlocProvider.of<AdminCubit>(context)
-                                                .categories[index]["name"],
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                                color: index ==
-                                                        FurnitureScreen
-                                                            .selectedCategoryIndex
-                                                    ? Colors.white
-                                                    : Colors.black),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ));
-                          }),
-                    ),
-                    SizedBox(height: MediaQuery.of(context).size.height / 28),
-                    Center(
-                      child: Container(
-                        alignment: Alignment.center,
-                        width: MediaQuery.of(context).size.width / 1.4,
-                        height: MediaQuery.of(context).size.height / 1.5,
-                        decoration: BoxDecoration(
-                            // color:primaryColor
+          ):  LayoutBuilder(
+              builder: (context, constraints){
+                return DashboardScreen(
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          Center(
+                            child: Container(
+                              alignment: Alignment.center,
+                              width: MediaQuery.of(context).size.width / 5,
+                              height: MediaQuery.of(context).size.height / 9,
+                              margin: const EdgeInsets.all(10),
+                              child: const Text(
+                                'Furniture',
+                                style: TextStyle(
+                                    fontFamily: "Montserrat",
+                                    fontSize: 20,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold),
+                              ),
                             ),
-                        child: SingleChildScrollView(
-                          controller: _scrollController,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Row(
-                                  // mainAxisAlignment: MainAxisAlignment.end,
-                                  mainAxisSize: MainAxisSize.max,
+                          ),
+                          Container(
+                            // margin: EdgeInsets.only(top: 2.0),
+                            height: MediaQuery.of(context).size.height / 7,
+                            child: ListView.builder(
+                                itemCount: BlocProvider.of<AdminCubit>(context)
+                                    .categories
+                                    .length,
+                                scrollDirection: Axis.horizontal,
+                                itemBuilder: (context, index) {
+                                  return Container(
+                                      margin: const EdgeInsets.all(10),
+                                      child: InkWell(
+                                        onTap: () {
+                                          setState(() {
+                                            FurnitureScreen.selectedCategoryName =
+                                            BlocProvider.of<AdminCubit>(context)
+                                                .categories[index]["name"];
+
+                                            FurnitureScreen.selectedCategoryIndex =
+                                                index;
+                                          });
+                                        },
+                                        child: Container(
+                                          margin: const EdgeInsets.all(10),
+                                          width:
+                                          MediaQuery.of(context).size.width / 5.2,
+                                          decoration: BoxDecoration(
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  blurRadius: 3,
+                                                  color: index ==
+                                                      FurnitureScreen
+                                                          .selectedCategoryIndex
+                                                      ? primaryColor
+                                                      : backgroundColor,
+                                                )
+                                              ],
+                                              borderRadius: BorderRadius.circular(
+                                                  MediaQuery.of(context).size.width /
+                                                      2.5),
+                                              color: secondaryColor),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8),
+                                            child: Column(
+                                              children: [
+                                                Expanded(
+                                                    child: CircleAvatar(
+                                                      radius: MediaQuery.of(context)
+                                                          .size
+                                                          .width /
+                                                          9,
+                                                      backgroundColor: Colors.grey[300],
+                                                      // radius: 10,
+                                                      child: Padding(
+                                                        padding:
+                                                        const EdgeInsets.all(2.0),
+                                                        child: Image.network(
+                                                          BlocProvider.of<AdminCubit>(
+                                                              context)
+                                                              .categories[index]["image"],
+                                                          fit: BoxFit.fill,
+                                                        ),
+                                                      ),
+                                                    )),
+                                                const SizedBox(
+                                                  height: 5,
+                                                ),
+                                                Text(
+                                                  BlocProvider.of<AdminCubit>(context)
+                                                      .categories[index]["name"],
+                                                  overflow: TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                      color: index ==
+                                                          FurnitureScreen
+                                                              .selectedCategoryIndex
+                                                          ? Colors.white
+                                                          : Colors.black),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ));
+                                }),
+                          ),
+                          SizedBox(height: MediaQuery.of(context).size.height / 28),
+                          Center(
+                            child: Container(
+                              alignment: Alignment.center,
+                              width: MediaQuery.of(context).size.width / 1.4,
+                              height: MediaQuery.of(context).size.height / 1.5,
+                              decoration: BoxDecoration(
+                                // color:primaryColor
+                              ),
+                              child: SingleChildScrollView(
+                                controller: _scrollController,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.stretch,
                                   children: [
-                                    ElevatedButton(
-                                      onPressed: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    AddFurnitureScreen()));
-                                      },
-                                      child: Row(
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: (constraints.maxWidth > 800)?
+                                      Row(
                                         mainAxisSize: MainAxisSize.max,
                                         children: [
-                                          Text('Add Furniture'), // <-- Text
-                                          SizedBox(
-                                            width: 5,
+                                          ElevatedButton(
+                                            onPressed: () {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          AddFurnitureScreen()));
+                                            },
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.max,
+                                              children: [
+                                                Text('Add Furniture'), // <-- Text
+                                                SizedBox(
+                                                  width: 5,
+                                                ),
+                                                Icon(
+                                                  // <-- Icon
+                                                  Icons.add,
+                                                  size: 12,
+                                                ),
+                                              ],
+                                            ),
+                                            style: ElevatedButton.styleFrom(
+                                              primary: secondaryColor,
+                                            ),
                                           ),
-                                          Icon(
-                                            // <-- Icon
-                                            Icons.add,
-                                            size: 12,
+                                          Expanded(
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(10.0),
+                                              child: TextField(
+                                                controller: _searchController,
+                                                cursorColor: primaryColor,
+                                                decoration: InputDecoration(
+                                                  enabledBorder: OutlineInputBorder(
+                                                    borderSide: const BorderSide(color: Colors.white),
+                                                    borderRadius: BorderRadius.circular(25.7),
+                                                  ),
+                                                  focusedBorder: OutlineInputBorder(
+                                                    borderSide: const BorderSide(color: Colors.white),
+                                                    borderRadius: BorderRadius.circular(25.7),
+                                                  ),
+                                                  hintText: 'What are you looking for?',
+                                                  prefixIcon: const Icon(
+                                                    Icons.search,
+                                                    color: Colors.black,
+                                                    size: 25,
+                                                  ),
+                                                  filled: true,
+                                                  fillColor: Colors.white,
+                                                  contentPadding: const EdgeInsets.only(
+                                                      left: 14.0, bottom: 5.0, top: 5.0),
+                                                ),
+                                                onChanged: (value) async {
+                                                  // filter search item by name
+                                                  await searchItem(value);
+                                                },
+                                              ),
+                                            ),
+                                          ),
+                                          Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(10),
+                                              color: primaryColor,
+                                            ),
+                                            child: IconButton(
+                                              icon: const Icon(Icons.filter_list, color: Colors.white, size: 25,),
+                                              onPressed: () async{
+                                                // filter
+                                                // apply filter
+                                              },
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            width: 10,
+                                          ),
+                                        ],
+                                      ):Column(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              ElevatedButton(
+                                                onPressed: () {
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              AddFurnitureScreen()));
+                                                },
+                                                child: Row(
+                                                  mainAxisSize: MainAxisSize.max,
+                                                  children: [
+                                                    Text('Add Furniture'), // <-- Text
+                                                    SizedBox(
+                                                      width: 5,
+                                                    ),
+                                                    Icon(
+                                                      // <-- Icon
+                                                      Icons.add,
+                                                      size: 12,
+                                                    ),
+                                                  ],
+                                                ),
+                                                style: ElevatedButton.styleFrom(
+                                                  primary: secondaryColor,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          Row(
+                                            children: [
+                                              Expanded(
+                                                child: Padding(
+                                                  padding: const EdgeInsets.all(10.0),
+                                                  child: TextField(
+                                                    controller: _searchController,
+                                                    cursorColor: primaryColor,
+                                                    decoration: InputDecoration(
+                                                      enabledBorder: OutlineInputBorder(
+                                                        borderSide: const BorderSide(color: Colors.white),
+                                                        borderRadius: BorderRadius.circular(25.7),
+                                                      ),
+                                                      focusedBorder: OutlineInputBorder(
+                                                        borderSide: const BorderSide(color: Colors.white),
+                                                        borderRadius: BorderRadius.circular(25.7),
+                                                      ),
+                                                      hintText: 'What are you looking for?',
+                                                      prefixIcon: const Icon(
+                                                        Icons.search,
+                                                        color: Colors.black,
+                                                        size: 25,
+                                                      ),
+                                                      filled: true,
+                                                      fillColor: Colors.white,
+                                                      contentPadding: const EdgeInsets.only(
+                                                          left: 14.0, bottom: 5.0, top: 5.0),
+                                                    ),
+                                                    onChanged: (value) async {
+                                                      // filter search item by name
+                                                      await searchItem(value);
+                                                    },
+                                                  ),
+                                                ),
+                                              ),
+                                              Container(
+                                                decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(10),
+                                                  color: primaryColor,
+                                                ),
+                                                child: IconButton(
+                                                  icon: const Icon(Icons.filter_list, color: Colors.white, size: 25,),
+                                                  onPressed: () async{
+                                                    // filter
+                                                    // apply filter
+                                                  },
+                                                ),
+                                              ),
+                                              const SizedBox(
+                                                width: 10,
+                                              ),
+                                            ],
                                           ),
                                         ],
                                       ),
-                                      style: ElevatedButton.styleFrom(
-                                        primary: secondaryColor,
-                                      ),
                                     ),
-                                    Expanded(
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(10.0),
-                                        child: TextField(
-                                          controller: _searchController,
-                                          cursorColor: primaryColor,
-                                          decoration: InputDecoration(
-                                            enabledBorder: OutlineInputBorder(
-                                              borderSide: const BorderSide(color: Colors.white),
-                                              borderRadius: BorderRadius.circular(25.7),
-                                            ),
-                                            focusedBorder: OutlineInputBorder(
-                                              borderSide: const BorderSide(color: Colors.white),
-                                              borderRadius: BorderRadius.circular(25.7),
-                                            ),
-                                            hintText: 'What are you looking for?',
-                                            prefixIcon: const Icon(
-                                              Icons.search,
-                                              color: Colors.black,
-                                              size: 25,
-                                            ),
-                                            filled: true,
-                                            fillColor: Colors.white,
-                                            contentPadding: const EdgeInsets.only(
-                                                left: 14.0, bottom: 5.0, top: 5.0),
-                                          ),
-                                          onChanged: (value) async {
-                                            // filter search item by name
-                                            await searchItem(value);
-                                          },
+                                    SizedBox(height: 10),
+                                    SingleChildScrollView(
+                                      scrollDirection: Axis.horizontal,
+                                      child: DataTable(
+                                        //border: TableBorder.symmetric(outside: BorderSide(width: 1)),
+                                        decoration: BoxDecoration(
+                                          border:
+                                          Border.all(color: Colors.grey.shade400),
+                                          borderRadius: BorderRadius.circular(10.0),
                                         ),
-                                      ),
-                                    ),
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        color: primaryColor,
-                                      ),
-                                      child: IconButton(
-                                        icon: const Icon(Icons.filter_list, color: Colors.white, size: 25,),
-                                        onPressed: () async{
-                                          // filter
-                                          // apply filter
-                                        },
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      width: 10,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(height: 10),
-                              SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                child: DataTable(
-                                  //border: TableBorder.symmetric(outside: BorderSide(width: 1)),
-                                  decoration: BoxDecoration(
-                                    border:
-                                        Border.all(color: Colors.grey.shade400),
-                                    borderRadius: BorderRadius.circular(10.0),
-                                  ),
-                                  columns: const [
-                                    DataColumn(
-                                      label: Text(
-                                        'Furniture ID',
-                                        style: TextStyle(
-                                            fontStyle: FontStyle.italic),
-                                      ),
-                                    ),
-                                    DataColumn(
-                                      label: Text(
-                                        'Name',
-                                        style: TextStyle(
-                                            fontStyle: FontStyle.italic),
-                                      ),
-                                    ),
-                                    DataColumn(
-                                      label: Text(
-                                        'Available Colors',
-                                        style: TextStyle(
-                                            fontStyle: FontStyle.italic),
-                                      ),
-                                    ),
-                                    DataColumn(
-                                      label: Text(
-                                        'Price',
-                                        style: TextStyle(
-                                            fontStyle: FontStyle.italic),
-                                      ),
-                                    ),
-                                    DataColumn(
-                                      label: Text(
-                                        'Available quantity',
-                                        style: TextStyle(
-                                            fontStyle: FontStyle.italic),
-                                      ),
-                                    ),
-                                    DataColumn(
-                                      label: Text(
-                                        'Actions',
-                                        style: TextStyle(
-                                            fontStyle: FontStyle.italic),
-                                      ),
-                                    ),
-                                  ],
+                                        columns: const [
+                                          DataColumn(
+                                            label: Text(
+                                              'Furniture ID',
+                                              style: TextStyle(
+                                                  fontStyle: FontStyle.italic),
+                                            ),
+                                          ),
+                                          DataColumn(
+                                            label: Text(
+                                              'Name',
+                                              style: TextStyle(
+                                                  fontStyle: FontStyle.italic),
+                                            ),
+                                          ),
+                                          DataColumn(
+                                            label: Text(
+                                              'Available Colors',
+                                              style: TextStyle(
+                                                  fontStyle: FontStyle.italic),
+                                            ),
+                                          ),
+                                          DataColumn(
+                                            label: Text(
+                                              'Price',
+                                              style: TextStyle(
+                                                  fontStyle: FontStyle.italic),
+                                            ),
+                                          ),
+                                          DataColumn(
+                                            label: Text(
+                                              'Available quantity',
+                                              style: TextStyle(
+                                                  fontStyle: FontStyle.italic),
+                                            ),
+                                          ),
+                                          DataColumn(
+                                            label: Text(
+                                              'Actions',
+                                              style: TextStyle(
+                                                  fontStyle: FontStyle.italic),
+                                            ),
+                                          ),
+                                        ],
 
-                                rows: List.generate(
-                                    searchR.length,
-                                    (index) => FurnitureDataRow(
-                                        searchR[index])),
-                              ),),
-                              searchR.length < 10
-                                  ? SizedBox(
+                                        rows: List.generate(
+                                            searchR.length,
+                                                (index) => FurnitureDataRow(
+                                                searchR[index])),
+                                      ),),
+                                    searchR.length < 10
+                                        ? SizedBox(
                                       height: 15,
                                     )
-                                  : Container(),
-                              searchR.length < 10
-                                  ? Row(
+                                        : Container(),
+                                    searchR.length < 10
+                                        ? Row(
                                       mainAxisSize: MainAxisSize.max,
                                       children: [
                                         Padding(
                                           padding:
-                                              const EdgeInsets.only(left: 10),
+                                          const EdgeInsets.only(left: 10),
                                           child: ElevatedButton(
                                             onPressed: () async {
                                               await getMoreFurniture();
@@ -378,16 +467,18 @@ class FurnitureScreenState extends State<FurnitureScreen> {
                                         ),
                                       ],
                                     )
-                                  : Container(),
-                            ],
+                                        : Container(),
+                                  ],
+                                ),
+                              ),
+                            ),
                           ),
-                        ),
+                        ],
                       ),
                     ),
-                  ],
-                ),
-              ),
-            ),
+                  ),
+                );
+              },
           );
         });
   }
