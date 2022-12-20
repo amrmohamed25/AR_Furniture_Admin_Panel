@@ -17,6 +17,11 @@ class AdminCubit extends Cubit<AdminStates> {
   List<FurnitureModel> furnitureList = [];
   List<String> returnedCategory = [];
   Map<String, dynamic> lastDocMap = {};
+  Map<String, bool> moreFurnitureCategory = {};
+  String lastSearchbarName = "";
+  String lastCategorySearch = "";
+  bool moreFurnitureAvailable = true;
+  DocumentSnapshot? _lastDocumentSearch;
 
   getAllData() async {
     emit(LoadingAllData());
@@ -150,11 +155,15 @@ class AdminCubit extends Cubit<AdminStates> {
 
   getFurniture(String categoryName, {limit = 0}) async {
     emit(LoadingFurnitureState());
+    if (!moreFurnitureCategory.containsKey(categoryName)) {
+      moreFurnitureCategory[categoryName] = true;
+    }
     if (!returnedCategory.contains(categoryName)) {
       returnedCategory.add(categoryName);
     }
 
     int flag = 0;
+    int sizeFurnitureBefore = furnitureList.length;
 
     if (limit == 0) {
       await FirebaseFirestore.instance
@@ -176,6 +185,11 @@ class AdminCubit extends Cubit<AdminStates> {
           }
         }
       });
+      if (moreFurnitureCategory.containsKey(categoryName)) {
+        moreFurnitureCategory.update(categoryName, (value) => false);
+      } else {
+        moreFurnitureCategory[categoryName] = false;
+      }
     } else {
       if (lastDocMap.keys.contains(categoryName)) {
         await FirebaseFirestore.instance
@@ -189,26 +203,27 @@ class AdminCubit extends Cubit<AdminStates> {
             .then((snapshot) {
               print("3ndooooo");
               print(snapshot.docs.length);
+              if (snapshot.docs.length < limit) {
+                moreFurnitureCategory.update(categoryName, (value) => false);
+              }
               if (snapshot.docs.length > 0) {
-
                 lastDocMap[categoryName] = snapshot.docs.last;
                 print("object test" + lastDocMap[categoryName].toString());
-              }
-
-              snapshot.docs.forEach((snap) {
-                print("Snap" + lastDocMap[categoryName].get('furnitureId'));
-                FurnitureModel myFurniture =
-                    FurnitureModel.fromJson(snap.data());
-                flag = 0;
-                furnitureList.forEach((element) {
-                  if (element.furnitureId == myFurniture.furnitureId) {
-                    flag = 1;
+                snapshot.docs.forEach((snap) {
+                  print("Snap" + lastDocMap[categoryName].get('furnitureId'));
+                  FurnitureModel myFurniture =
+                  FurnitureModel.fromJson(snap.data());
+                  flag = 0;
+                  furnitureList.forEach((element) {
+                    if (element.furnitureId == myFurniture.furnitureId) {
+                      flag = 1;
+                    }
+                  });
+                  if (flag == 0) {
+                    furnitureList.add(myFurniture);
                   }
                 });
-                if (flag == 0) {
-                  furnitureList.add(myFurniture);
-                }
-              });
+              }
             })
             .catchError((error) => print("Error: " + error.toString()));
       } else {
@@ -217,37 +232,125 @@ class AdminCubit extends Cubit<AdminStates> {
             .collection('category')
             .doc(categoryName)
             .collection("furniture")
-            //.orderBy('furnitureId')
+            .orderBy('furnitureId')
             .limit(limit)
             .get()
             .then((snapshot) {
-          print("Test");
-          print(snapshot.docs.length);
+          if (snapshot.docs.length < limit) {
+            moreFurnitureCategory.update(categoryName, (value) => false);
+          }
           if (snapshot.docs.length > 0) {
             lastDocMap[categoryName] = snapshot.docs.last;
-          }
-          print("lastDocMap");
-          print(lastDocMap[categoryName]);
-
-          snapshot.docs.forEach((snap) {
-            print("Snap " + lastDocMap[categoryName].get('furnitureId'));
-            print(snap.data());
-            FurnitureModel myFurniture = FurnitureModel.fromJson(snap.data());
-            flag = 0;
-            furnitureList.forEach((element) {
-              if (element.furnitureId == myFurniture.furnitureId) {
-                flag = 1;
+            snapshot.docs.forEach((snap) {
+              FurnitureModel myFurniture = FurnitureModel.fromJson(snap.data());
+              flag = 0;
+              furnitureList.forEach((element) {
+                if (element.furnitureId == myFurniture.furnitureId) {
+                  flag = 1;
+                }
+              });
+              if (flag == 0) {
+                furnitureList.add(myFurniture);
               }
             });
-            if (flag == 0) {
-              furnitureList.add(myFurniture);
-            }
-          });
+          }
         }).catchError((error) => print("Error: " + error.toString()));
       }
     }
 
     emit(LoadedFurnitureState());
     print(furnitureList.length);
+    if (sizeFurnitureBefore == furnitureList.length) {
+      moreFurnitureCategory.update(categoryName, (value) => false);
+    }
   }
+
+  getSearchData(String categoryName,String searchbarName) async {
+    print("ANA GET SEARCH DATA   $searchbarName");
+    int sizeFurniture = furnitureList.length;
+    lastSearchbarName = searchbarName;
+    lastCategorySearch = categoryName;
+    moreFurnitureAvailable = true;
+    int flag = 0;
+    await FirebaseFirestore.instance
+        .collection('category')
+        .doc(categoryName)
+        .collection("furniture")
+        .where('name',
+        isGreaterThanOrEqualTo: searchbarName,
+        isLessThanOrEqualTo: '$searchbarName\uf8ff')
+        .orderBy('name')
+        .limit(6)
+        .get()
+        .then((snapshot) {
+      if(snapshot.docs.length < 6) {
+        moreFurnitureAvailable = false;
+      }
+      if (snapshot.docs.length != 0) {
+        _lastDocumentSearch = snapshot.docs.last;
+        snapshot.docs.forEach((snap) {
+          FurnitureModel myFurniture = FurnitureModel.fromJson(snap.data());
+          flag = 0;
+          furnitureList.forEach((element) {
+            if (element.furnitureId == myFurniture.furnitureId) {
+              flag = 1;
+            }
+          });
+          if (flag == 0) {
+            furnitureList.add(myFurniture);
+          }
+        });
+      }
+    }).catchError((error) => print("Error: " + error.toString()));
+    print("ANA 5LAST GET SEARCH DATA   $searchbarName");
+    if (sizeFurniture == furnitureList.length) {
+      moreFurnitureAvailable = false;
+    }
+  }
+
+  getMoreSearchData (String categoryName, String searchbarName) async {
+    print("ANA GET MORE DATAAAAAAA  $searchbarName");
+    print(moreFurnitureAvailable);
+    if (moreFurnitureAvailable == false) {
+      return;
+    }
+    int flag = 0;
+    int sizeFurniture = furnitureList.length;
+    await FirebaseFirestore.instance
+        .collection('category')
+        .doc(categoryName)
+        .collection("furniture")
+        .where('name',
+        isGreaterThanOrEqualTo: searchbarName,
+        isLessThanOrEqualTo: '$searchbarName\uf8ff')
+        .orderBy('name')
+        .startAfter([_lastDocumentSearch?.data()])
+        .limit(6)
+        .get()
+        .then((snapshot) {
+      if(snapshot.docs.length < 6) {
+        moreFurnitureAvailable = false;
+      }
+      if (snapshot.docs.length != 0) {
+        _lastDocumentSearch = snapshot.docs.last;
+        snapshot.docs.forEach((snap) {
+          FurnitureModel myFurniture = FurnitureModel.fromJson(snap.data());
+          flag = 0;
+          furnitureList.forEach((element) {
+            if (element.furnitureId == myFurniture.furnitureId) {
+              flag = 1;
+            }
+          });
+          if (flag == 0) {
+            furnitureList.add(myFurniture);
+          }
+        });
+      }
+    }).catchError((error) => print("Error: " + error.toString()));
+    print("ANA 5LAST GET MORE DATAAAAAAA  $searchbarName");
+    if (sizeFurniture == furnitureList.length) {
+      moreFurnitureAvailable = false;
+    }
+  }
+
 }
