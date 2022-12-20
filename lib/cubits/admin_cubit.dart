@@ -17,6 +17,8 @@ class AdminCubit extends Cubit<AdminStates> {
   List<FurnitureModel> furnitureList = [];
   List<String> returnedCategory = [];
   Map<String, dynamic> lastDocMap = {};
+  DocumentSnapshot? lastDocumentOrderId ;
+  bool moreOrdersAvailable = true;
 
   getAllData() async {
     emit(LoadingAllData());
@@ -134,16 +136,58 @@ class AdminCubit extends Cubit<AdminStates> {
     ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("$furnitureName added successfully")));
   }
-
-  getOrders() async {
+ //bool
+  getOrders({limit = 0}) async {
+    if (moreOrdersAvailable == false){
+      return;
+    }
     emit(LoadingOrderState());
-    await FirebaseFirestore.instance.collection("order").get().then((value) {
-      value.docs.forEach((element) {
-        orders.add(OrderModel.fromJson(element.data()));
+    //print("ttttttttttttttttttttttttttttttttttt");
+    print(limit);
+
+
+   // if (limit == 0 && moreOrdersAvailable != false)
+    if (limit == 0)
+      {
+      await FirebaseFirestore.instance.collection("order").limit(3).get().then((
+          snapshot) {
+        if (snapshot.docs.length < 3 ) {
+          moreOrdersAvailable = false;
+        }
+        snapshot.docs.forEach((element) {
+
+          orders.add(OrderModel.fromJson(element.data()));
+        });
+
+
+        lastDocumentOrderId = snapshot.docs.last;
+        print("hello");
       });
-      emit(LoadedOrderState());
-    });
+    }
+    else //if (limit !=0 && moreOrdersAvailable != false )
+    {      //print(lastDocumentOrderId);
+      await FirebaseFirestore.instance.collection("order").startAfterDocument(lastDocumentOrderId!).limit(limit).get().then((snapshot) {
+        print(snapshot);
+        if (snapshot.docs.length < limit){
+          moreOrdersAvailable = false;
+        }
+        if (snapshot.docs.length > 0) {
+          lastDocumentOrderId=snapshot.docs.last;
+          snapshot.docs.forEach((element) {
+            orders.add(OrderModel.fromJson(element.data()));
+
+          });
+        }
+       // lastDocumentOrderId=snapshot.docs.last;
+    });}
+
+    emit(LoadedOrderState());
+    // if (sizeOrder == orders.length) {
+    //   moreOrdersAvailable = false;
+    // }
   }
+
+
 
   getFurniture(String categoryName, {limit = 0}) async {
     emit(LoadingFurnitureState());

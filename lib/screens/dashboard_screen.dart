@@ -26,7 +26,7 @@ class _DashboardScreen extends State<DashboardScreen> {
         mobile: Scaffold(
           key: scaffoldKey,
           drawer: Container(
-              width: MediaQuery.of(context).size.width * 0.4,
+              width: MediaQuery.of(context).size.width * 0.6,
               color: secondaryColor,
               child: Column(
                 children: [
@@ -78,9 +78,11 @@ class _DashboardScreen extends State<DashboardScreen> {
                     ),
                   ),
                   ListTile(
-                    onTap: () {
+                    onTap: () async {
                       print("mmmmm");
-                      BlocProvider.of<AdminCubit>(context).getOrders();
+                      if (BlocProvider.of<AdminCubit>(context).orders.isEmpty) {
+                        await BlocProvider.of<AdminCubit>(context).getOrders();
+                      }
                       Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -98,9 +100,9 @@ class _DashboardScreen extends State<DashboardScreen> {
                     ),
                   ),
                   ListTile(
-                    onTap: () {
-                      print("mmmmm");
-                      BlocProvider.of<AdminCubit>(context).getOrders();
+                    onTap: () async {
+                      //  print("mmmmm");
+                      //  await BlocProvider.of<AdminCubit>(context).getOrders();
                       Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -133,9 +135,8 @@ class _DashboardScreen extends State<DashboardScreen> {
               children: [
                 Expanded(
                   flex: 2,
-                  child: Container(
-                    color: backgroundColor,
-                  ),
+                  child:
+                      Container(color: backgroundColor, child: widget.screen),
                 ),
               ],
             ),
@@ -218,15 +219,18 @@ class _DashboardScreen extends State<DashboardScreen> {
                             ),
                           ),
                           ListTile(
-                            onTap: () {
+                            onTap: () async {
                               print("mmmmm");
-                              BlocProvider.of<AdminCubit>(context).getOrders();
+                              if (BlocProvider.of<AdminCubit>(context)
+                                  .orders
+                                  .isEmpty) {
+                                await BlocProvider.of<AdminCubit>(context)
+                                    .getOrders();
+                              }
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => OrderScreen()));
-
-
                             },
                             horizontalTitleGap: 0.0,
                             leading: Icon(
@@ -240,15 +244,13 @@ class _DashboardScreen extends State<DashboardScreen> {
                             ),
                           ),
                           ListTile(
-                            onTap: () {
-                              print("mmmmm");
-                              BlocProvider.of<AdminCubit>(context).getOrders();
+                            onTap: () async {
+                              //  print("mmmmm");
+                              //  await BlocProvider.of<AdminCubit>(context).getOrders();
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => FurnitureScreen()));
-
-
                             },
                             horizontalTitleGap: 0.0,
                             leading: Icon(
@@ -258,7 +260,7 @@ class _DashboardScreen extends State<DashboardScreen> {
                             title: Text(
                               "Furniture",
                               style:
-                              TextStyle(color: Colors.black, fontSize: 15),
+                                  TextStyle(color: Colors.black, fontSize: 15),
                             ),
                           ),
                         ],
