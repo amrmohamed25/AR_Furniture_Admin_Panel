@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../cubits/admin_cubit.dart';
+import 'offers_screen.dart';
 
 
 List<FurnitureModel> filteredFurniture = [];
@@ -538,6 +539,7 @@ class FurnitureScreenState extends State<FurnitureScreen> {
                 child: const Icon(Icons.delete),
                 onTap: () {
                   //action code when clicked
+                  Navigator.push(context,MaterialPageRoute(builder: (context)=>EditFurnitureScreen(furniture)));
                   print("The icon delete is clicked");
                 },
               ),
@@ -548,7 +550,16 @@ class FurnitureScreenState extends State<FurnitureScreen> {
                   //action code when clicked
                   print("The icon add offer is clicked");
                 },
-              )
+              ),
+              const SizedBox(width: 10),
+              InkWell(
+                child: const Icon(Icons.percent),
+                onTap: () {
+                  //action code when clicked
+                  Navigator.push(context,MaterialPageRoute(builder: (context)=>OffersScreen(furniture)));
+                  print("The icon discount offer is clicked");
+                },
+              ),
             ],
           ),
         ),
