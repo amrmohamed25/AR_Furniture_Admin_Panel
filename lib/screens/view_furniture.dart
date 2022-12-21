@@ -40,7 +40,7 @@ class _ViewFurnitureScreenState extends State<ViewFurnitureScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print("Building");
+    print("Width " + MediaQuery.of(context).size.width.toString() + " / Height: " + (MediaQuery.of(context).size.height * 0.5).toString());
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -48,29 +48,48 @@ class _ViewFurnitureScreenState extends State<ViewFurnitureScreen> {
           child: Stack(
             children: [
           Positioned(
-          top:-150,
-          right: -150,
+          top: MediaQuery
+              .of(context)
+              .size
+              .width >= 850 ? -MediaQuery.of(context).size.width * 0.15: -MediaQuery
+              .of(context)
+              .size
+              .width * 0.33,
+          right: MediaQuery
+              .of(context)
+              .size
+              .width >= 850 ? -MediaQuery.of(context).size.width * 0.11: -MediaQuery
+              .of(context)
+              .size
+              .width * 0.26,
           child: CustomCircleAvatar(
-            radius: 200,
+            radius: MediaQuery.of(context).size.width >= 850 ? MediaQuery.of(context).size.width * 0.15 : MediaQuery.of(context).size.width * 0.25,
             CavatarColor: primaryColor,
           ),
           ),
-              Align(
-                alignment: Alignment.topRight,
+              Positioned(
+                top: 0,
+                right: 5.0,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
-                      height: 300,
-                      width: 300,
+                      height: MediaQuery
+                    .of(context)
+                    .size
+                    .width * 0.25,
+                      width: MediaQuery
+                          .of(context)
+                          .size
+                          .width * 0.25,
                       child: Image.network(
                         widget.selectedFurniture.shared[selectedColorIndex].image,
                         fit: BoxFit.contain,
                       ),
                     ),
                     Container(
-                      width: 160,
-                      height: 50,
+                      width: MediaQuery.of(context).size.width >= 850 ? MediaQuery.of(context).size.width * 0.1 : MediaQuery.of(context).size.width * 0.2,
+                      height: MediaQuery.of(context).size.width >= 850 ? MediaQuery.of(context).size.width * 0.03 : MediaQuery.of(context).size.width * 0.05,
                       child: ListView.builder(
                           shrinkWrap: true,
                           scrollDirection: Axis.horizontal,
@@ -84,29 +103,17 @@ class _ViewFurnitureScreenState extends State<ViewFurnitureScreen> {
                                 });
                               },
                               child: Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 4.0, right: 4.0),
+                                padding: MediaQuery.of(context).size.width >= 850 ? const EdgeInsets.only(
+                                    left: 5.0, right: 4.0) : const EdgeInsets.only(
+                                    left: 2.0, right: 1.0),
                                 child: CustomCircleAvatar(
-                                  radius: 20.0,
-                                  // MediaQuery
-                                  //     .of(context)
-                                  //     .size
-                                  //     .height > 700
-                                  //     ? 15.0
-                                  //     : 12.0,
+                                  radius: MediaQuery.of(context).size.width >= 850 ? MediaQuery.of(context).size.width * 0.014 : MediaQuery.of(context).size.width * 0.03,
                                   CavatarColor: widget.availableColors[index],
                                   icon: index == selectedColorIndex
                                       ? Icon(
                                     Icons.check,
                                     color: Colors.black,
-                                    size: 25.0,
-                                    // MediaQuery
-                                    //     .of(context)
-                                    //     .size
-                                    //     .height >
-                                    //     700
-                                    //     ? 22.0
-                                    //     : 18.0,
+                                    size: MediaQuery.of(context).size.width >= 850 ? MediaQuery.of(context).size.width * 0.017 : MediaQuery.of(context).size.width * 0.032,
                                   )
                                       : null,
                                 ),
@@ -114,25 +121,28 @@ class _ViewFurnitureScreenState extends State<ViewFurnitureScreen> {
                             );
                           }),
                     ),
-                    SizedBox(height: 40.0,),
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => DashboardScreen(EditFurnitureScreen(widget.selectedFurniture))));
-                      },
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12.0),
+                    SizedBox(height: 50.0,),
+                    Container(
+                      height: MediaQuery.of(context).size.width >= 850 ? MediaQuery.of(context).size.width * 0.04 : MediaQuery.of(context).size.width * 0.05,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => DashboardScreen(EditFurnitureScreen(widget.selectedFurniture))));
+                        },
+                        style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.0),
+                          ),
+                          backgroundColor: thirdColor,
                         ),
-                        backgroundColor: thirdColor,
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(Icons.edit),
-                          SizedBox(width: 10.0,),
-                          Text("Edit"),
-                        ],
-                      ),),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.edit, size: MediaQuery.of(context).size.width >= 850 ? MediaQuery.of(context).size.width * 0.018 : MediaQuery.of(context).size.width * 0.027,),
+                            SizedBox(width: 10.0,),
+                            Text("Edit", style: TextStyle(fontSize: MediaQuery.of(context).size.width >= 850 ? MediaQuery.of(context).size.width * 0.012 : MediaQuery.of(context).size.width * 0.02,),),
+                          ],
+                        ),),
+                    ),
                   ],
                 ),
               ),
@@ -144,7 +154,7 @@ class _ViewFurnitureScreenState extends State<ViewFurnitureScreen> {
                     Text(
                       widget.selectedFurniture.name,
                       style: TextStyle(
-                        fontSize: 30.0,
+                        fontSize: MediaQuery.of(context).size.width >= 850 ? MediaQuery.of(context).size.width * 0.028 : MediaQuery.of(context).size.width * 0.033,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -153,15 +163,12 @@ class _ViewFurnitureScreenState extends State<ViewFurnitureScreen> {
                       widget.selectedFurniture.description!,
                       style: TextStyle(
                         fontStyle: FontStyle.italic,
-                        fontSize: 25.0,
+                        fontSize: MediaQuery.of(context).size.width >= 850 ? MediaQuery.of(context).size.width * 0.023 : MediaQuery.of(context).size.width * 0.028,
                         color: Colors.black54,
                       ),
                     ),
                     SizedBox(
-                      height: 10.0,
-                    ),
-                    SizedBox(
-                      height: 10.0,
+                      height: 20.0,
                     ),
                     Column(
                       children: [
@@ -169,11 +176,6 @@ class _ViewFurnitureScreenState extends State<ViewFurnitureScreen> {
                           children: [
                             Expanded(
                                 child: ReusableCard(
-                                  onPress: () {
-                                    // setState(() {
-                                    //   selectedGender = Gender.male;
-                                    // });
-                                  },
                                   color: secondaryColor,
                                   cardChild: IconContent(
                                     icon: FontAwesomeIcons.dollarSign,
@@ -186,15 +188,10 @@ class _ViewFurnitureScreenState extends State<ViewFurnitureScreen> {
                                 )),
                             Expanded(
                                 child: ReusableCard(
-                                  onPress: () {
-                                    // setState(() {
-                                    //   selectedGender = Gender.male;
-                                    // });
-                                  },
                                   color: secondaryColor,
                                   cardChild: IconContent(
                                     icon: Icons.percent,
-                                    label: 'Offer',
+                                    label: 'Sale',
                                     value: double.parse(widget.selectedFurniture
                                         .shared[selectedColorIndex].discount)
                                         .toInt()
@@ -210,11 +207,6 @@ class _ViewFurnitureScreenState extends State<ViewFurnitureScreen> {
                           children: [
                             Expanded(
                                 child: ReusableCard(
-                                  onPress: () {
-                                    // setState(() {
-                                    //   selectedGender = Gender.male;
-                                    // });
-                                  },
                                   color: secondaryColor,
                                   cardChild: IconContent(
                                     icon: Icons.star,
@@ -227,11 +219,6 @@ class _ViewFurnitureScreenState extends State<ViewFurnitureScreen> {
                                 )),
                             Expanded(
                                 child: ReusableCard(
-                                  onPress: () {
-                                    // setState(() {
-                                    //   selectedGender = Gender.male;
-                                    // });
-                                  },
                                   color: secondaryColor,
                                   cardChild: IconContent(
                                     icon: FontAwesomeIcons.hashtag,
@@ -247,15 +234,15 @@ class _ViewFurnitureScreenState extends State<ViewFurnitureScreen> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 20.0,),
+                    SizedBox(height: MediaQuery.of(context).size.width >= 850 ? 35.0: 25.0,),
                     Text(
                       "Reviews",
                       style: TextStyle(
-                        fontSize: 25.0,
+                        fontSize: MediaQuery.of(context).size.width >= 850 ? MediaQuery.of(context).size.width * 0.02 : MediaQuery.of(context).size.width * 0.033,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: 10.0,),
+                    SizedBox(height: MediaQuery.of(context).size.width >= 850 ? 20.0 : 15.0,),
                     rows.length == 0 ? Padding(
                       padding: const EdgeInsets.all(20.0),
                       child: CircularProgressIndicator(color: thirdColor,),
@@ -265,12 +252,12 @@ class _ViewFurnitureScreenState extends State<ViewFurnitureScreen> {
                         Border.all(color: Colors.grey.shade400),
                         borderRadius: BorderRadius.circular(10.0),
                       ),
-                      columns: const <DataColumn>[
+                      columns: <DataColumn>[
                         DataColumn(
                           label: Expanded(
                             child: Text(
                               'Name',
-                              style: TextStyle(fontStyle: FontStyle.italic),
+                              style: TextStyle(fontStyle: FontStyle.italic, fontWeight: FontWeight.bold, fontSize: MediaQuery.of(context).size.width >= 850 ? MediaQuery.of(context).size.width * 0.012 : MediaQuery.of(context).size.width * 0.023),
                             ),
                           ),
                         ),
@@ -278,54 +265,12 @@ class _ViewFurnitureScreenState extends State<ViewFurnitureScreen> {
                           label: Expanded(
                             child: Text(
                               'Rating',
-                              style: TextStyle(fontStyle: FontStyle.italic),
+                              style: TextStyle(fontStyle: FontStyle.italic, fontWeight: FontWeight.bold, fontSize: MediaQuery.of(context).size.width >= 850 ? MediaQuery.of(context).size.width * 0.012 : MediaQuery.of(context).size.width * 0.023),
                             ),
                           ),
                         ),
                       ],
                       rows: rows,
-                      //   DataRow(
-                      //     cells: <DataCell>[
-                      //       DataCell(Text('Fady')),
-                      //       DataCell(
-                      //         RatingBar.builder(
-                      //           itemSize: 20.0,
-                      //           initialRating: widget.selectedFurniture.calculateAverageRating(),
-                      //           //minRating: 1,
-                      //           direction: Axis.horizontal,
-                      //           // allowHalfRating: true,
-                      //           ignoreGestures: true,
-                      //           itemCount: 5,
-                      //           itemPadding: const EdgeInsets.symmetric(
-                      //               horizontal: 1.0),
-                      //           itemBuilder: (context, _) =>
-                      //           const Icon(
-                      //             Icons.star,
-                      //             color: Colors.amber,
-                      //           ),
-                      //           onRatingUpdate: (rating) {
-                      //             //   print("Rating: " + rating.toString());
-                      //             //   setState(() {
-                      //             //     starsRating = rating;
-                      //             //   });
-                      //           },
-                      //         ),
-                      //       ),
-                      //     ],
-                      //   ),
-                      //   DataRow(
-                      //     cells: <DataCell>[
-                      //       DataCell(Text('Janine')),
-                      //       DataCell(Text('43')),
-                      //     ],
-                      //   ),
-                      //   DataRow(
-                      //     cells: <DataCell>[
-                      //       DataCell(Text('William')),
-                      //       DataCell(Text('27')),
-                      //     ],
-                      //   ),
-                      // ],
                     ),
                   ],
                 ),
@@ -348,10 +293,10 @@ class _ViewFurnitureScreenState extends State<ViewFurnitureScreen> {
         rows.add(
           DataRow(
             cells: <DataCell>[
-              DataCell(Text(userName)),
+              DataCell(Text(userName, style: TextStyle(fontSize: MediaQuery.of(context).size.width >= 850 ? MediaQuery.of(context).size.width * 0.012 : MediaQuery.of(context).size.width * 0.023),)),
               DataCell(
                 RatingBar.builder(
-                  itemSize: 20.0,
+                  itemSize: MediaQuery.of(context).size.width >= 850 ? 20.0: 10.0,
                   initialRating: entry.value,
                   //minRating: 1,
                   direction: Axis.horizontal,
@@ -382,22 +327,18 @@ class ReusableCard extends StatelessWidget {
 
   final Color color; // const can't be used at run time so, we use final
   final Widget? cardChild;
-  final VoidCallback? onPress;
 
-  ReusableCard({required this.color, this.cardChild, this.onPress});
+  ReusableCard({required this.color, this.cardChild});
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onPress,
-      child: Container(
-        margin: EdgeInsets.only(right: 15.0, top: 15.0, bottom: 15.0),
-        decoration: BoxDecoration(
-          color: color,
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        child: cardChild,
+    return Container(
+      margin: EdgeInsets.only(right: 15.0, top: 15.0, bottom: 15.0),
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(10.0),
       ),
+      child: cardChild,
     );
   }
 }
@@ -419,10 +360,10 @@ class IconContent extends StatelessWidget {
         children: [
           Icon(
             icon,
-            size: 80.0,
+            size: MediaQuery.of(context).size.width * 0.05,
           ),
           SizedBox(
-            width: 15.0,
+            width: MediaQuery.of(context).size.width >= 850 ? 20.0 : 10.0,
           ),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -430,30 +371,32 @@ class IconContent extends StatelessWidget {
               Text(
                 label!,
                 style: TextStyle(
-                  color: primaryColor,
-                  fontSize: 18.0,
+                  overflow: TextOverflow.ellipsis,
+                  color: Colors.black,
+                  fontSize: MediaQuery.of(context).size.width >= 850 ? MediaQuery.of(context).size.width * 0.013 : MediaQuery.of(context).size.width * 0.019,
                 ),
               ),
               SizedBox(
-                height: 15.0,
+                height: MediaQuery.of(context).size.width >= 850 ? 15.0 : 8.0,
               ),
               Row(
                 children: [
                   label != "Price" ?
                   Text(
-                    label == "Offer" ? value! + " %" : label == "Average Rating"
+                    label == "Sale" ? value! + " %" : label == "Average Rating"
                         ? value! + ".0"
                         : value!,
                     style: TextStyle(
                       color: primaryColor,
-                      fontSize: 18.0,
+                        fontSize: MediaQuery.of(context).size.width >= 850 ? MediaQuery.of(context).size.width * 0.018 : MediaQuery.of(context).size.width * 0.03,
+                        fontWeight: FontWeight.bold,
                     ),
                   ) : discount != "0.0" ? Text(
                     value! + " L.E",
                     style: TextStyle(
                       decoration: TextDecoration.lineThrough,
-                      color: primaryColor,
-                      fontSize: 18.0,
+                      color: Colors.red,
+                      fontSize: MediaQuery.of(context).size.width >= 850 ? MediaQuery.of(context).size.width * 0.018 : 10.0,
                     ),
                   ) : Text(""),
                   SizedBox(width: 10.0,),
@@ -463,7 +406,8 @@ class IconContent extends StatelessWidget {
                         .toString() + " L.E",
                     style: TextStyle(
                       color: primaryColor,
-                      fontSize: 18.0,
+                      fontSize: MediaQuery.of(context).size.width >= 850 ? MediaQuery.of(context).size.width * 0.018 : 10.0,
+                      fontWeight: FontWeight.bold,
                     ),
                   ) : Text("")) : Text(""),
                 ],
