@@ -213,7 +213,7 @@ class AdminCubit extends Cubit<AdminStates> {
                 snapshot.docs.forEach((snap) {
                   print("Snap" + lastDocMap[categoryName].get('furnitureId'));
                   FurnitureModel myFurniture =
-                  FurnitureModel.fromJson(snap.data());
+                      FurnitureModel.fromJson(snap.data());
                   flag = 0;
                   furnitureList.forEach((element) {
                     if (element.furnitureId == myFurniture.furnitureId) {
@@ -266,7 +266,7 @@ class AdminCubit extends Cubit<AdminStates> {
     }
   }
 
-  getSearchData(String categoryName,String searchbarName) async {
+  getSearchData(String categoryName, String searchbarName) async {
     print("ANA GET SEARCH DATA   $searchbarName");
     int sizeFurniture = furnitureList.length;
     lastSearchbarName = searchbarName;
@@ -278,13 +278,13 @@ class AdminCubit extends Cubit<AdminStates> {
         .doc(categoryName)
         .collection("furniture")
         .where('name',
-        isGreaterThanOrEqualTo: searchbarName,
-        isLessThanOrEqualTo: '$searchbarName\uf8ff')
+            isGreaterThanOrEqualTo: searchbarName,
+            isLessThanOrEqualTo: '$searchbarName\uf8ff')
         .orderBy('name')
         .limit(6)
         .get()
         .then((snapshot) {
-      if(snapshot.docs.length < 6) {
+      if (snapshot.docs.length < 6) {
         moreFurnitureAvailable = false;
       }
       if (snapshot.docs.length != 0) {
@@ -309,7 +309,7 @@ class AdminCubit extends Cubit<AdminStates> {
     }
   }
 
-  getMoreSearchData (String categoryName, String searchbarName) async {
+  getMoreSearchData(String categoryName, String searchbarName) async {
     print("ANA GET MORE DATAAAAAAA  $searchbarName");
     print(moreFurnitureAvailable);
     if (moreFurnitureAvailable == false) {
@@ -322,40 +322,45 @@ class AdminCubit extends Cubit<AdminStates> {
         .doc(categoryName)
         .collection("furniture")
         .where('name',
-        isGreaterThanOrEqualTo: searchbarName,
-        isLessThanOrEqualTo: '$searchbarName\uf8ff')
+            isGreaterThanOrEqualTo: searchbarName,
+            isLessThanOrEqualTo: '$searchbarName\uf8ff')
         .orderBy('name')
         .startAfter([_lastDocumentSearch?.data()])
         .limit(6)
         .get()
         .then((snapshot) {
-      if(snapshot.docs.length < 6) {
-        moreFurnitureAvailable = false;
-      }
-      if (snapshot.docs.length != 0) {
-        _lastDocumentSearch = snapshot.docs.last;
-        snapshot.docs.forEach((snap) {
-          FurnitureModel myFurniture = FurnitureModel.fromJson(snap.data());
-          flag = 0;
-          furnitureList.forEach((element) {
-            if (element.furnitureId == myFurniture.furnitureId) {
-              flag = 1;
-            }
-          });
-          if (flag == 0) {
-            furnitureList.add(myFurniture);
+          if (snapshot.docs.length < 6) {
+            moreFurnitureAvailable = false;
           }
-        });
-      }
-    }).catchError((error) => print("Error: " + error.toString()));
+          if (snapshot.docs.length != 0) {
+            _lastDocumentSearch = snapshot.docs.last;
+            snapshot.docs.forEach((snap) {
+              FurnitureModel myFurniture = FurnitureModel.fromJson(snap.data());
+              flag = 0;
+              furnitureList.forEach((element) {
+                if (element.furnitureId == myFurniture.furnitureId) {
+                  flag = 1;
+                }
+              });
+              if (flag == 0) {
+                furnitureList.add(myFurniture);
+              }
+            });
+          }
+        })
+        .catchError((error) => print("Error: " + error.toString()));
     print("ANA 5LAST GET MORE DATAAAAAAA  $searchbarName");
     if (sizeFurniture == furnitureList.length) {
       moreFurnitureAvailable = false;
     }
   }
 
-
-  updateFurniture(BuildContext context, {required FurnitureModel oldFurniture,required String furnitureName, required FileOrURL model, required String furnitureDescription, required List<SharedProperties> myShared}) async{
+  updateFurniture(BuildContext context,
+      {required FurnitureModel oldFurniture,
+      required String furnitureName,
+      required FileOrURL model,
+      required String furnitureDescription,
+      required List<SharedProperties> myShared}) async {
     emit(UpdatingFurnitureInProgressState());
     bool doesExistInFirestore = false;
     await FirebaseFirestore.instance
@@ -374,19 +379,20 @@ class AdminCubit extends Cubit<AdminStates> {
       return;
     }
     // String modelLink="";
-print("yarb");
+    print("yarb");
     print(oldFurniture.model.startsWith("https://firebasestorage"));
 
-      //TODO :COMMENT kol l t7t w agrb da bs
-      if(oldFurniture.model.startsWith("https://firebasestorage")){
-        print("hleh");
-        try{
-          await FirebaseStorage.instance.refFromURL(oldFurniture.model).delete();
-        }catch(e){}
-      }
+    //TODO :COMMENT kol l t7t w agrb da bs
+    if (oldFurniture.model.startsWith("https://firebasestorage")) {
+      print("hleh");
+      try {
+        await FirebaseStorage.instance.refFromURL(oldFurniture.model).delete();
+      } catch (e) {}
+    }
     if (model.file != null) {
-      await FirebaseStorage.instance.ref(
-          'furniture/${oldFurniture.category}/${oldFurniture.furnitureId}_${model.urlController.text}')
+      await FirebaseStorage.instance
+          .ref(
+              'furniture/${oldFurniture.category}/${oldFurniture.furnitureId}_${model.urlController.text}')
           .putData(model.file!)
           .then((p0) async {
         String url = await p0.ref.getDownloadURL();
@@ -397,25 +403,38 @@ print("yarb");
     List<SharedModel> shared = [];
     for (int i = 0; i < myShared.length; i++) {
       print(myShared[i].image.urlController.text);
-      if(myShared[i].image.file!=null){ //Will upload to server
-        if(i<oldFurniture.shared.length){ //checking if shared exist
-          if(oldFurniture.shared[i].image.startsWith("https://firebasestorage")){ //if shared is stored in firebase
-            await FirebaseStorage.instance.refFromURL(oldFurniture.shared[i].image).delete();
+      if (myShared[i].image.file != null) {
+        //Will upload to server
+        if (i < oldFurniture.shared.length) {
+          //checking if shared exist
+          if (oldFurniture.shared[i].image
+              .startsWith("https://firebasestorage")) {
+            //if shared is stored in firebase
+            await FirebaseStorage.instance
+                .refFromURL(oldFurniture.shared[i].image)
+                .delete();
           }
         }
-        await FirebaseStorage.instance.ref(
-            'furniture/${oldFurniture.category}/${oldFurniture.furnitureId}_${myShared[i].image.urlController.text}')
+        await FirebaseStorage.instance
+            .ref(
+                'furniture/${oldFurniture.category}/${oldFurniture.furnitureId}_${myShared[i].image.urlController.text}')
             .putData(myShared[i].image.file!)
             .then((p0) async {
           String url = await p0.ref.getDownloadURL();
           myShared[i].image.urlController.text = url;
           print(url);
         });
-
-      }else{
-        if(i<oldFurniture.shared.length){ //checking if shared exist
-          if(oldFurniture.shared[i].image.startsWith("https://firebasestorage") && oldFurniture.shared[i].image!=myShared[i].image.urlController.text){ //if shared is stored in firebase
-            await FirebaseStorage.instance.refFromURL(oldFurniture.shared[i].image).delete();
+      } else {
+        if (i < oldFurniture.shared.length) {
+          //checking if shared exist
+          if (oldFurniture.shared[i].image
+                  .startsWith("https://firebasestorage") &&
+              oldFurniture.shared[i].image !=
+                  myShared[i].image.urlController.text) {
+            //if shared is stored in firebase
+            await FirebaseStorage.instance
+                .refFromURL(oldFurniture.shared[i].image)
+                .delete();
           }
         }
       }
@@ -427,10 +446,10 @@ print("yarb");
           quantity: myShared[i].quantity.text,
           discount: myShared[i].discount.text));
     }
-    oldFurniture.name=furnitureName;
-    oldFurniture.description=furnitureDescription;
-    oldFurniture.model=model.urlController.text;
-    oldFurniture.shared=shared;
+    oldFurniture.name = furnitureName;
+    oldFurniture.description = furnitureDescription;
+    oldFurniture.model = model.urlController.text;
+    oldFurniture.shared = shared;
     // FurnitureModel furnitureModel = FurnitureModel(
     //     description: furnitureDescription,
     //     furnitureId: doc,
@@ -453,7 +472,6 @@ print("yarb");
         SnackBar(content: Text("$furnitureName updated successfully")));
   }
 
-
   Color? getColorFromHex(String hexColor) {
     hexColor = hexColor.replaceAll("#", "");
     if (hexColor.length == 6) {
@@ -473,4 +491,28 @@ print("yarb");
     return availableColors;
   }
 
+  deleteFurniture(FurnitureModel deletedFurniture) async {
+    emit(deletingFurnitureState());
+    if (deletedFurniture.model.startsWith("https://firebasestorage")) {
+      try {
+        await FirebaseStorage.instance
+            .refFromURL(deletedFurniture.model)
+            .delete();
+      } catch (e) {}
+    }
+    for (int i = 0; i < deletedFurniture.shared.length; i++) {
+      if (deletedFurniture.shared[i].image
+          .startsWith("https://firebasestorage")) {
+        try {
+          await FirebaseStorage.instance
+              .refFromURL(deletedFurniture.shared[i].image)
+              .delete();
+        } catch (e) {}
+      }
+    }
+    await FirebaseFirestore.instance.collection("category").doc(deletedFurniture.category).collection("furniture").doc(deletedFurniture.furnitureId).delete() .then((_) {
+      print("deleted!");
+      emit(deletedFurnitureSucessfullyState());
+    });
+  }
 }
