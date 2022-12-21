@@ -77,9 +77,7 @@ class FurnitureScreenState extends State<FurnitureScreen> {
           return state is LoadingAllData
           ?  Center(
             child: CircularProgressIndicator(),
-          ):  LayoutBuilder(
-              builder: (context, constraints){
-                return DashboardScreen(
+          ):  DashboardScreen(
                   Align(
                     alignment: Alignment.topCenter,
                     child: SingleChildScrollView(
@@ -202,7 +200,7 @@ class FurnitureScreenState extends State<FurnitureScreen> {
                                   children: [
                                     Padding(
                                       padding: const EdgeInsets.all(8.0),
-                                      child: (constraints.maxWidth > 800)?
+                                      child: (MediaQuery.of(context).size.width > 800)?
                                       Row(
                                         mainAxisSize: MainAxisSize.max,
                                         children: [
@@ -258,9 +256,9 @@ class FurnitureScreenState extends State<FurnitureScreen> {
                                                   contentPadding: const EdgeInsets.only(
                                                       left: 14.0, bottom: 5.0, top: 5.0),
                                                 ),
-                                                onChanged: (value) async {
+                                                onChanged: (value) {
                                                   // filter search item by name
-                                                  await searchItem(value);
+                                                  searchItem(value);
                                                 },
                                               ),
                                             ),
@@ -343,9 +341,9 @@ class FurnitureScreenState extends State<FurnitureScreen> {
                                                       contentPadding: const EdgeInsets.only(
                                                           left: 14.0, bottom: 5.0, top: 5.0),
                                                     ),
-                                                    onChanged: (value) async {
+                                                    onChanged: (value) {
                                                       // filter search item by name
-                                                      await searchItem(value);
+                                                      searchItem(value);
                                                     },
                                                   ),
                                                 ),
@@ -479,8 +477,6 @@ class FurnitureScreenState extends State<FurnitureScreen> {
                     ),
                   ),
                 );
-              },
-          );
         });
   }
 
@@ -556,26 +552,16 @@ class FurnitureScreenState extends State<FurnitureScreen> {
     );
   }
 
-  Future<void> searchItem (String query) async {
+  void searchItem (String query) {
     if (query != ''){
       final input = query.toLowerCase();
       List<FurnitureModel> suggestions = filteredFurniture.where((fur) {
         final searchTitle = fur.name.toLowerCase();
         return searchTitle.contains(input);
       }).toList();
-      if (suggestions.length < 4){
-        //suggestions = await addMoreData(suggestions,input);
-      }
       setState(() {
         searchR = [...suggestions];
       });
-      print("dataaaaaaaaaaaaaaaaaaaaaa");
-
-      searchR.forEach((element) {
-        print(element.name);
-      });
-
-      print("end dataaaaaaaaaaaa");
     } else{
       setState(() {
         searchR = [...filteredFurniture];
@@ -584,26 +570,38 @@ class FurnitureScreenState extends State<FurnitureScreen> {
   }
 
   getMoreFurniture() async {
-    int furnitureCount = filteredFurniture.length;
-    await BlocProvider.of<AdminCubit>(context).getFurniture(FurnitureScreen.selectedCategoryName, limit: 5);
-    filteredFurniture = BlocProvider.of<AdminCubit>(context)
-        .furnitureList
-        .where((element) =>
-    element.category == FurnitureScreen.selectedCategoryName)
-        .toList();
-    if (FurnitureScreen.selectedCategoryIndex == 0) {
-      FurnitureScreen.selectedCategoryName =
-      BlocProvider.of<AdminCubit>(context)
-          .categories[FurnitureScreen.selectedCategoryIndex]["name"];
-    };
-    if (furnitureCount != filteredFurniture.length && _searchController.text.toLowerCase() != '') {
-      print("ana da5el search itemmmmmmmmmm");
-      searchItem(_searchController.text.toLowerCase());
-      print("ana 5last search itemmmmmmmm");
-    }else if (furnitureCount != filteredFurniture.length || _searchController.text.toLowerCase() == '') {
+    if (_searchController.text.toLowerCase() == '' && BlocProvider.of<AdminCubit>(context).moreFurnitureCategory[FurnitureScreen.selectedCategoryName] == true) {
+      await BlocProvider.of<AdminCubit>(context).getFurniture(FurnitureScreen.selectedCategoryName, limit: 5);
+
+      filteredFurniture = BlocProvider.of<AdminCubit>(context)
+          .furnitureList
+          .where((element) =>
+      element.category == FurnitureScreen.selectedCategoryName)
+          .toList();
+
       setState(() {
         searchR = [...filteredFurniture];
       });
+
+    } else if (_searchController.text.toLowerCase() != '' && BlocProvider.of<AdminCubit>(context).moreFurnitureCategory[FurnitureScreen.selectedCategoryName] == true) {
+      int sizeFurniture = filteredFurniture.length;
+
+      if (BlocProvider.of<AdminCubit>(context).lastSearchbarName == _searchController.text.toLowerCase() && BlocProvider.of<AdminCubit>(context).lastCategorySearch == FurnitureScreen.selectedCategoryName && BlocProvider.of<AdminCubit>(context).moreFurnitureAvailable == true) {
+        await BlocProvider.of<AdminCubit>(context).getMoreSearchData(FurnitureScreen.selectedCategoryName, _searchController.text.toLowerCase());
+      }else if (BlocProvider.of<AdminCubit>(context).lastSearchbarName != _searchController.text.toLowerCase()){
+        await BlocProvider.of<AdminCubit>(context).getSearchData(FurnitureScreen.selectedCategoryName, _searchController.text.toLowerCase());
+      }
+
+      filteredFurniture = BlocProvider.of<AdminCubit>(context)
+          .furnitureList
+          .where((element) =>
+      element.category == FurnitureScreen.selectedCategoryName)
+          .toList();
+
+      if (sizeFurniture != filteredFurniture.length) {
+        searchItem(_searchController.text.toLowerCase());
+      }
+
     }
   }
 }
