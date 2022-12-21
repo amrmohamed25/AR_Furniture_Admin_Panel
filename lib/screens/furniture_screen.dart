@@ -64,7 +64,7 @@ class FurnitureScreenState extends State<FurnitureScreen> {
   }
   @override
   Widget build(BuildContext) {
-    print("Building out");
+    // print("Building out");
     // if (FurnitureScreen.selectedCategoryIndex == -1) {
     //   FurnitureScreen.selectedCategoryName =
     //   BlocProvider.of<AdminCubit>(context)
@@ -78,7 +78,7 @@ class FurnitureScreenState extends State<FurnitureScreen> {
 
         },
         builder: (context, state) {
-          print("Building in");
+          // print("Building in");
 
           if(searchR.isEmpty || _searchController.text.toLowerCase() == '') {
             filteredFurniture = BlocProvider.of<AdminCubit>(context)
@@ -280,7 +280,32 @@ class FurnitureScreenState extends State<FurnitureScreen> {
                                                       borderRadius: BorderRadius.circular(20),
 
                                                       child: IconButton(splashRadius: 20,onPressed: (){
-                                                        // print("sad");
+                                                        showDialog(
+                                                            context: context,
+                                                            builder: (context) {
+                                                              return StatefulBuilder(
+                                                                  builder: (context, setState) {
+
+                                                                    return  AlertDialog(
+                                                                      title: Text("Warning Deleting Category",style: TextStyle(color: Colors.red),),
+                                                                      content:SizedBox(
+                                                                        width: MediaQuery.of(context).size.width/2,
+                                                                        child: Text("Are you sure do you want to delete this category?"),
+                                                                      ),
+                                                                      actions: [
+                                                                        TextButton(onPressed: ()async{
+                                                                          await BlocProvider.of<AdminCubit>(context).deleteCategory(context,index);
+                                                                          Navigator.of(context).pop();
+                                                                        }, child:Text("Delete")),
+                                                                        TextButton(onPressed: (){
+                                                                          Navigator.of(context).pop();
+                                                                        }, child:Text("Cancel"))
+
+                                                                      ],
+                                                                    );
+                                                                  }
+                                                              );
+                                                            });
                                                       },icon:Icon(Icons.delete)),
                                                     ),
                                                   ],
