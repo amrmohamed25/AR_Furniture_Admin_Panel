@@ -28,12 +28,12 @@ class AdminCubit extends Cubit<AdminStates> {
     emit(LoadingAllData());
     await getCategories();
 
-    // for (int i = 0; i < categories.length; i++) {
-    //   print("testtttttttttttttt");
-    //   print(categories[i]["name"]);
-    //
-    //   await getFurniture(categories[i]["name"], limit: 6);
-    // }
+    for (int i = 0; i < categories.length; i++) {
+      print("testtttttttttttttt");
+      print(categories[i]["name"]);
+
+      await getFurniture(categories[i]["name"], limit: 6);
+    }
 
     ///////// await getOrders();
     emit(LoadedAllData());
