@@ -21,3 +21,9 @@ class UploadingFurnitureInProgressState extends AdminStates{}
 class UploadingFurnitureSuccessState extends AdminStates{}
 
 class UploadingFurnitureErrorState extends AdminStates{}
+
+class UpdatingFurnitureInProgressState extends AdminStates{}
+
+class UpdatedFurnitureSuccessState extends AdminStates{}
+
+class UpdatedFurnitureErrorState extends AdminStates{}
