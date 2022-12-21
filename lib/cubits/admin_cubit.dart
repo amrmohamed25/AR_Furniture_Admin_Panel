@@ -353,7 +353,6 @@ class AdminCubit extends Cubit<AdminStates> {
     }
   }
 
-  }
 
   updateFurniture(BuildContext context, {required FurnitureModel oldFurniture,required String furnitureName, required FileOrURL model, required String furnitureDescription, required List<SharedProperties> myShared}) async{
     emit(UpdatingFurnitureInProgressState());
