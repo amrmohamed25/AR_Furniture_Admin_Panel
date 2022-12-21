@@ -17,6 +17,7 @@ class AdminCubit extends Cubit<AdminStates> {
   List<FurnitureModel> furnitureList = [];
   List<String> returnedCategory = [];
   Map<String, dynamic> lastDocMap = {};
+  List<Color?> availableColors = [];
 
   getAllData() async {
     emit(LoadingAllData());
@@ -247,4 +248,25 @@ class AdminCubit extends Cubit<AdminStates> {
     emit(LoadedFurnitureState());
     print(furnitureList.length);
   }
+
+
+  Color? getColorFromHex(String hexColor) {
+    hexColor = hexColor.replaceAll("#", "");
+    if (hexColor.length == 6) {
+      hexColor = "FF" + hexColor;
+    }
+    if (hexColor.length == 8) {
+      return Color(int.parse("0x$hexColor"));
+    }
+    return null;
+  }
+
+  List<Color?> getAvailableColorsOfFurniture(FurnitureModel selectedFurniture) {
+    availableColors.clear();
+    for (int i = 0; i < selectedFurniture.shared.length; i++) {
+      availableColors.add(getColorFromHex(selectedFurniture.shared[i].color));
+    }
+    return availableColors;
+  }
+
 }

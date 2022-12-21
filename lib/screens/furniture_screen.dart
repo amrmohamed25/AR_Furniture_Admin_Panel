@@ -4,6 +4,7 @@ import 'package:ar_furniture_admin_panel/models/furniture_model.dart';
 import 'package:ar_furniture_admin_panel/responsive.dart';
 import 'package:ar_furniture_admin_panel/screens/add_furniture_screen.dart';
 import 'package:ar_furniture_admin_panel/screens/dashboard_screen.dart';
+import 'package:ar_furniture_admin_panel/screens/view_furniture.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -349,7 +350,7 @@ class FurnitureScreenState extends State<FurnitureScreen> {
               InkWell(
                 child: const Icon(Icons.remove_red_eye),
                 onTap: () {
-                  //action code when clicked
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => DashboardScreen(ViewFurnitureScreen(selectedFurniture: furniture, availableColors: BlocProvider.of<AdminCubit>(context).getAvailableColorsOfFurniture(furniture)))));
                   print("The icon view is clicked");
                 },
               ),

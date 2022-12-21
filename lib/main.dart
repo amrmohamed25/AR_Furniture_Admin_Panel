@@ -1,6 +1,7 @@
 
 import 'package:ar_furniture_admin_panel/screens/dashboard_screen.dart';
 import 'package:ar_furniture_admin_panel/screens/order_screen.dart';
+import 'package:ar_furniture_admin_panel/screens/view_furniture.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
