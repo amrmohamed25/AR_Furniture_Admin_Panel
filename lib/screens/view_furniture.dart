@@ -1,4 +1,6 @@
 import 'package:ar_furniture_admin_panel/constants.dart';
+import 'package:ar_furniture_admin_panel/screens/dashboard_screen.dart';
+import 'package:ar_furniture_admin_panel/screens/edit_furniture_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -114,7 +116,9 @@ class _ViewFurnitureScreenState extends State<ViewFurnitureScreen> {
                     ),
                     SizedBox(height: 40.0,),
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => DashboardScreen(EditFurnitureScreen(widget.selectedFurniture))));
+                      },
                       style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12.0),
