@@ -26,12 +26,12 @@ class AdminCubit extends Cubit<AdminStates> {
   getAllData() async {
     emit(LoadingAllData());
     await getCategories();
-    for (int i = 0; i < categories.length; i++) {
-      print("testtttttttttttttt");
-      print(categories[i]["name"]);
-
-      await getFurniture(categories[i]["name"], limit: 6);
-    }
+    // for (int i = 0; i < categories.length; i++) {
+    //   print("testtttttttttttttt");
+    //   print(categories[i]["name"]);
+    //
+    //   await getFurniture(categories[i]["name"], limit: 6);
+    // }
     // await getOrders();
     emit(LoadedAllData());
   }
@@ -450,5 +450,33 @@ print("yarb");
     emit(UpdatedFurnitureSuccessState());
     ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("$furnitureName updated successfully")));
+  }
+
+  updateCategory(context,{required int index,required FileOrURL image})async{
+    emit(UpdatingCategoryInProgressState());
+    if(categories[index]["image"].startsWith("https://firebasestorage")){
+      print("hdelete aho");
+      try{
+        await FirebaseStorage.instance.refFromURL(categories[index]["image"]).delete();
+      }catch(e){}
+    }
+    if(image.file!=null){
+      await FirebaseStorage.instance.ref(
+          'category_icons/${image.urlController.text}')
+          .putData(image.file!)
+          .then((p0) async {
+        String url = await p0.ref.getDownloadURL();
+        image.urlController.text = url;
+        print(url);
+      });
+    }
+    categories[index]["image"]=image.urlController.text;
+
+    await FirebaseFirestore.instance.collection("names").get().then((value){
+      FirebaseFirestore.instance.collection("names").doc(value.docs.first.id).set({"names":categories});
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("${categories[index]["name"]} updated successfully")));
+    emit(UpdatedCategorySuccessState());
   }
 }
