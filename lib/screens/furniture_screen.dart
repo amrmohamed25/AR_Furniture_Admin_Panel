@@ -280,7 +280,7 @@ class FurnitureScreenState extends State<FurnitureScreen> {
                                                       borderRadius: BorderRadius.circular(20),
 
                                                       child: IconButton(splashRadius: 20,onPressed: (){
-                                                        print("sad");
+                                                        // print("sad");
                                                       },icon:Icon(Icons.delete)),
                                                     ),
                                                   ],
@@ -594,12 +594,12 @@ class FurnitureScreenState extends State<FurnitureScreen> {
     String quantities = "";
     for (int i = 0; i < furniture.shared.length - 1; i++) {
       availableColors = availableColors + furniture.shared[i].colorName + ",";
-      print("in for" +availableColors);
+      // print("in for" +availableColors);
     }
 
     availableColors = availableColors +
         furniture.shared[furniture.shared.length - 1].colorName;
-    print("after for" +availableColors);
+    // print("after for" +availableColors);
     for (int i = 0; i < furniture.shared.length - 1; i++) {
 
       prices = prices +"EGP" + furniture.shared[i].price + ",";

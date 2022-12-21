@@ -32,7 +32,11 @@ class AdminCubit extends Cubit<AdminStates> {
     //
     //   await getFurniture(categories[i]["name"], limit: 6);
     // }
-    // await getOrders();
+
+
+
+
+    ///////// await getOrders();
     emit(LoadedAllData());
   }
 
@@ -396,6 +400,7 @@ print("yarb");
     List<SharedModel> shared = [];
     for (int i = 0; i < myShared.length; i++) {
       print(myShared[i].image.urlController.text);
+      print(myShared[i].quantity.text);
       if(myShared[i].image.file!=null){ //Will upload to server
         if(i<oldFurniture.shared.length){ //checking if shared exist
           if(oldFurniture.shared[i].image.startsWith("https://firebasestorage")){ //if shared is stored in firebase
@@ -426,30 +431,67 @@ print("yarb");
           quantity: myShared[i].quantity.text,
           discount: myShared[i].discount.text));
     }
-    oldFurniture.name=furnitureName;
-    oldFurniture.description=furnitureDescription;
-    oldFurniture.model=model.urlController.text;
-    oldFurniture.shared=shared;
-    // FurnitureModel furnitureModel = FurnitureModel(
-    //     description: furnitureDescription,
-    //     furnitureId: doc,
-    //     name: furnitureName,
-    //     model: model.urlController.text,
-    //     category: furnitureCategory,
-    //     shared: shared,
-    //     ratings: {});
+
+    FurnitureModel tempFurniture=copyFurniture(oldFurniture);
+    tempFurniture.name=furnitureName;
+    tempFurniture.description=furnitureDescription;
+    tempFurniture.model=model.urlController.text;
+    print("ya rb");
+    print(tempFurniture.shared.first.quantity);
+    tempFurniture.shared=shared;
+    print(tempFurniture.shared.first.quantity);
+
     // print(furnitureModel.shared.first.image);
     await FirebaseFirestore.instance
         .collection("category")
-        .doc(oldFurniture.category)
+        .doc(tempFurniture.category)
         .collection("furniture")
-        .doc(oldFurniture.furnitureId)
-        .set(oldFurniture.toMap());
+        .doc(tempFurniture.furnitureId)
+        .set(tempFurniture.toMap()).then((value) {
+      assignByReference(tempFurniture,oldFurniture);
+      oldFurniture.shared=shared;
+      emit(UpdatedFurnitureSuccessState());
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("$furnitureName updated successfully")));
+    }).catchError((error){
+      print("error");
+      emit(UpdatedFurnitureErrorState());
+    });
     // print("Done");
     // furnitureList.add(furnitureModel);
-    emit(UpdatedFurnitureSuccessState());
-    ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("$furnitureName updated successfully")));
+
+  }
+
+  assignByReference(FurnitureModel copiedFrom,FurnitureModel copiedTo){
+    copiedTo.furnitureId=copiedFrom.furnitureId;
+    copiedTo.ratings=copiedFrom.ratings;
+    copiedTo.model=copiedFrom.model;
+    copiedTo.description=copiedFrom.description;
+    copiedTo.name=copiedFrom.name;
+    //all is assigned except shared
+  }
+
+  FurnitureModel copyFurniture(FurnitureModel oldFurniture){
+    FurnitureModel newFurniture = FurnitureModel(
+        description: oldFurniture.description,
+        furnitureId: oldFurniture.furnitureId,
+        name: oldFurniture.name,
+        model: oldFurniture.model,
+        category: oldFurniture.category,
+        shared: oldFurniture.shared.map((e) => SharedModel.fromJson(e.toMap())).toList(),
+        ratings: oldFurniture.ratings);
+    return newFurniture;
+  }
+
+  List<Map<String,dynamic>> copyCategory(tempCategory){
+    List<Map<String,dynamic>> tempMap=[];
+    print("lol");
+    for(int i=0;i<categories.length;i++){
+      tempMap.add({});
+      tempMap.last["name"]=categories[i]["name"].toString();
+      tempMap.last["image"]=categories[i]["image"].toString();
+    }
+    return tempMap;
   }
 
   updateCategory(context,{required int index,required FileOrURL image})async{
@@ -470,13 +512,21 @@ print("yarb");
         print(url);
       });
     }
-    categories[index]["image"]=image.urlController.text;
 
-    await FirebaseFirestore.instance.collection("names").get().then((value){
-      FirebaseFirestore.instance.collection("names").doc(value.docs.first.id).set({"names":categories});
+    List<Map<String,dynamic>> tempMap=copyCategory(categories);
+    tempMap[index]["image"]=image.urlController.text;
+    await FirebaseFirestore.instance.collection("names").get().then((value)async{
+      await FirebaseFirestore.instance.collection("names").doc(value.docs.first.id).set({"names":tempMap});
+    }).then((value) {
+      categories[index]["image"]=image.urlController.text;
+      print(categories.last["image"]);
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("${categories[index]["name"]} updated successfully")));
+      emit(UpdatedCategorySuccessState());
+    }).catchError((error){
+      emit(UpdatedCategoryErrorState());
     });
-    ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("${categories[index]["name"]} updated successfully")));
-    emit(UpdatedCategorySuccessState());
+
+
   }
 }
