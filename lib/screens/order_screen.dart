@@ -5,6 +5,7 @@ import 'package:ar_furniture_admin_panel/cubits/admin_states.dart';
 import 'package:ar_furniture_admin_panel/models/shared_model.dart';
 import 'package:ar_furniture_admin_panel/responsive.dart';
 import 'package:ar_furniture_admin_panel/screens/dashboard_screen.dart';
+import 'package:ar_furniture_admin_panel/screens/order_details_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,7 +15,9 @@ import '../models/order_model.dart';
 
 class OrderScreen extends StatefulWidget {
   @override
-  const OrderScreen({Key? key}) : super(key: key);
+  //const OrderScreen({Key? key}) : super(key: key);
+  double tax = 0;
+  double estimatingTax = 0.14;
 
   @override
   State<OrderScreen> createState() => _OrderScreen();
@@ -296,6 +299,8 @@ class _OrderScreen extends State<OrderScreen> {
                                         (index) => orderDataRow(
                                             BlocProvider.of<AdminCubit>(context)
                                                 .orders[index])),
+
+
                                   ),
                                 ),
                               ),
@@ -359,7 +364,10 @@ class _OrderScreen extends State<OrderScreen> {
                       side: BorderSide(width: 2, color: Colors.black),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15))),
-                  onPressed: () {},
+                  onPressed: () {Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => OrderDetailsScreen(orders)));},
                   child:
                       Text("Details", style: TextStyle(color: secondaryColor))),
             ],

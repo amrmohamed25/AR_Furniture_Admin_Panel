@@ -7,8 +7,8 @@ import '../models/order_model.dart';
 
 class OrderDetailsScreen extends StatelessWidget {
   //List<Map<String,dynamic>> furniture = [];
-// OrderModel myOrder;
-// OrderDetailsScreen(this.furniture,this.myOrder);
+ OrderModel myOrder;
+ OrderDetailsScreen(this.myOrder);
   @override
   Widget build(BuildContext context) {
     return DashboardScreen(Responsive(
@@ -73,13 +73,13 @@ class OrderDetailsScreen extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Text(
-                              // "Order id: ${myOrder.orderId}",
+                               "Order id: ${myOrder.orderId}",
                               // overflow: TextOverflow.ellipsis,
                               // style: GoogleFonts.raleway(
                               //   textStyle: const TextStyle(
                               //       fontSize: 18, fontWeight: FontWeight.bold),
 
-                              "Order id :",
+                             // "Order id :",
                               style: TextStyle(
                                   fontFamily: "Montserrat",
                                   fontSize: 18,
@@ -100,6 +100,7 @@ class OrderDetailsScreen extends StatelessWidget {
                           child: Column(
                             children: [
                               Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     // "Order id: ${myOrder.orderId}",
@@ -108,14 +109,14 @@ class OrderDetailsScreen extends StatelessWidget {
                                     //   textStyle: const TextStyle(
                                     //       fontSize: 18, fontWeight: FontWeight.bold),
 
-                                    "User Name :",
+                                    "User Name : ${myOrder.userName}",
                                     style: TextStyle(
                                       fontStyle: FontStyle.italic,
                                       fontSize: 15,
                                     ),
                                   ),
                                   SizedBox(
-                                    width: MediaQuery.of(context).size.width /3,
+                                    width: MediaQuery.of(context).size.width /4,
                                   ),
                                   Text(
                                     // "Order id: ${myOrder.orderId}",
@@ -123,7 +124,85 @@ class OrderDetailsScreen extends StatelessWidget {
                                     // style: GoogleFonts.raleway(
                                     //   textStyle: const TextStyle(
                                     //       fontSize: 18, fontWeight: FontWeight.bold),
-                                    "Mobile number :",
+                                    "Mobile number :${myOrder.mobileNumber}",
+                                    style: TextStyle(
+                                      fontStyle: FontStyle.italic,
+                                      fontSize: 15,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 60,
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    // "Order id: ${myOrder.orderId}",
+                                    // overflow: TextOverflow.ellipsis,
+                                    // style: GoogleFonts.raleway(
+                                    //   textStyle: const TextStyle(
+                                    //       fontSize: 18, fontWeight: FontWeight.bold),
+
+                                    "Order time : ${myOrder.time.toDate().year.toString()}-${myOrder.time.toDate().month.toString()}-${myOrder.time.toDate().day.toString()}",
+                                    style: TextStyle(
+                                      fontStyle: FontStyle.italic,
+                                      fontSize: 15,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: MediaQuery.of(context).size.width /5,
+                                  ),
+                                  Text(
+                                    // "Order id: ${myOrder.orderId}",
+                                    // overflow: TextOverflow.ellipsis,
+                                    // style: GoogleFonts.raleway(
+                                    //   textStyle: const TextStyle(
+                                    //       fontSize: 18, fontWeight: FontWeight.bold),
+                                    "Street Name : ${myOrder.streetName}",
+                                    style: TextStyle(
+                                      fontStyle: FontStyle.italic,
+                                      fontSize: 15,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 60,
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    // "Order id: ${myOrder.orderId}",
+                                    // overflow: TextOverflow.ellipsis,
+                                    // style: GoogleFonts.raleway(
+                                    //   textStyle: const TextStyle(
+                                    //       fontSize: 18, fontWeight: FontWeight.bold),
+
+                                    "Area :${myOrder.area}",
+                                    style: TextStyle(
+                                      fontStyle: FontStyle.italic,
+                                      fontSize: 15,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: MediaQuery.of(context).size.width /3.8,
+                                  ),
+                                  Text(
+                                    // "Order id: ${myOrder.orderId}",
+                                    // overflow: TextOverflow.ellipsis,
+                                    // style: GoogleFonts.raleway(
+                                    //   textStyle: const TextStyle(
+                                    //       fontSize: 18, fontWeight: FontWeight.bold),
+                                    "Building Name : ${myOrder.buildingNumber}",
                                     style: TextStyle(
                                       fontStyle: FontStyle.italic,
                                       fontSize: 15,
@@ -146,83 +225,7 @@ class OrderDetailsScreen extends StatelessWidget {
                                     //   textStyle: const TextStyle(
                                     //       fontSize: 18, fontWeight: FontWeight.bold),
 
-                                    "Order time :",
-                                    style: TextStyle(
-                                      fontStyle: FontStyle.italic,
-                                      fontSize: 15,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: MediaQuery.of(context).size.width /2.95,
-                                  ),
-                                  Text(
-                                    // "Order id: ${myOrder.orderId}",
-                                    // overflow: TextOverflow.ellipsis,
-                                    // style: GoogleFonts.raleway(
-                                    //   textStyle: const TextStyle(
-                                    //       fontSize: 18, fontWeight: FontWeight.bold),
-                                    "Street Name :",
-                                    style: TextStyle(
-                                      fontStyle: FontStyle.italic,
-                                      fontSize: 15,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 60,
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                height: 20,
-                              ),
-                              Row(
-                                children: [
-                                  Text(
-                                    // "Order id: ${myOrder.orderId}",
-                                    // overflow: TextOverflow.ellipsis,
-                                    // style: GoogleFonts.raleway(
-                                    //   textStyle: const TextStyle(
-                                    //       fontSize: 18, fontWeight: FontWeight.bold),
-
-                                    "Area :",
-                                    style: TextStyle(
-                                      fontStyle: FontStyle.italic,
-                                      fontSize: 15,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: MediaQuery.of(context).size.width /2.75,
-                                  ),
-                                  Text(
-                                    // "Order id: ${myOrder.orderId}",
-                                    // overflow: TextOverflow.ellipsis,
-                                    // style: GoogleFonts.raleway(
-                                    //   textStyle: const TextStyle(
-                                    //       fontSize: 18, fontWeight: FontWeight.bold),
-                                    "Building Name :",
-                                    style: TextStyle(
-                                      fontStyle: FontStyle.italic,
-                                      fontSize: 15,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 60,
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                height: 20,
-                              ),
-                              Row(
-                                children: [
-                                  Text(
-                                    // "Order id: ${myOrder.orderId}",
-                                    // overflow: TextOverflow.ellipsis,
-                                    // style: GoogleFonts.raleway(
-                                    //   textStyle: const TextStyle(
-                                    //       fontSize: 18, fontWeight: FontWeight.bold),
-
-                                    "Floor number :",
+                                    "Floor number :${myOrder.floorNumber}",
                                     style: TextStyle(
                                       fontStyle: FontStyle.italic,
                                       fontSize: 15,
@@ -418,6 +421,7 @@ class OrderDetailsScreen extends StatelessWidget {
                                 );
                               }),
                        // )
+
                       ])),
                 ),
 
