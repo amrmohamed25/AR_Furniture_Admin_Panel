@@ -25,7 +25,9 @@ class OffersScreen extends StatefulWidget {
 
 class _OffersScreenState extends State<OffersScreen> {
   var nameController = TextEditingController();
+  final nController = TextEditingController();
   FileOrURL model = FileOrURL(urlController: TextEditingController());
+  FileOrURL offerModel = FileOrURL(urlController: TextEditingController());
   var descriptionController = TextEditingController();
   List<SharedProperties> sharedProperties = [
     // SharedProperties(
@@ -246,23 +248,23 @@ class _OffersScreenState extends State<OffersScreen> {
                               ),
 
                               // ...BlocProvider.of<AdminCubit>(context).categories.map((e) => Text(e["name"])).toList(),
-                              TextFormField(
-                                validator: (value) {
-                                  if (value.toString().isEmpty) {
-                                    return "Please enter description";
-                                  }
-                                  return null;
-                                },
-                                decoration: const InputDecoration(
-                                    hintText: "Description",
-                                    enabledBorder: OutlineInputBorder(
-                                        borderSide:
-                                        BorderSide(color: Colors.grey)),
-                                    focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Colors.grey))),
-                                controller: descriptionController,
-                              ),
+                              // TextFormField(
+                              //   validator: (value) {
+                              //     if (value.toString().isEmpty) {
+                              //       return "Please enter description";
+                              //     }
+                              //     return null;
+                              //   },
+                              //   decoration: const InputDecoration(
+                              //       hintText: "Description",
+                              //       enabledBorder: OutlineInputBorder(
+                              //           borderSide:
+                              //           BorderSide(color: Colors.grey)),
+                              //       focusedBorder: OutlineInputBorder(
+                              //           borderSide: BorderSide(
+                              //               color: Colors.grey))),
+                              //   controller: descriptionController,
+                              // ),
                               Row(
                                 crossAxisAlignment:
                                 CrossAxisAlignment.start,
@@ -434,19 +436,19 @@ class _OffersScreenState extends State<OffersScreen> {
                                 Expanded(
                                   child: TextFormField(
                                     validator: (value) {
-                                      if (model.file == null) {
+                                      if (offerModel.file == null) {
                                         if (!Uri.parse(
-                                            model.urlController.text)
+                                            offerModel.urlController.text)
                                             .isAbsolute) {
                                           return "Please enter a url or upload a model";
                                         }
                                       }
                                       return null;
                                     },
-                                    controller: model.urlController,
+                                    controller: offerModel.urlController,
                                     decoration: InputDecoration(
                                       hintText: "uploading discount picture",
-                                      enabled: model.file == null
+                                      enabled: offerModel.file == null
                                           ? true
                                           : false,
                                       enabledBorder:
@@ -463,15 +465,15 @@ class _OffersScreenState extends State<OffersScreen> {
                                 IconButton(
                                     onPressed: () async {
                                       print("hello");
-                                      await getFile(model);
+                                      await getFile(offerModel);
                                     },
                                     icon: const Icon(Icons.attach_file)),
-                                if (model.file != null)
+                                if (offerModel.file != null)
                                   IconButton(
                                       onPressed: () async {
                                         setState(() {
-                                          model.file = null;
-                                          model.urlController.text = "";
+                                          offerModel.file = null;
+                                          offerModel.urlController.text = "";
                                         });
                                         // await getImage();
                                       },
@@ -552,6 +554,36 @@ class _OffersScreenState extends State<OffersScreen> {
                                   backgroundColor: primaryColor,
                                 ),
                                 onPressed: () async {
+
+                                  List<String> color =[];
+                                  var category;
+                                  var furnID;
+                                  var image;
+                                  // List<String> discount =[];
+                                  var flag =0;
+                                  for (int i=0;i<sharedProperties.length;i++){
+                                    print('HERÈrtrtrt');
+                                    print(widget.furniture.shared[i].discount);
+                                    print(sharedProperties[i].discount.text);
+                                    // discount.add(sharedProperties[i].discount.text);
+                                    if((widget.furniture.shared[i].discount == '0' )&& (widget.furniture.shared[i].discount!= sharedProperties[i].discount.text)){
+                                      print('Entered!!!');
+                                      flag =1;
+                                      color.add(sharedProperties[i].colorName.text);
+                                      category = widget.furniture.category;
+                                      furnID = widget.furniture.furnitureId;
+                                      image=offerModel.urlController.text;
+                                      print('------------------');
+                                      print(widget.furniture.shared[i].discount);
+                                      print(sharedProperties[i].discount.text);
+                                      print('------------------');
+                                    }
+                                    // color.add(sharedProperties[i].colorName.text);
+                                  }
+                                  if (flag ==1){
+                                    createOffer(category : category, furnID: furnID,color : color,image:image);
+                                    print("Offer should be added");}
+
                                   print(descriptionController.text);
                                   if (_formKey.currentState!.validate()) {
                                     print("aho");
@@ -569,6 +601,13 @@ class _OffersScreenState extends State<OffersScreen> {
                                         descriptionController.text,
                                         myShared: sharedProperties, oldFurniture: widget.furniture);
                                   }
+                                  // final discount = sharedProperties[0].discount.text;
+                                  // print(discount);
+                                  // print(nameController.text);
+                                  // createOffer(discount : discount);
+                                  // print("Offer should be added");
+
+
                                 },
                                 child: const Text("Add Offer"))
                           ],
@@ -761,5 +800,17 @@ class _OffersScreenState extends State<OffersScreen> {
         // ),
       ],
     );
+  }
+
+  Future createOffer({required String category,required String furnID,required List<String> color, required image}) async{
+    final docUser = FirebaseFirestore.instance.collection('offer').doc();
+
+    final json = {
+      'category':category,
+      'colors':color,
+      'img':image,
+      'salesID':furnID
+    };
+    await docUser.set(json);
   }
 }
