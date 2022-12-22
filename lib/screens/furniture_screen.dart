@@ -5,12 +5,14 @@ import 'package:ar_furniture_admin_panel/responsive.dart';
 import 'package:ar_furniture_admin_panel/screens/add_furniture_screen.dart';
 import 'package:ar_furniture_admin_panel/screens/dashboard_screen.dart';
 import 'package:ar_furniture_admin_panel/screens/edit_furniture_screen.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:ar_furniture_admin_panel/screens/view_furniture.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
 import '../cubits/admin_cubit.dart';
+
 
 List<FurnitureModel> filteredFurniture = [];
 
@@ -28,7 +30,6 @@ class FurnitureScreenState extends State<FurnitureScreen> {
   List<FurnitureModel> searchR = filteredFurniture;
   ScrollController _scrollController = ScrollController();
   TextEditingController _searchController = TextEditingController();
-
   @override
   void initState() {
     // TODO: implement initState
@@ -44,10 +45,28 @@ class FurnitureScreenState extends State<FurnitureScreen> {
       }
     });
   }
+  getFile(FileOrURL shared,{isImage=false}) async {
+    FilePickerResult? filePicker;
+    // print(isImage);
+    if(isImage==true){
+      // print(isImage);
+      filePicker= await FilePicker.platform.pickFiles(type: FileType.custom,allowedExtensions: ['png','jpg','jpeg']);
 
+    }else {
+      filePicker= await FilePicker.platform.pickFiles(type: FileType.custom,allowedExtensions: ['glb']);
+    }if (filePicker != null) {
+      setState(() {
+        shared.file = filePicker!.files.first.bytes!;
+        shared.urlController.text = filePicker.files.first.name;
+      });
+
+      print(shared.urlController.text);
+      // model.urlController.text=_filePicker.files.single.path!.split(".");
+    }
+  }
   @override
   Widget build(BuildContext) {
-    print("Building out");
+    // print("Building out");
     // if (FurnitureScreen.selectedCategoryIndex == -1) {
     //   FurnitureScreen.selectedCategoryName =
     //   BlocProvider.of<AdminCubit>(context)
@@ -57,9 +76,11 @@ class FurnitureScreenState extends State<FurnitureScreen> {
     //
     // };
     return BlocConsumer<AdminCubit, AdminStates>(
-        listener: (context, state) {},
+        listener: (context, state) {
+
+        },
         builder: (context, state) {
-          print("Building in");
+          // print("Building in");
 
           if (searchR.isEmpty || _searchController.text.toLowerCase() == '') {
             filteredFurniture = BlocProvider.of<AdminCubit>(context)
@@ -100,7 +121,7 @@ class FurnitureScreenState extends State<FurnitureScreen> {
                           ),
                           Container(
                             // margin: EdgeInsets.only(top: 2.0),
-                            height: MediaQuery.of(context).size.height / 7,
+                            height: MediaQuery.of(context).size.height / 5,
                             child: ListView.builder(
                                 itemCount: BlocProvider.of<AdminCubit>(context)
                                     .categories
@@ -110,6 +131,9 @@ class FurnitureScreenState extends State<FurnitureScreen> {
                                   return Container(
                                       margin: const EdgeInsets.all(10),
                                       child: InkWell(
+                                        borderRadius: BorderRadius.circular(
+                                            MediaQuery.of(context).size.width /
+                                                2.5),
                                         onTap: () {
                                           setState(() {
                                             FurnitureScreen
@@ -189,6 +213,118 @@ class FurnitureScreenState extends State<FurnitureScreen> {
                                                           ? Colors.white
                                                           : Colors.black),
                                                 ),
+                                                Row(
+                                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                  children: [
+                                                    Material(
+                                                      borderRadius: BorderRadius.circular(20),
+                                                      color: Colors.transparent,
+                                                      child: IconButton(splashRadius: 20,onPressed: (){
+                                                        showDialog(
+                                                            context: context,
+                                                            builder: (context) {
+                                                              FileOrURL categoryImg=FileOrURL(urlController: TextEditingController());
+                                                              categoryImg.urlController.text=BlocProvider.of<AdminCubit>(
+                                                                  context)
+                                                                  .categories[index]["image"];
+                                                              return StatefulBuilder(
+                                                                builder: (context, setState) {
+
+                                                                  return  AlertDialog(
+                                                                    title: Text("Edit Category"),
+                                                                    content:SizedBox(
+                                                                      width: MediaQuery.of(context).size.width/2,
+                                                                      child: Row(
+                                                                        children: [
+                                                                          Expanded(
+                                                                            child: TextFormField(
+                                                                              validator: (value) {
+                                                                                if (categoryImg.file == null) {
+                                                                                  if (!Uri.parse(
+                                                                                      categoryImg.urlController.text)
+                                                                                      .isAbsolute) {
+                                                                                    return "Please enter a url or upload an image";
+                                                                                  }
+                                                                                }
+                                                                                return null;
+                                                                              },
+                                                                              controller: categoryImg.urlController,
+                                                                              decoration: InputDecoration(
+                                                                                hintText: "Image or upload",
+                                                                                enabled: categoryImg.file == null
+                                                                                    ? true
+                                                                                    : false,
+                                                                                enabledBorder:
+                                                                                const OutlineInputBorder(
+                                                                                    borderSide: BorderSide(
+                                                                                        color: Colors.grey)),
+                                                                                focusedBorder:
+                                                                                const OutlineInputBorder(
+                                                                                    borderSide: BorderSide(
+                                                                                        color: Colors.grey)),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                          IconButton(
+                                                                              onPressed: () async {
+                                                                                print("hello");
+                                                                                await getFile(categoryImg,isImage:true);
+                                                                              },
+                                                                              icon: const Icon(Icons.attach_file)),
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                    actions: [
+                                                                      TextButton(onPressed: ()async{
+                                                                        await BlocProvider.of<AdminCubit>(context).updateCategory(context,index:index,image:categoryImg);
+                                                                        Navigator.of(context).pop();
+                                                                        }, child:Text("Save")),
+                                                                      TextButton(onPressed: (){
+                                                                        Navigator.of(context).pop();
+                                                                      }, child:Text("Cancel"))
+
+                                                                    ],
+                                                                  );
+                                                                }
+                                                              );
+                                                            });
+                                                      },icon:Icon(Icons.edit)),
+                                                    ),
+                                                    Material(
+                                                      color: Colors.transparent,
+                                                      borderRadius: BorderRadius.circular(20),
+
+                                                      child: IconButton(splashRadius: 20,onPressed: (){
+                                                        showDialog(
+                                                            context: context,
+                                                            builder: (context) {
+                                                              return StatefulBuilder(
+                                                                  builder: (context, setState) {
+
+                                                                    return  AlertDialog(
+                                                                      title: Text("Warning Deleting Category",style: TextStyle(color: Colors.red),),
+                                                                      content:SizedBox(
+                                                                        width: MediaQuery.of(context).size.width/2,
+                                                                        child: Text("Are you sure do you want to delete this category?"),
+                                                                      ),
+                                                                      actions: [
+                                                                        TextButton(onPressed: ()async{
+                                                                          await BlocProvider.of<AdminCubit>(context).deleteCategory(context,index);
+                                                                          Navigator.of(context).pop();
+                                                                        }, child:Text("Delete")),
+                                                                        TextButton(onPressed: (){
+                                                                          Navigator.of(context).pop();
+                                                                        }, child:Text("Cancel"))
+
+                                                                      ],
+                                                                    );
+                                                                  }
+                                                              );
+                                                            });
+                                                      },icon:Icon(Icons.delete)),
+                                                    ),
+                                                  ],
+                                                )
                                               ],
                                             ),
                                           ),
@@ -578,12 +714,12 @@ class FurnitureScreenState extends State<FurnitureScreen> {
     String quantities = "";
     for (int i = 0; i < furniture.shared.length - 1; i++) {
       availableColors = availableColors + furniture.shared[i].colorName + ",";
-      print("in for" + availableColors);
+      // print("in for" +availableColors);
     }
 
     availableColors = availableColors +
         furniture.shared[furniture.shared.length - 1].colorName;
-    print("after for" + availableColors);
+    // print("after for" +availableColors);
     for (int i = 0; i < furniture.shared.length - 1; i++) {
       prices = prices + "EGP" + furniture.shared[i].price + ",";
     }
@@ -755,6 +891,7 @@ class FurnitureScreenState extends State<FurnitureScreen> {
       if (sizeFurniture != filteredFurniture.length) {
         searchItem(_searchController.text.toLowerCase());
       }
+
     }
   }
 }
