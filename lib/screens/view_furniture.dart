@@ -43,7 +43,7 @@ class _ViewFurnitureScreenState extends State<ViewFurnitureScreen> {
     print("Width " + MediaQuery.of(context).size.width.toString() + " / Height: " + (MediaQuery.of(context).size.height * 0.5).toString());
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(3.0),
         child: SingleChildScrollView(
           child: Row(
             children: [
@@ -51,7 +51,7 @@ class _ViewFurnitureScreenState extends State<ViewFurnitureScreen> {
               Expanded(
                 flex:6,
                 child: Padding(
-                  padding: const EdgeInsets.only(left: 15.0, top: 15.0),
+                  padding: const EdgeInsets.only(left: 5.0, top: 15.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -154,31 +154,34 @@ class _ViewFurnitureScreenState extends State<ViewFurnitureScreen> {
                       ) : rows.length == 0 ? Padding(
                         padding: const EdgeInsets.all(20.0),
                         child: CircularProgressIndicator(color: thirdColor,),
-                      ) : DataTable(
-                        decoration: BoxDecoration(
-                          border:
-                          Border.all(color: Colors.grey.shade400),
-                          borderRadius: BorderRadius.circular(10.0),
+                      ) : SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: DataTable(
+                          decoration: BoxDecoration(
+                            border:
+                            Border.all(color: Colors.grey.shade400),
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          columns: <DataColumn>[
+                            DataColumn(
+                              label: Expanded(
+                                child: Text(
+                                  'Name',
+                                  style: TextStyle(fontStyle: FontStyle.italic, fontWeight: FontWeight.bold, fontSize: MediaQuery.of(context).size.width >= 850 ? MediaQuery.of(context).size.width * 0.012 : MediaQuery.of(context).size.width * 0.023),
+                                ),
+                              ),
+                            ),
+                            DataColumn(
+                              label: Expanded(
+                                child: Text(
+                                  'Rating',
+                                  style: TextStyle(fontStyle: FontStyle.italic, fontWeight: FontWeight.bold, fontSize: MediaQuery.of(context).size.width >= 850 ? MediaQuery.of(context).size.width * 0.012 : MediaQuery.of(context).size.width * 0.023),
+                                ),
+                              ),
+                            ),
+                          ],
+                          rows: rows,
                         ),
-                        columns: <DataColumn>[
-                          DataColumn(
-                            label: Expanded(
-                              child: Text(
-                                'Name',
-                                style: TextStyle(fontStyle: FontStyle.italic, fontWeight: FontWeight.bold, fontSize: MediaQuery.of(context).size.width >= 850 ? MediaQuery.of(context).size.width * 0.012 : MediaQuery.of(context).size.width * 0.023),
-                              ),
-                            ),
-                          ),
-                          DataColumn(
-                            label: Expanded(
-                              child: Text(
-                                'Rating',
-                                style: TextStyle(fontStyle: FontStyle.italic, fontWeight: FontWeight.bold, fontSize: MediaQuery.of(context).size.width >= 850 ? MediaQuery.of(context).size.width * 0.012 : MediaQuery.of(context).size.width * 0.023),
-                              ),
-                            ),
-                          ),
-                        ],
-                        rows: rows,
                       ),
                     ],
                   ),
@@ -350,7 +353,9 @@ class ReusableCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(right: 15.0, top: 15.0, bottom: 15.0),
+      margin: EdgeInsets.symmetric(horizontal: 1,vertical: 4),
+      height: MediaQuery.of(context).size.height*0.1,
+
       decoration: BoxDecoration(
         color: color,
         borderRadius: BorderRadius.circular(10.0),
@@ -370,69 +375,66 @@ class IconContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            icon,
-            size: MediaQuery.of(context).size.width * 0.05,
-          ),
-          SizedBox(
-            width: MediaQuery.of(context).size.width >= 850 ? 20.0 : 10.0,
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                label!,
-                style: TextStyle(
-                  overflow: TextOverflow.ellipsis,
-                  color: Colors.black,
-                  fontSize: MediaQuery.of(context).size.width >= 850 ? MediaQuery.of(context).size.width * 0.013 : MediaQuery.of(context).size.width * 0.019,
-                ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(
+          icon,
+          size: MediaQuery.of(context).size.width * 0.05,
+        ),
+        SizedBox(
+          width: MediaQuery.of(context).size.width >= 850 ? 20.0 : 10.0,
+        ),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              label!,
+              style: TextStyle(
+                overflow: TextOverflow.ellipsis,
+                color: Colors.black,
+                fontSize: MediaQuery.of(context).size.width >= 850 ? MediaQuery.of(context).size.width * 0.013 : MediaQuery.of(context).size.width * 0.019,
               ),
-              SizedBox(
-                height: MediaQuery.of(context).size.width >= 850 ? 15.0 : 8.0,
-              ),
-              Row(
-                children: [
-                  label != "Price" ?
-                  Text(
-                    label == "Sale" ? value! + " %" : label == "Average Rating"
-                        ? value! + ".0"
-                        : value!,
-                    style: TextStyle(
-                      color: primaryColor,
-                        fontSize: MediaQuery.of(context).size.width >= 850 ? MediaQuery.of(context).size.width * 0.018 : MediaQuery.of(context).size.width * 0.03,
-                        fontWeight: FontWeight.bold,
-                    ),
-                  ) : discount != "0.0" && discount != "0" ? Text(
-                    value! + " L.E",
-                    style: TextStyle(
-                      decoration: TextDecoration.lineThrough,
-                      color: Colors.red,
-                      fontSize: MediaQuery.of(context).size.width >= 850 ? MediaQuery.of(context).size.width * 0.018 : MediaQuery.of(context).size.width * 0.022,
-                    ),
-                  ) : Text(""),
-                  SizedBox(width: 10.0,),
-                  label == "Price" ? Text(
-                    (double.parse(value!) -
-                        double.parse(discount!) / 100 * double.parse(value!))
-                        .toString() + " L.E",
-                    style: TextStyle(
-                      color: primaryColor,
-                      fontSize: MediaQuery.of(context).size.width >= 850 ? MediaQuery.of(context).size.width * 0.018 : MediaQuery.of(context).size.width * 0.022,
+            ),
+            SizedBox(
+              height: MediaQuery.of(context).size.width >= 850 ? 15.0 : 8.0,
+            ),
+            Row(
+              children: [
+                label != "Price" ?
+                Text(
+                  label == "Sale" ? value! + " %" : label == "Average Rating"
+                      ? value! + ".0"
+                      : value!,
+                  style: TextStyle(
+                    color: primaryColor,
+                      fontSize: MediaQuery.of(context).size.width >= 850 ? MediaQuery.of(context).size.width * 0.018 : MediaQuery.of(context).size.width * 0.03,
                       fontWeight: FontWeight.bold,
-                    ),
-                  ) : Text(""),
-                ],
-              ),
-            ],
-          ),
-        ],
-      ),
+                  ),
+                ) : discount != "0.0" && discount != "0" ? Text(
+                  value! + " L.E",
+                  style: TextStyle(
+                    decoration: TextDecoration.lineThrough,
+                    color: Colors.red,
+                    fontSize: MediaQuery.of(context).size.width >= 850 ? MediaQuery.of(context).size.width * 0.018 : MediaQuery.of(context).size.width * 0.03,
+                  ),
+                ) : Text(""),
+                SizedBox(width: 2.0,),
+                label == "Price" ? Text(
+                  (double.parse(value!) -
+                      double.parse(discount!) / 100 * double.parse(value!))
+                      .toString() + " L.E",
+                  style: TextStyle(
+                    color: primaryColor,
+                    fontSize: MediaQuery.of(context).size.width >= 850 ? MediaQuery.of(context).size.width * 0.018 : MediaQuery.of(context).size.width * 0.03,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ) : Text(""),
+              ],
+            ),
+          ],
+        ),
+      ],
     );
   }
 }
