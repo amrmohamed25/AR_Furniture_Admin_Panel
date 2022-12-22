@@ -9,6 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../constants.dart';
 
 class DashboardScreen extends StatefulWidget {
+  @override
   Widget screen;
 
   DashboardScreen(this.screen);
@@ -87,10 +88,11 @@ class _DashboardScreen extends State<DashboardScreen> {
                               ),
                             ),
                             ListTile(
-                              onTap: () {
-                                // print("mmmmm");
-                                BlocProvider.of<AdminCubit>(context)
-                                    .getOrders();
+                              onTap: () async {
+                                print("mmmmm");
+                                if (BlocProvider.of<AdminCubit>(context).orders.isEmpty) {
+                                  await BlocProvider.of<AdminCubit>(context).getOrders();
+                                }
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -236,15 +238,18 @@ class _DashboardScreen extends State<DashboardScreen> {
                                       ),
                                     ),
                                     ListTile(
-                                      onTap: () {
-                                        // print("mmmmm");
-                                        BlocProvider.of<AdminCubit>(context)
-                                            .getOrders();
+                                      onTap: () async {
+                                        print("mmmmm");
+                                        if (BlocProvider.of<AdminCubit>(context)
+                                            .orders
+                                            .isEmpty) {
+                                          await BlocProvider.of<AdminCubit>(context)
+                                              .getOrders();
+                                        }
                                         Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                                builder: (context) =>
-                                                    OrderScreen()));
+                                                builder: (context) => OrderScreen()));
                                       },
                                       horizontalTitleGap: 0.0,
                                       leading: Icon(
