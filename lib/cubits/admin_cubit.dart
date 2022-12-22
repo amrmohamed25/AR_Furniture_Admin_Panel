@@ -148,6 +148,42 @@ class AdminCubit extends Cubit<AdminStates> {
         SnackBar(content: Text("$furnitureName added successfully")));
   }
 
+  addCategory(context, {required String categoryName, required FileOrURL categoryImage}) async {
+    emit(AddingCategory());
+    for (int i = 0; i < categories.length; i++) {
+      if (categories[i]["name"] == categoryName) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("$categoryName already exists")));
+        return;
+      }
+    }
+
+    // get id
+    var documentId;
+    await FirebaseFirestore.instance.collection("names").get().then((value) => documentId = value.docs.first.id);
+
+    // add to categories
+    Map<String, dynamic> newCategory = {};
+
+    if (categoryImage.file != null) {
+      await FirebaseStorage.instance.ref(
+          'category_icons/${categoryImage.urlController.text}')
+          .putData(categoryImage.file!)
+          .then((p0) async {
+        String url = await p0.ref.getDownloadURL();
+        categoryImage.urlController.text = url;
+      });
+    }
+    newCategory["image"] = categoryImage.urlController.text;
+    newCategory["name"] = categoryName;
+    categories.add(newCategory);
+
+    // add category to firebase
+    await FirebaseFirestore.instance.collection("names").doc(documentId).set({"names": categories});
+
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Category $categoryName added successfully")));
+    emit (AddedCategory());
+  }
+
   getOrders() async {
     emit(LoadingOrderState());
     await FirebaseFirestore.instance.collection("order").get().then((value) {

@@ -37,3 +37,7 @@ class UpdatedCategoryErrorState extends AdminStates{}
 class deletingFurnitureState extends AdminStates{}
 
 class deletedFurnitureSucessfullyState extends AdminStates{}
+
+class AddingCategory extends AdminStates{}
+
+class AddedCategory extends AdminStates{}
