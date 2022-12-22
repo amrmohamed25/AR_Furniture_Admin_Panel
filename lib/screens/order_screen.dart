@@ -353,7 +353,7 @@ class _OrderScreen extends State<OrderScreen> {
   DataRow orderDataRow(OrderModel orders) {
     return DataRow(
       cells: [
-        DataCell(Flexible(child: Text(orders.orderId,))),
+        DataCell( Text(orders.orderId,)),
         DataCell(Text(orders.userName)),
         DataCell(Text(
             "${orders.time.toDate().day}/${orders.time.toDate().month}/${orders.time.toDate().year}")),
