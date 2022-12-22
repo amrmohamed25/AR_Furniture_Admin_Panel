@@ -6,8 +6,11 @@ import 'package:ar_furniture_admin_panel/screens/add_category_screen.dart';
 import 'package:ar_furniture_admin_panel/screens/add_furniture_screen.dart';
 import 'package:ar_furniture_admin_panel/screens/dashboard_screen.dart';
 import 'package:ar_furniture_admin_panel/screens/edit_furniture_screen.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:ar_furniture_admin_panel/screens/view_furniture.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 import '../cubits/admin_cubit.dart';
 
@@ -28,7 +31,6 @@ class FurnitureScreenState extends State<FurnitureScreen> {
   List<FurnitureModel> searchR = filteredFurniture;
   ScrollController _scrollController = ScrollController();
   TextEditingController _searchController = TextEditingController();
-
   @override
   void initState() {
     // TODO: implement initState
@@ -44,10 +46,28 @@ class FurnitureScreenState extends State<FurnitureScreen> {
       }
     });
   }
+  getFile(FileOrURL shared,{isImage=false}) async {
+    FilePickerResult? filePicker;
+    // print(isImage);
+    if(isImage==true){
+      // print(isImage);
+      filePicker= await FilePicker.platform.pickFiles(type: FileType.custom,allowedExtensions: ['png','jpg','jpeg']);
 
+    }else {
+      filePicker= await FilePicker.platform.pickFiles(type: FileType.custom,allowedExtensions: ['glb']);
+    }if (filePicker != null) {
+      setState(() {
+        shared.file = filePicker!.files.first.bytes!;
+        shared.urlController.text = filePicker.files.first.name;
+      });
+
+      print(shared.urlController.text);
+      // model.urlController.text=_filePicker.files.single.path!.split(".");
+    }
+  }
   @override
   Widget build(BuildContext) {
-    print("Building out");
+    // print("Building out");
     // if (FurnitureScreen.selectedCategoryIndex == -1) {
     //   FurnitureScreen.selectedCategoryName =
     //   BlocProvider.of<AdminCubit>(context)
@@ -61,24 +81,24 @@ class FurnitureScreenState extends State<FurnitureScreen> {
 
         },
         builder: (context, state) {
-          print("Building in");
+          // print("Building in");
 
-          if(searchR.isEmpty || _searchController.text.toLowerCase() == '') {
+          if (searchR.isEmpty || _searchController.text.toLowerCase() == '') {
             filteredFurniture = BlocProvider.of<AdminCubit>(context)
                 .furnitureList
                 .where((element) =>
-            element.category == FurnitureScreen.selectedCategoryName)
+                    element.category == FurnitureScreen.selectedCategoryName)
                 .toList();
-
           }
-          if(searchR.isEmpty || _searchController.text.toLowerCase() == '') {
+          if (searchR.isEmpty || _searchController.text.toLowerCase() == '') {
             searchR = [...filteredFurniture];
           }
 
-          return state is LoadingAllData
-          ?  Center(
-            child: CircularProgressIndicator(),
-          ):  DashboardScreen(
+          return state is LoadingAllData || state is deletingFurnitureState
+              ? Center(
+                  child: CircularProgressIndicator(),
+                )
+              : DashboardScreen(
                   Align(
                     alignment: Alignment.topCenter,
                     child: SingleChildScrollView(
@@ -102,7 +122,7 @@ class FurnitureScreenState extends State<FurnitureScreen> {
                           ),
                           Container(
                             // margin: EdgeInsets.only(top: 2.0),
-                            height: MediaQuery.of(context).size.height / 7,
+                            height: MediaQuery.of(context).size.height / 5,
                             child: ListView.builder(
                                 itemCount: BlocProvider.of<AdminCubit>(context).categories.length + 1,
                                 scrollDirection: Axis.horizontal,
@@ -111,71 +131,221 @@ class FurnitureScreenState extends State<FurnitureScreen> {
                                       margin: const EdgeInsets.all(10),
                                       child: (index != BlocProvider.of<AdminCubit>(context).categories.length )?
                                       InkWell(
+                                        borderRadius: BorderRadius.circular(
+                                            MediaQuery.of(context).size.width /
+                                                2.5),
                                         onTap: () {
                                           setState(() {
-                                            FurnitureScreen.selectedCategoryName =
-                                            BlocProvider.of<AdminCubit>(context)
-                                                .categories[index]["name"];
+                                            FurnitureScreen
+                                                    .selectedCategoryName =
+                                                BlocProvider.of<AdminCubit>(
+                                                        context)
+                                                    .categories[index]["name"];
 
-                                            FurnitureScreen.selectedCategoryIndex =
-                                                index;
+                                            FurnitureScreen
+                                                .selectedCategoryIndex = index;
                                           });
                                         },
                                         child: Container(
                                           margin: const EdgeInsets.all(10),
-                                          width:
-                                          MediaQuery.of(context).size.width / 5.2,
+
+                                          width: MediaQuery.of(context)
+                                              .size
+                                              .width <530?120:MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              5.2,
                                           decoration: BoxDecoration(
                                               boxShadow: [
                                                 BoxShadow(
                                                   blurRadius: 3,
                                                   color: index ==
-                                                      FurnitureScreen
-                                                          .selectedCategoryIndex
+                                                          FurnitureScreen
+                                                              .selectedCategoryIndex
                                                       ? primaryColor
                                                       : backgroundColor,
                                                 )
                                               ],
-                                              borderRadius: BorderRadius.circular(
-                                                  MediaQuery.of(context).size.width /
-                                                      2.5),
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                      MediaQuery.of(context)
+                                                              .size
+                                                              .width /
+                                                          2.5),
                                               color: secondaryColor),
                                           child: Padding(
                                             padding: const EdgeInsets.all(8),
                                             child: Column(
                                               children: [
                                                 Expanded(
+                                                  flex:2,
                                                     child: CircleAvatar(
-                                                      radius: MediaQuery.of(context)
+                                                  radius: MediaQuery.of(context)
                                                           .size
                                                           .width /
-                                                          9,
-                                                      backgroundColor: Colors.grey[300],
-                                                      // radius: 10,
-                                                      child: Padding(
-                                                        padding:
-                                                        const EdgeInsets.all(2.0),
-                                                        child: Image.network(
-                                                          BlocProvider.of<AdminCubit>(
-                                                              context)
-                                                              .categories[index]["image"],
-                                                          fit: BoxFit.fill,
-                                                        ),
-                                                      ),
-                                                    )),
+                                                      5,
+                                                  backgroundColor:
+                                                      Colors.grey[300],
+                                                  // radius: 10,
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            2.0),
+                                                    child: Image.network(
+                                                      BlocProvider.of<AdminCubit>(
+                                                                  context)
+                                                              .categories[index]
+                                                          ["image"],
+                                                      fit: BoxFit.fill,
+                                                    ),
+                                                  ),
+                                                )),
                                                 const SizedBox(
-                                                  height: 5,
+                                                  height: 2,
                                                 ),
                                                 Text(
-                                                  BlocProvider.of<AdminCubit>(context)
-                                                      .categories[index]["name"],
-                                                  overflow: TextOverflow.ellipsis,
+                                                  BlocProvider.of<AdminCubit>(
+                                                              context)
+                                                          .categories[index]
+                                                      ["name"],
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
                                                   style: TextStyle(
                                                       color: index ==
-                                                          FurnitureScreen
-                                                              .selectedCategoryIndex
+                                                              FurnitureScreen
+                                                                  .selectedCategoryIndex
                                                           ? Colors.white
                                                           : Colors.black),
+                                                ),
+                                                Expanded(
+                                                  child: Row(
+                                                    // mainAxisAlignment: MainAxisAlignment.spaceAround
+                                                    mainAxisSize: MainAxisSize.min,
+                                                    children: [
+                                                      Material(
+                                                        borderRadius: BorderRadius.circular(MediaQuery.of(context)
+                                                            .size
+                                                            .width /
+                                                            22),
+                                                        color: Colors.transparent,
+                                                        child: IconButton(splashRadius: MediaQuery.of(context)
+                                                            .size
+                                                            .width /
+                                                            22,onPressed: (){
+                                                          showDialog(
+                                                              context: context,
+                                                              builder: (context) {
+                                                                FileOrURL categoryImg=FileOrURL(urlController: TextEditingController());
+                                                                categoryImg.urlController.text=BlocProvider.of<AdminCubit>(
+                                                                    context)
+                                                                    .categories[index]["image"];
+                                                                return StatefulBuilder(
+                                                                  builder: (context, setState) {
+
+                                                                    return  AlertDialog(
+                                                                      title: Text("Edit Category"),
+                                                                      content:SizedBox(
+                                                                        width: MediaQuery.of(context).size.width/2,
+                                                                        child: Row(
+                                                                          children: [
+                                                                            Expanded(
+                                                                              child: TextFormField(
+                                                                                validator: (value) {
+                                                                                  if (categoryImg.file == null) {
+                                                                                    if (!Uri.parse(
+                                                                                        categoryImg.urlController.text)
+                                                                                        .isAbsolute) {
+                                                                                      return "Please enter a url or upload an image";
+                                                                                    }
+                                                                                  }
+                                                                                  return null;
+                                                                                },
+                                                                                controller: categoryImg.urlController,
+                                                                                decoration: InputDecoration(
+                                                                                  hintText: "Image or upload",
+                                                                                  enabled: categoryImg.file == null
+                                                                                      ? true
+                                                                                      : false,
+                                                                                  enabledBorder:
+                                                                                  const OutlineInputBorder(
+                                                                                      borderSide: BorderSide(
+                                                                                          color: Colors.grey)),
+                                                                                  focusedBorder:
+                                                                                  const OutlineInputBorder(
+                                                                                      borderSide: BorderSide(
+                                                                                          color: Colors.grey)),
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                            IconButton(
+                                                                                onPressed: () async {
+                                                                                  print("hello");
+                                                                                  await getFile(categoryImg,isImage:true);
+                                                                                },
+                                                                                icon: const Icon(Icons.attach_file)),
+                                                                          ],
+                                                                        ),
+                                                                      ),
+                                                                      actions: [
+                                                                        TextButton(onPressed: ()async{
+                                                                          await BlocProvider.of<AdminCubit>(context).updateCategory(context,index:index,image:categoryImg);
+                                                                          Navigator.of(context).pop();
+                                                                          }, child:Text("Save")),
+                                                                        TextButton(onPressed: (){
+                                                                          Navigator.of(context).pop();
+                                                                        }, child:Text("Cancel"))
+
+                                                                      ],
+                                                                    );
+                                                                  }
+                                                                );
+                                                              });
+                                                        },icon:Icon(Icons.edit)),
+                                                      ),
+                                                      Material(
+                                                        color: Colors.transparent,
+                                                        borderRadius: BorderRadius.circular(MediaQuery.of(context)
+                                                            .size
+                                                            .width /
+                                                            22),
+
+                                                        child: IconButton(splashRadius: MediaQuery.of(context)
+                                                            .size
+                                                            .width /
+                                                            22,onPressed: (){
+                                                          showDialog(
+                                                              context: context,
+                                                              builder: (context) {
+                                                                return StatefulBuilder(
+                                                                    builder: (context, setState) {
+
+                                                                      return  AlertDialog(
+                                                                        title: Text("Warning Deleting Category",style: TextStyle(color: Colors.red),),
+                                                                        content:SizedBox(
+                                                                          width: MediaQuery.of(context).size.width/2,
+                                                                          child: Text("Are you sure do you want to delete this category?"),
+                                                                        ),
+                                                                        actions: [
+                                                                          TextButton(onPressed: ()async{
+                                                                            await BlocProvider.of<AdminCubit>(context).deleteCategory(context,index);
+                                                                            Navigator.of(context).pop();
+                                                                          }, child:Text("Delete")),
+                                                                          TextButton(onPressed: (){
+                                                                            Navigator.of(context).pop();
+                                                                          }, child:Text("Cancel"))
+
+                                                                        ],
+                                                                      );
+                                                                    }
+                                                                );
+                                                              });
+                                                        },icon:Icon(Icons.delete)),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                 SizedBox(
+                                                  height: 8,
                                                 ),
                                               ],
                                             ),
@@ -218,193 +388,268 @@ class FurnitureScreenState extends State<FurnitureScreen> {
                                             ),
                                           ),
                                         ),
-                                      ),);
+                                      ));
                                 }),
                           ),
-                          SizedBox(height: MediaQuery.of(context).size.height / 28),
+                          SizedBox(
+                              height: MediaQuery.of(context).size.height / 28),
                           Center(
                             child: Container(
                               alignment: Alignment.center,
                               width: MediaQuery.of(context).size.width / 1.4,
                               height: MediaQuery.of(context).size.height / 1.5,
                               decoration: BoxDecoration(
-                                // color:primaryColor
-                              ),
+                                  // color:primaryColor
+                                  ),
                               child: SingleChildScrollView(
                                 controller: _scrollController,
                                 child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
                                   children: [
                                     Padding(
                                       padding: const EdgeInsets.all(8.0),
-                                      child: (MediaQuery.of(context).size.width > 800)?
-                                      Row(
-                                        mainAxisSize: MainAxisSize.max,
-                                        children: [
-                                          ElevatedButton(
-                                            onPressed: () {
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          AddFurnitureScreen()));
-                                            },
-                                            child: Row(
+                                      child: (MediaQuery.of(context)
+                                                  .size
+                                                  .width >
+                                              800)
+                                          ? Row(
                                               mainAxisSize: MainAxisSize.max,
                                               children: [
-                                                Text('Add Furniture'), // <-- Text
-                                                SizedBox(
-                                                  width: 5,
-                                                ),
-                                                Icon(
-                                                  // <-- Icon
-                                                  Icons.add,
-                                                  size: 12,
-                                                ),
-                                              ],
-                                            ),
-                                            style: ElevatedButton.styleFrom(
-                                              primary: secondaryColor,
-                                            ),
-                                          ),
-                                          Expanded(
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(10.0),
-                                              child: TextField(
-                                                controller: _searchController,
-                                                cursorColor: primaryColor,
-                                                decoration: InputDecoration(
-                                                  enabledBorder: OutlineInputBorder(
-                                                    borderSide: const BorderSide(color: Colors.white),
-                                                    borderRadius: BorderRadius.circular(25.7),
-                                                  ),
-                                                  focusedBorder: OutlineInputBorder(
-                                                    borderSide: const BorderSide(color: Colors.white),
-                                                    borderRadius: BorderRadius.circular(25.7),
-                                                  ),
-                                                  hintText: 'What are you looking for?',
-                                                  prefixIcon: const Icon(
-                                                    Icons.search,
-                                                    color: Colors.black,
-                                                    size: 25,
-                                                  ),
-                                                  filled: true,
-                                                  fillColor: Colors.white,
-                                                  contentPadding: const EdgeInsets.only(
-                                                      left: 14.0, bottom: 5.0, top: 5.0),
-                                                ),
-                                                onChanged: (value) {
-                                                  // filter search item by name
-                                                  searchItem(value);
-                                                },
-                                              ),
-                                            ),
-                                          ),
-                                          Container(
-                                            decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.circular(10),
-                                              color: primaryColor,
-                                            ),
-                                            child: IconButton(
-                                              icon: const Icon(Icons.filter_list, color: Colors.white, size: 25,),
-                                              onPressed: () async{
-                                                // filter
-                                                // apply filter
-                                              },
-                                            ),
-                                          ),
-                                          const SizedBox(
-                                            width: 10,
-                                          ),
-                                        ],
-                                      ):Column(
-                                        mainAxisSize: MainAxisSize.max,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              ElevatedButton(
-                                                onPressed: () {
-                                                  Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              AddFurnitureScreen()));
-                                                },
-                                                child: Row(
-                                                  mainAxisSize: MainAxisSize.max,
-                                                  children: [
-                                                    Text('Add Furniture'), // <-- Text
-                                                    SizedBox(
-                                                      width: 5,
-                                                    ),
-                                                    Icon(
-                                                      // <-- Icon
-                                                      Icons.add,
-                                                      size: 12,
-                                                    ),
-                                                  ],
-                                                ),
-                                                style: ElevatedButton.styleFrom(
-                                                  primary: secondaryColor,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          Row(
-                                            children: [
-                                              Expanded(
-                                                child: Padding(
-                                                  padding: const EdgeInsets.all(10.0),
-                                                  child: TextField(
-                                                    controller: _searchController,
-                                                    cursorColor: primaryColor,
-                                                    decoration: InputDecoration(
-                                                      enabledBorder: OutlineInputBorder(
-                                                        borderSide: const BorderSide(color: Colors.white),
-                                                        borderRadius: BorderRadius.circular(25.7),
+                                                ElevatedButton(
+                                                  onPressed: () {
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                AddFurnitureScreen()));
+                                                  },
+                                                  child: Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.max,
+                                                    children: [
+                                                      Text(
+                                                          'Add Furniture'), // <-- Text
+                                                      SizedBox(
+                                                        width: 5,
                                                       ),
-                                                      focusedBorder: OutlineInputBorder(
-                                                        borderSide: const BorderSide(color: Colors.white),
-                                                        borderRadius: BorderRadius.circular(25.7),
+                                                      Icon(
+                                                        // <-- Icon
+                                                        Icons.add,
+                                                        size: 12,
                                                       ),
-                                                      hintText: 'What are you looking for?',
-                                                      prefixIcon: const Icon(
-                                                        Icons.search,
-                                                        color: Colors.black,
-                                                        size: 25,
+                                                    ],
+                                                  ),
+                                                  style:
+                                                      ElevatedButton.styleFrom(
+                                                    primary: secondaryColor,
+                                                  ),
+                                                ),
+                                                Expanded(
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            10.0),
+                                                    child: TextField(
+                                                      controller:
+                                                          _searchController,
+                                                      cursorColor: primaryColor,
+                                                      decoration:
+                                                          InputDecoration(
+                                                        enabledBorder:
+                                                            OutlineInputBorder(
+                                                          borderSide:
+                                                              const BorderSide(
+                                                                  color: Colors
+                                                                      .white),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      25.7),
+                                                        ),
+                                                        focusedBorder:
+                                                            OutlineInputBorder(
+                                                          borderSide:
+                                                              const BorderSide(
+                                                                  color: Colors
+                                                                      .white),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      25.7),
+                                                        ),
+                                                        hintText:
+                                                            'What are you looking for?',
+                                                        prefixIcon: const Icon(
+                                                          Icons.search,
+                                                          color: Colors.black,
+                                                          size: 25,
+                                                        ),
+                                                        filled: true,
+                                                        fillColor: Colors.white,
+                                                        contentPadding:
+                                                            const EdgeInsets
+                                                                    .only(
+                                                                left: 14.0,
+                                                                bottom: 5.0,
+                                                                top: 5.0),
                                                       ),
-                                                      filled: true,
-                                                      fillColor: Colors.white,
-                                                      contentPadding: const EdgeInsets.only(
-                                                          left: 14.0, bottom: 5.0, top: 5.0),
+                                                      onChanged: (value) {
+                                                        // filter search item by name
+                                                        searchItem(value);
+                                                      },
                                                     ),
-                                                    onChanged: (value) {
-                                                      // filter search item by name
-                                                      searchItem(value);
+                                                  ),
+                                                ),
+                                                Container(
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                    color: primaryColor,
+                                                  ),
+                                                  child: IconButton(
+                                                    icon: const Icon(
+                                                      Icons.filter_list,
+                                                      color: Colors.white,
+                                                      size: 25,
+                                                    ),
+                                                    onPressed: () async {
+                                                      // filter
+                                                      // apply filter
                                                     },
                                                   ),
                                                 ),
-                                              ),
-                                              Container(
-                                                decoration: BoxDecoration(
-                                                  borderRadius: BorderRadius.circular(10),
-                                                  color: primaryColor,
+                                                const SizedBox(
+                                                  width: 10,
                                                 ),
-                                                child: IconButton(
-                                                  icon: const Icon(Icons.filter_list, color: Colors.white, size: 25,),
-                                                  onPressed: () async{
-                                                    // filter
-                                                    // apply filter
-                                                  },
+                                              ],
+                                            )
+                                          : Column(
+                                              mainAxisSize: MainAxisSize.max,
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    ElevatedButton(
+                                                      onPressed: () {
+                                                        Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        AddFurnitureScreen()));
+                                                      },
+                                                      child: Row(
+                                                        mainAxisSize:
+                                                            MainAxisSize.max,
+                                                        children: [
+                                                          Text(
+                                                              'Add Furniture'), // <-- Text
+                                                          SizedBox(
+                                                            width: 5,
+                                                          ),
+                                                          Icon(
+                                                            // <-- Icon
+                                                            Icons.add,
+                                                            size: 12,
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      style: ElevatedButton
+                                                          .styleFrom(
+                                                        primary: secondaryColor,
+                                                      ),
+                                                    ),
+                                                  ],
                                                 ),
-                                              ),
-                                              const SizedBox(
-                                                width: 10,
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
+                                                Row(
+                                                  children: [
+                                                    Expanded(
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(10.0),
+                                                        child: TextField(
+                                                          controller:
+                                                              _searchController,
+                                                          cursorColor:
+                                                              primaryColor,
+                                                          decoration:
+                                                              InputDecoration(
+                                                            enabledBorder:
+                                                                OutlineInputBorder(
+                                                              borderSide:
+                                                                  const BorderSide(
+                                                                      color: Colors
+                                                                          .white),
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          25.7),
+                                                            ),
+                                                            focusedBorder:
+                                                                OutlineInputBorder(
+                                                              borderSide:
+                                                                  const BorderSide(
+                                                                      color: Colors
+                                                                          .white),
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          25.7),
+                                                            ),
+                                                            hintText:
+                                                                'What are you looking for?',
+                                                            prefixIcon:
+                                                                const Icon(
+                                                              Icons.search,
+                                                              color:
+                                                                  Colors.black,
+                                                              size: 25,
+                                                            ),
+                                                            filled: true,
+                                                            fillColor:
+                                                                Colors.white,
+                                                            contentPadding:
+                                                                const EdgeInsets
+                                                                        .only(
+                                                                    left: 14.0,
+                                                                    bottom: 5.0,
+                                                                    top: 5.0),
+                                                          ),
+                                                          onChanged: (value) {
+                                                            // filter search item by name
+                                                            searchItem(value);
+                                                          },
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Container(
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10),
+                                                        color: primaryColor,
+                                                      ),
+                                                      child: IconButton(
+                                                        icon: const Icon(
+                                                          Icons.filter_list,
+                                                          color: Colors.white,
+                                                          size: 25,
+                                                        ),
+                                                        onPressed: () async {
+                                                          // filter
+                                                          // apply filter
+                                                        },
+                                                      ),
+                                                    ),
+                                                    const SizedBox(
+                                                      width: 10,
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
                                     ),
                                     SizedBox(height: 10),
                                     SingleChildScrollView(
@@ -412,9 +657,10 @@ class FurnitureScreenState extends State<FurnitureScreen> {
                                       child: DataTable(
                                         //border: TableBorder.symmetric(outside: BorderSide(width: 1)),
                                         decoration: BoxDecoration(
-                                          border:
-                                          Border.all(color: Colors.grey.shade400),
-                                          borderRadius: BorderRadius.circular(10.0),
+                                          border: Border.all(
+                                              color: Colors.grey.shade400),
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
                                         ),
                                         columns: const [
                                           DataColumn(
@@ -463,46 +709,50 @@ class FurnitureScreenState extends State<FurnitureScreen> {
 
                                         rows: List.generate(
                                             searchR.length,
-                                                (index) => FurnitureDataRow(
+                                            (index) => FurnitureDataRow(
                                                 searchR[index])),
-                                      ),),
+                                      ),
+                                    ),
                                     searchR.length < 10
                                         ? SizedBox(
-                                      height: 15,
-                                    )
+                                            height: 15,
+                                          )
                                         : Container(),
                                     searchR.length < 10
                                         ? Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        Padding(
-                                          padding:
-                                          const EdgeInsets.only(left: 10),
-                                          child: ElevatedButton(
-                                            onPressed: () async {
-                                              await getMoreFurniture();
-                                            },
-                                            child: Row(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                Text('Load more'), // <-- Text
-                                                SizedBox(
-                                                  width: 5,
+                                            mainAxisSize: MainAxisSize.max,
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 10),
+                                                child: ElevatedButton(
+                                                  onPressed: () async {
+                                                    await getMoreFurniture();
+                                                  },
+                                                  child: Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      Text(
+                                                          'Load more'), // <-- Text
+                                                      SizedBox(
+                                                        width: 5,
+                                                      ),
+                                                      Icon(
+                                                        // <-- Icon
+                                                        Icons.refresh,
+                                                        size: 12.0,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  style:
+                                                      ElevatedButton.styleFrom(
+                                                    primary: secondaryColor,
+                                                  ),
                                                 ),
-                                                Icon(
-                                                  // <-- Icon
-                                                  Icons.refresh,
-                                                  size: 12.0,
-                                                ),
-                                              ],
-                                            ),
-                                            style: ElevatedButton.styleFrom(
-                                              primary: secondaryColor,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    )
+                                              ),
+                                            ],
+                                          )
                                         : Container(),
                                   ],
                                 ),
@@ -523,15 +773,14 @@ class FurnitureScreenState extends State<FurnitureScreen> {
     String quantities = "";
     for (int i = 0; i < furniture.shared.length - 1; i++) {
       availableColors = availableColors + furniture.shared[i].colorName + ",";
-      print("in for" +availableColors);
+      // print("in for" +availableColors);
     }
 
     availableColors = availableColors +
         furniture.shared[furniture.shared.length - 1].colorName;
-    print("after for" +availableColors);
+    // print("after for" +availableColors);
     for (int i = 0; i < furniture.shared.length - 1; i++) {
-
-      prices = prices +"EGP" + furniture.shared[i].price + ",";
+      prices = prices + "EGP" + furniture.shared[i].price + ",";
     }
     prices =
         prices + "EGP" + furniture.shared[furniture.shared.length - 1].price;
@@ -554,6 +803,16 @@ class FurnitureScreenState extends State<FurnitureScreen> {
                 child: const Icon(Icons.remove_red_eye),
                 onTap: () {
                   //action code when clicked
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => DashboardScreen(
+                              ViewFurnitureScreen(
+                                  selectedFurniture: furniture,
+                                  availableColors:
+                                      BlocProvider.of<AdminCubit>(context)
+                                          .getAvailableColorsOfFurniture(
+                                              furniture)))));
                   print("The icon view is clicked");
                 },
               ),
@@ -561,7 +820,11 @@ class FurnitureScreenState extends State<FurnitureScreen> {
               InkWell(
                 child: const Icon(Icons.edit),
                 onTap: () {
-                  Navigator.push(context,MaterialPageRoute(builder: (context)=>EditFurnitureScreen(furniture)));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              EditFurnitureScreen(furniture)));
                   //action code when clicked
                   print("The icon edit is clicked");
                 },
@@ -570,6 +833,40 @@ class FurnitureScreenState extends State<FurnitureScreen> {
               InkWell(
                 child: const Icon(Icons.delete),
                 onTap: () {
+                  Alert(
+                    context: context,
+                    type: AlertType.warning,
+                    title: "Delete Furniture",
+                    desc: "Are you sure you want to delete (" +
+                        furniture.name +
+                        ")\n",
+                    buttons: [
+                      DialogButton(
+                          child: Text(
+                            "OK",
+                            style: TextStyle(color: Colors.white, fontSize: 20),
+                          ),
+                          color: primaryColor,
+                          onPressed: () async {
+                            Navigator.pop(context);
+                            await BlocProvider.of<AdminCubit>(context)
+                                .deleteFurniture(furniture);
+                            filteredFurniture.remove(furniture);
+                            searchR.remove(furniture);
+                            BlocProvider.of<AdminCubit>(context).furnitureList.remove(furniture);
+                          }),
+                    ],
+                    style: AlertStyle(
+                      animationType: AnimationType.fromTop,
+                      animationDuration: Duration(milliseconds: 400),
+                      titleStyle: TextStyle(
+                        color: Colors.red,
+                      ),
+                      descStyle: TextStyle(
+                        fontSize: 17,
+                      ),
+                    ),
+                  ).show();
                   //action code when clicked
                   print("The icon delete is clicked");
                 },
@@ -589,8 +886,8 @@ class FurnitureScreenState extends State<FurnitureScreen> {
     );
   }
 
-  void searchItem (String query) {
-    if (query != ''){
+  void searchItem(String query) {
+    if (query != '') {
       final input = query.toLowerCase();
       List<FurnitureModel> suggestions = filteredFurniture.where((fur) {
         final searchTitle = fur.name.toLowerCase();
@@ -599,7 +896,7 @@ class FurnitureScreenState extends State<FurnitureScreen> {
       setState(() {
         searchR = [...suggestions];
       });
-    } else{
+    } else {
       setState(() {
         searchR = [...filteredFurniture];
       });

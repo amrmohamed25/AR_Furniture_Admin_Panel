@@ -694,11 +694,17 @@ class _AddFurnitureScreenState extends State<AddFurnitureScreen> {
         ),
         TextFormField(
           validator: (value){
-            if(value.toString().isEmpty){
+            if (value.toString().isEmpty) {
               return "Please enter a quantity";
             }
-            if(int.parse(value.toString())<=0){
-              return "Please enter a quantity that is larger than 0";
+            if (double.tryParse(value.toString()) == null) {
+              return "Please enter valid number";
+            }
+            if (double.tryParse(value.toString()) != null) {
+              if (
+              double.parse(value.toString()) < 0) {
+                return "Please enter a valid quantity";
+              }
             }
             return null;
           },
@@ -713,11 +719,17 @@ class _AddFurnitureScreenState extends State<AddFurnitureScreen> {
         ),
         TextFormField(
           validator: (value){
-            if(value.toString().isEmpty){
-              return "Please enter a valid discount";
+            if (value.toString().isEmpty) {
+              return "Please enter a discount";
             }
-            if(int.parse(value.toString())>100){
-              return "Please enter a valid discount which is less than 100";
+            if (double.tryParse(value.toString()) == null) {
+              return "Please enter valid number";
+            }
+            if (double.tryParse(value.toString()) != null) {
+              if ((double.parse(value.toString()) >= 100 ||
+                  double.parse(value.toString()) < 0)) {
+                return "Please enter a valid discount which is less than 100";
+              }
             }
             return null;
           },
@@ -786,11 +798,17 @@ class _AddFurnitureScreenState extends State<AddFurnitureScreen> {
         ),
         TextFormField(
           validator: (value){
-            if(value.toString().isEmpty){
-              return "Please enter a quantity";
+            if (value.toString().isEmpty) {
+              return "Please enter a price";
             }
-            if(int.parse(value.toString())<=0){
-              return "Please enter a quantity that is larger than 0";
+            if (int.tryParse(value.toString()) == null) {
+              return "Please enter valid number";
+            }
+            if (int.tryParse(value.toString()) != null) {
+              if (
+                  int.parse(value.toString()) < 0) {
+                return "Please enter a valid price";
+              }
             }
             return null;
           },
