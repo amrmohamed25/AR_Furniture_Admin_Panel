@@ -101,9 +101,10 @@ class _OrderScreen extends State<OrderScreen> {
                                   width: double.infinity,
                                   child: SingleChildScrollView(
                                     scrollDirection: Axis.vertical,
+                                    controller: scrollController,
                                     child: SingleChildScrollView(
                                       scrollDirection: Axis.horizontal,
-                                      controller: scrollController,
+
 
                                         child: DataTable(
                                           //columnSpacing: 0.6,
@@ -167,7 +168,7 @@ class _OrderScreen extends State<OrderScreen> {
                             ),
                           ),
                         ),
-                        BlocProvider.of<AdminCubit>(context).orders.length < 4?
+                        BlocProvider.of<AdminCubit>(context).orders.length < 7?
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Row(
