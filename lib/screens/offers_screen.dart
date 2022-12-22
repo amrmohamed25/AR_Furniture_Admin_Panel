@@ -14,7 +14,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../responsive.dart';
 import 'add_furniture_screen.dart';
 
-
 class OffersScreen extends StatefulWidget {
   FurnitureModel furniture;
   OffersScreen(this.furniture);
@@ -27,7 +26,8 @@ class _OffersScreenState extends State<OffersScreen> {
   var nameController = TextEditingController();
   final nController = TextEditingController();
   FileOrURL model = FileOrURL(urlController: TextEditingController());
-  FileOrURL offerModel = FileOrURL(urlController: TextEditingController());
+  FileOrURL offerImage = FileOrURL(urlController: TextEditingController());
+
   var descriptionController = TextEditingController();
   List<SharedProperties> sharedProperties = [
     // SharedProperties(
@@ -40,17 +40,18 @@ class _OffersScreenState extends State<OffersScreen> {
     // ),
   ];
 
-
-  getFile(FileOrURL shared,{isImage=false}) async {
+  getFile(FileOrURL shared, {isImage = false}) async {
     FilePickerResult? filePicker;
     // print(isImage);
-    if(isImage==true){
+    if (isImage == true) {
       // print(isImage);
-      filePicker= await FilePicker.platform.pickFiles(type: FileType.custom,allowedExtensions: ['png','jpg','jpeg']);
-
-    }else {
-      filePicker= await FilePicker.platform.pickFiles(type: FileType.custom,allowedExtensions: ['glb']);
-    }if (filePicker != null) {
+      filePicker = await FilePicker.platform.pickFiles(
+          type: FileType.custom, allowedExtensions: ['png', 'jpg', 'jpeg']);
+    } else {
+      filePicker = await FilePicker.platform
+          .pickFiles(type: FileType.custom, allowedExtensions: ['glb']);
+    }
+    if (filePicker != null) {
       setState(() {
         shared.file = filePicker!.files.first.bytes!;
         shared.urlController.text = filePicker.files.first.name;
@@ -61,14 +62,13 @@ class _OffersScreenState extends State<OffersScreen> {
     }
   }
 
-
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    nameController.text=widget.furniture.name;
-    model.urlController.text=widget.furniture.model;
-    descriptionController.text=widget.furniture.description??"";
+    nameController.text = widget.furniture.name;
+    model.urlController.text = widget.furniture.model;
+    descriptionController.text = widget.furniture.description ?? "";
     widget.furniture.shared.forEach((element) {
       sharedProperties.add(SharedProperties(
         color: TextEditingController(),
@@ -79,29 +79,27 @@ class _OffersScreenState extends State<OffersScreen> {
         quantity: TextEditingController(),
       ));
 
-      sharedProperties.last.color.text=element.color;
-      sharedProperties.last.colorName.text=element.colorName;
-      sharedProperties.last.discount.text=element.discount;
-      sharedProperties.last.image.urlController.text=element.image;
-      sharedProperties.last.price.text=element.price;
-      sharedProperties.last.quantity.text=element.quantity;
-
+      sharedProperties.last.color.text = element.color;
+      sharedProperties.last.colorName.text = element.colorName;
+      sharedProperties.last.discount.text = element.discount;
+      sharedProperties.last.image.urlController.text = element.image;
+      sharedProperties.last.price.text = element.price;
+      sharedProperties.last.quantity.text = element.quantity;
     });
-
   }
+
   final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AdminCubit, AdminStates>(
       listener: (context, state) {
-
-        if(state is UploadingFurnitureSuccessState){
-          nameController.text ="" ;
-          model.file=null;
-          model.urlController.text="";
+        if (state is UploadingFurnitureSuccessState) {
+          nameController.text = "";
+          model.file = null;
+          model.urlController.text = "";
           descriptionController.text = "";
-          sharedProperties=[
+          sharedProperties = [
             SharedProperties(
               color: TextEditingController(),
               colorName: TextEditingController(),
@@ -111,515 +109,627 @@ class _OffersScreenState extends State<OffersScreen> {
               quantity: TextEditingController(),
             ),
           ];
-
         }
       },
       builder: (context, state) {
         return state is LoadingAllData
             ? const Center(child: CircularProgressIndicator())
             : Responsive(
-          mobile: Scaffold(
-            appBar: AppBar(
-              leading: IconButton(
-                onPressed: (){
-                  Navigator.push(context,MaterialPageRoute(builder: (context)=>DashboardScreen(Container())));
-                  //TODO: Navigate to previous SCREEN
-                  // Navigator.pop(context);
-                },
-                icon: const Icon(Icons.keyboard_backspace,color: Colors.black,),
-              ),
-              centerTitle: true,
-              title: const Text(
-                "Lem 3afshk",
-                style: TextStyle(
-                    fontFamily: "Montserrat",
-                    fontSize: 20,
-                    color: Colors.black),
-              ),
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-            ),
-            body: Container(
-              decoration: const BoxDecoration(
-                // image: const DecorationImage(image: AssetImage("assets/images/login_img.jpg"),fit: BoxFit.fill),
+                mobile: Scaffold(
+                  appBar: AppBar(
+                    leading: Container(),
+                    title: MaterialButton(
+                      hoverColor: Colors.transparent,
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    DashboardScreen(Container())));
 
-              ),
-              child: Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      // image: const DecorationImage(image: AssetImage("assets/images/login_img.jpg"),fit: BoxFit.fill),
-
-                      color: Colors.grey.withOpacity(0.7),
-                      borderRadius: BorderRadius.circular(20),
+                        //TODO: navigate to HOMESCREEN
+                      },
+                      child: const Text(
+                        "Offers Screen",
+                        style: TextStyle(
+                            fontFamily: "Montserrat",
+                            fontSize: 20,
+                            color: Colors.black),
+                      ),
                     ),
-                    width: 500,
-                    height: MediaQuery.of(context).size.height / 1.5,
-                    child: Form(
+                    backgroundColor: Colors.transparent,
+                    elevation: 0,
+                  ),
+                  body: Container(
+                    decoration: const BoxDecoration(
+                        // image: const DecorationImage(image: AssetImage("assets/images/login_img.jpg"),fit: BoxFit.fill),
 
-                      key: _formKey,
-                      child: SingleChildScrollView(
-                        child: Padding(
-                          padding: const EdgeInsets.all(15.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Row(
-                                children: const [
+                        ),
+                    child: Center(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          // image: const DecorationImage(image: AssetImage("assets/images/login_img.jpg"),fit: BoxFit.fill),
+
+                          color: Colors.grey.withOpacity(0.7),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        width: 500,
+                        height: MediaQuery.of(context).size.height / 1.5,
+                        child: Form(
+                          key: _formKey,
+                          child: SingleChildScrollView(
+                            child: Padding(
+                              padding: const EdgeInsets.all(15.0),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Row(
+                                    children: const [
+                                      Text(
+                                        "Adding Offer",
+                                        style: TextStyle(
+                                            fontFamily: "Montserrat",
+                                            fontSize: 20),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
                                   Text(
-                                    "Edit Furniture",
+                                    nameController.text,
                                     style: TextStyle(
-                                        fontFamily: "Montserrat",
-                                        fontSize: 20),
+                                        fontFamily: "Montserrat", fontSize: 15),
+                                    // validator: (value) {
+                                    //   if (!RegExp(r"^([a-z A-Z']+)$")
+                                    //       .hasMatch(value.toString())) {
+                                    //     return 'Please enter a valid name';
+                                    //   }
+                                    //   return null;
+                                    // },
+                                    // decoration: const InputDecoration(
+                                    //     hintText: "Name",
+                                    //     enabledBorder: OutlineInputBorder(
+                                    //         borderSide:
+                                    //         BorderSide(color: Colors.grey)),
+                                    //     focusedBorder: OutlineInputBorder(
+                                    //         borderSide: BorderSide(
+                                    //             color: Colors.grey))),
                                   ),
-                                ],
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              TextFormField(
-                                controller: nameController,
-                                validator: (value) {
-                                  if (!RegExp(r"^([a-z A-Z']+)$")
-                                      .hasMatch(value.toString())) {
-                                    return 'Please enter a valid name';
-                                  }
-                                  return null;
-                                },
-                                decoration: const InputDecoration(
-                                    hintText: "Name",
-                                    enabledBorder: OutlineInputBorder(
-                                        borderSide:
-                                        BorderSide(color: Colors.grey)),
-                                    focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Colors.grey))),
-                              ),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: TextFormField(
-                                      validator: (value) {
-                                        if (model.file == null) {
-                                          if (!Uri.parse(
-                                              model.urlController.text)
-                                              .isAbsolute) {
-                                            return "Please enter a url or upload a model";
-                                          }
-                                        }
-                                        return null;
-                                      },
-                                      controller: model.urlController,
-                                      decoration: InputDecoration(
-                                        hintText: "3D Model or upload",
-                                        enabled: model.file == null
-                                            ? true
-                                            : false,
-                                        enabledBorder:
-                                        const OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: Colors.grey)),
-                                        focusedBorder:
-                                        const OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: Colors.grey)),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: TextFormField(
+                                          validator: (value) {
+                                            if (offerImage.file == null) {
+                                              if (!Uri.parse(offerImage
+                                                      .urlController.text)
+                                                  .isAbsolute) {
+                                                return "Please enter a url or upload a model";
+                                              }
+                                            }
+                                            return null;
+                                          },
+                                          controller: offerImage.urlController,
+                                          decoration: InputDecoration(
+                                            hintText:
+                                                "uploading discount picture",
+                                            enabled: offerImage.file == null
+                                                ? true
+                                                : false,
+                                            enabledBorder:
+                                                const OutlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color: Colors.grey)),
+                                            focusedBorder:
+                                                const OutlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color: Colors.grey)),
+                                          ),
+                                        ),
                                       ),
-                                    ),
+                                      IconButton(
+                                          onPressed: () async {
+                                            print("hello");
+                                            await getFile(offerImage,
+                                                isImage: true);
+                                          },
+                                          icon: const Icon(Icons.attach_file)),
+                                      if (offerImage.file != null)
+                                        IconButton(
+                                            onPressed: () async {
+                                              setState(() {
+                                                offerImage.file = null;
+                                                offerImage.urlController.text =
+                                                    "";
+                                              });
+                                              // await getImage();
+                                            },
+                                            icon: const Icon(Icons.delete)),
+                                    ],
                                   ),
-                                  IconButton(
-                                      onPressed: () async {
-                                        print("hello");
-                                        await getFile(model);
-                                      },
-                                      icon: const Icon(Icons.attach_file)),
-                                  if (model.file != null)
-                                    IconButton(
-                                        onPressed: () async {
-                                          setState(() {
-                                            model.file = null;
-                                            model.urlController.text = "";
-                                          });
-                                          // await getImage();
-                                        },
-                                        icon: const Icon(Icons.delete)),
-                                ],
-                              ),
 
-                              // ...BlocProvider.of<AdminCubit>(context).categories.map((e) => Text(e["name"])).toList(),
-                              // TextFormField(
-                              //   validator: (value) {
-                              //     if (value.toString().isEmpty) {
-                              //       return "Please enter description";
-                              //     }
-                              //     return null;
-                              //   },
-                              //   decoration: const InputDecoration(
-                              //       hintText: "Description",
-                              //       enabledBorder: OutlineInputBorder(
-                              //           borderSide:
-                              //           BorderSide(color: Colors.grey)),
-                              //       focusedBorder: OutlineInputBorder(
-                              //           borderSide: BorderSide(
-                              //               color: Colors.grey))),
-                              //   controller: descriptionController,
-                              // ),
-                              Row(
-                                crossAxisAlignment:
-                                CrossAxisAlignment.start,
-                                children: [
-                                  Expanded(
-                                    child: SizedBox(
-                                      height: 150,
-                                      // width: 100,
-                                      child: ListView.builder(
-                                        itemBuilder: (context, index) {
-                                          return buildExpansionTile(
-                                              "Variant $index",
-                                              sharedProperties[index],
-                                              index);
-                                        },
-                                        itemCount: sharedProperties.length,
-                                      ),
-                                    ),
-                                  ),
-                                  // Column(
-                                  //   children: [
-                                      // IconButton(
-                                      //   splashRadius: 15,
-                                      //   icon: const Icon(Icons.add),
-                                      //   onPressed: () {
-                                      //     setState(() {
-                                      //       sharedProperties
-                                      //           .add(SharedProperties(
-                                      //         color:
-                                      //         TextEditingController(),
-                                      //         colorName:
-                                      //         TextEditingController(),
-                                      //         discount:
-                                      //         TextEditingController(),
-                                      //         image: FileOrURL(
-                                      //             urlController:
-                                      //             TextEditingController()),
-                                      //         price:
-                                      //         TextEditingController(),
-                                      //         quantity:
-                                      //         TextEditingController(),
-                                      //       ));
-                                      //     });
-                                      //   },
-                                      // ),
-                                    // ],
+                                  // TextFormField(
+                                  //   validator: (value) {
+                                  //     if (value.toString().isEmpty) {
+                                  //       return "Please enter description";
+                                  //     }
+                                  //     return null;
+                                  //   },
+                                  //   decoration: const InputDecoration(
+                                  //       hintText: "Description",
+                                  //       enabledBorder: OutlineInputBorder(
+                                  //           borderSide:
+                                  //           BorderSide(color: Colors.grey)),
+                                  //       focusedBorder: OutlineInputBorder(
+                                  //           borderSide: BorderSide(
+                                  //               color: Colors.grey))),
+                                  //   controller: descriptionController,
                                   // ),
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Expanded(
+                                        child: Container(
+                                          height: 150,
+                                          // width: 100,
+                                          child: ListView.builder(
+                                            itemBuilder: (context, index) {
+                                              return buildExpansionTile(
+                                                  sharedProperties[index]
+                                                      .colorName
+                                                      .text,
+                                                  sharedProperties[index],
+                                                  index);
+                                            },
+                                            itemCount: sharedProperties.length,
+                                          ),
+                                        ),
+                                      ),
+                                      // Column(
+                                      //   children: [
+                                      //     IconButton(
+                                      //       splashRadius: 15,
+                                      //       icon: const Icon(Icons.add),
+                                      //       onPressed: () {
+                                      //         setState(() {
+                                      //           sharedProperties
+                                      //               .add(SharedProperties(
+                                      //             color:
+                                      //             TextEditingController(),
+                                      //             colorName:
+                                      //             TextEditingController(),
+                                      //             discount:
+                                      //             TextEditingController(),
+                                      //             image: FileOrURL(
+                                      //                 urlController:
+                                      //                 TextEditingController()),
+                                      //             price:
+                                      //             TextEditingController(),
+                                      //             quantity:
+                                      //             TextEditingController(),
+                                      //           ));
+                                      //         });
+                                      //       },
+                                      //     ),
+                                      //   ],
+                                      // ),
+                                    ],
+                                  ),
+                                  state is UploadingFurnitureInProgressState
+                                      ? const Center(
+                                          child: CircularProgressIndicator(),
+                                        )
+                                      : ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            minimumSize: const Size(50, 50),
+                                            backgroundColor: primaryColor,
+                                          ),
+                                          onPressed: () async {
+                                            List<String> color = [];
+                                            var category;
+                                            var furnID;
+                                            var image;
+                                            // List<String> discount =[];
+                                            var flag = 0;
+                                            for (int i = 0;
+                                                i < sharedProperties.length;
+                                                i++) {
+                                              print('HERÈrtrtrt');
+                                              print(widget.furniture.shared[i]
+                                                  .discount);
+                                              print(sharedProperties[i]
+                                                  .discount
+                                                  .text);
+                                              // discount.add(sharedProperties[i].discount.text);
+                                              if (((widget.furniture.shared[i]
+                                                          .discount ==
+                                                      '0') || (widget.furniture.shared[i]
+                                                  .discount ==
+                                                  0.0)) &&
+                                                  (widget.furniture.shared[i]
+                                                          .discount !=
+                                                      sharedProperties[i]
+                                                          .discount
+                                                          .text)) {
+                                                print('Entered!!!');
+                                                flag = 1;
+                                                color.add(sharedProperties[i]
+                                                    .colorName
+                                                    .text);
+                                                category =
+                                                    widget.furniture.category;
+                                                furnID = widget
+                                                    .furniture.furnitureId;
+                                                image = offerImage
+                                                    .urlController.text;
+                                                print('------------------');
+                                                print(widget.furniture.shared[i]
+                                                    .discount);
+                                                print(sharedProperties[i]
+                                                    .discount
+                                                    .text);
+                                                print('------------------');
+                                              }
+                                              // color.add(sharedProperties[i].colorName.text);
+                                            }
+                                            if (flag == 1) {
+                                              createOffer(
+                                                  category: category,
+                                                  furnID: furnID,
+                                                  color: color,
+                                                  image: image);
+                                              print("Offer should be added");
+                                            }
+
+                                            print(descriptionController.text);
+                                            if (_formKey.currentState!
+                                                .validate()) {
+                                              print("aho");
+                                              print(sharedProperties[0]
+                                                  .image
+                                                  .urlController
+                                                  .text);
+                                              print(descriptionController.text);
+                                              await BlocProvider.of<AdminCubit>(
+                                                      context)
+                                                  .updateFurniture(context,
+                                                      furnitureName:
+                                                          nameController.text,
+                                                      model: model,
+                                                      furnitureDescription:
+                                                          descriptionController
+                                                              .text,
+                                                      myShared:
+                                                          sharedProperties,
+                                                      oldFurniture:
+                                                          widget.furniture);
+                                            }
+                                            // final discount = sharedProperties[0].discount.text;
+                                            // print(discount);
+                                            // print(nameController.text);
+                                            // createOffer(discount : discount);
+                                            // print("Offer should be added");
+                                          },
+                                          child: const Text("Add Offer"))
                                 ],
                               ),
-                              state is UploadingFurnitureInProgressState?const Center(child: CircularProgressIndicator(),):
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      minimumSize: const Size(50, 50),
-                                      backgroundColor: primaryColor,
-                                    ),
-                                    onPressed: () async {
-                                      print(descriptionController.text);
-                                      if (_formKey.currentState!.validate()) {
-                                        print("aho");
-                                        print(sharedProperties[0]
-                                            .image
-                                            .urlController.text);
-                                        print(descriptionController.text);
-                                        await BlocProvider.of<AdminCubit>(context)
-                                            .updateFurniture(context,
-                                            oldFurniture:widget.furniture,
-                                            furnitureName:
-                                            nameController.text,
-                                            model: model,
-                                            furnitureDescription:
-                                            descriptionController.text,
-                                            myShared: sharedProperties);
-                                      }
-                                    },
-                                    child: const Text("Edit Furniture")),
-                              )
-                            ],
+                            ),
                           ),
                         ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            ),
-          ),
-          desktop: Scaffold(
-            appBar: AppBar(
-              leading:Container(),
-              title: MaterialButton(
-                hoverColor: Colors.transparent,
-                onPressed: () {
-                  Navigator.push(context,MaterialPageRoute(builder: (context)=>DashboardScreen(Container())));
+                desktop: Scaffold(
+                  appBar: AppBar(
+                    leading: Container(),
+                    title: MaterialButton(
+                      hoverColor: Colors.transparent,
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    DashboardScreen(Container())));
 
-                  //TODO: navigate to HOMESCREEN
-                },
-                child: const Text(
-                  "Offers Screen",
-                  style: TextStyle(
-                      fontFamily: "Montserrat",
-                      fontSize: 20,
-                      color: Colors.black),
-                ),
-              ),
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-            ),
-            body: Container(
-              decoration: const BoxDecoration(
-                // image: const DecorationImage(image: AssetImage("assets/images/login_img.jpg"),fit: BoxFit.fill),
-
-              ),
-              child: Center(
-                child: Container(
-                  decoration: BoxDecoration(
-                    // image: const DecorationImage(image: AssetImage("assets/images/login_img.jpg"),fit: BoxFit.fill),
-
-                    color: Colors.grey.withOpacity(0.7),
-                    borderRadius: BorderRadius.circular(20),
+                        //TODO: navigate to HOMESCREEN
+                      },
+                      child: const Text(
+                        "Offers Screen",
+                        style: TextStyle(
+                            fontFamily: "Montserrat",
+                            fontSize: 20,
+                            color: Colors.black),
+                      ),
+                    ),
+                    backgroundColor: Colors.transparent,
+                    elevation: 0,
                   ),
-                  width: 500,
-                  height: MediaQuery.of(context).size.height / 1.5,
-                  child: Form(
-                    key: _formKey,
-                    child: SingleChildScrollView(
-                      child: Padding(
-                        padding: const EdgeInsets.all(15.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Row(
-                              children: const [
-                                Text(
-                                  "Adding Offer",
-                                  style: TextStyle(
-                                      fontFamily: "Montserrat",
-                                      fontSize: 20),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            Text(nameController.text,
-                              style: TextStyle(
-                                  fontFamily: "Montserrat",
-                                  fontSize: 15),
-                              // validator: (value) {
-                              //   if (!RegExp(r"^([a-z A-Z']+)$")
-                              //       .hasMatch(value.toString())) {
-                              //     return 'Please enter a valid name';
-                              //   }
-                              //   return null;
-                              // },
-                              // decoration: const InputDecoration(
-                              //     hintText: "Name",
-                              //     enabledBorder: OutlineInputBorder(
-                              //         borderSide:
-                              //         BorderSide(color: Colors.grey)),
-                              //     focusedBorder: OutlineInputBorder(
-                              //         borderSide: BorderSide(
-                              //             color: Colors.grey))),
-                            ),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: TextFormField(
-                                    validator: (value) {
-                                      if (offerModel.file == null) {
-                                        if (!Uri.parse(
-                                            offerModel.urlController.text)
-                                            .isAbsolute) {
-                                          return "Please enter a url or upload a model";
-                                        }
-                                      }
-                                      return null;
-                                    },
-                                    controller: offerModel.urlController,
-                                    decoration: InputDecoration(
-                                      hintText: "uploading discount picture",
-                                      enabled: offerModel.file == null
-                                          ? true
-                                          : false,
-                                      enabledBorder:
-                                      const OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: Colors.grey)),
-                                      focusedBorder:
-                                      const OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: Colors.grey)),
-                                    ),
+                  body: Container(
+                    decoration: const BoxDecoration(
+                        // image: const DecorationImage(image: AssetImage("assets/images/login_img.jpg"),fit: BoxFit.fill),
+
+                        ),
+                    child: Center(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          // image: const DecorationImage(image: AssetImage("assets/images/login_img.jpg"),fit: BoxFit.fill),
+
+                          color: Colors.grey.withOpacity(0.7),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        width: 500,
+                        height: MediaQuery.of(context).size.height / 1.5,
+                        child: Form(
+                          key: _formKey,
+                          child: SingleChildScrollView(
+                            child: Padding(
+                              padding: const EdgeInsets.all(15.0),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Row(
+                                    children: const [
+                                      Text(
+                                        "Adding Offer",
+                                        style: TextStyle(
+                                            fontFamily: "Montserrat",
+                                            fontSize: 20),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                                IconButton(
-                                    onPressed: () async {
-                                      print("hello");
-                                      await getFile(offerModel);
-                                    },
-                                    icon: const Icon(Icons.attach_file)),
-                                if (offerModel.file != null)
-                                  IconButton(
-                                      onPressed: () async {
-                                        setState(() {
-                                          offerModel.file = null;
-                                          offerModel.urlController.text = "";
-                                        });
-                                        // await getImage();
-                                      },
-                                      icon: const Icon(Icons.delete)),
-                              ],
-                            ),
-
-                            // TextFormField(
-                            //   validator: (value) {
-                            //     if (value.toString().isEmpty) {
-                            //       return "Please enter description";
-                            //     }
-                            //     return null;
-                            //   },
-                            //   decoration: const InputDecoration(
-                            //       hintText: "Description",
-                            //       enabledBorder: OutlineInputBorder(
-                            //           borderSide:
-                            //           BorderSide(color: Colors.grey)),
-                            //       focusedBorder: OutlineInputBorder(
-                            //           borderSide: BorderSide(
-                            //               color: Colors.grey))),
-                            //   controller: descriptionController,
-                            // ),
-                            Row(
-                              crossAxisAlignment:
-                              CrossAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                  child: Container(
-                                    height: 150,
-                                    // width: 100,
-                                    child: ListView.builder(
-                                      itemBuilder: (context, index) {
-                                        return buildExpansionTile(
-                                            sharedProperties[index].colorName.text,
-                                            sharedProperties[index],
-                                            index);
-                                      },
-                                      itemCount: sharedProperties.length,
-                                    ),
+                                  const SizedBox(
+                                    height: 20,
                                   ),
-                                ),
-                                // Column(
-                                //   children: [
-                                //     IconButton(
-                                //       splashRadius: 15,
-                                //       icon: const Icon(Icons.add),
-                                //       onPressed: () {
-                                //         setState(() {
-                                //           sharedProperties
-                                //               .add(SharedProperties(
-                                //             color:
-                                //             TextEditingController(),
-                                //             colorName:
-                                //             TextEditingController(),
-                                //             discount:
-                                //             TextEditingController(),
-                                //             image: FileOrURL(
-                                //                 urlController:
-                                //                 TextEditingController()),
-                                //             price:
-                                //             TextEditingController(),
-                                //             quantity:
-                                //             TextEditingController(),
-                                //           ));
-                                //         });
-                                //       },
-                                //     ),
-                                //   ],
-                                // ),
-                              ],
+                                  Text(
+                                    nameController.text,
+                                    style: TextStyle(
+                                        fontFamily: "Montserrat", fontSize: 15),
+                                    // validator: (value) {
+                                    //   if (!RegExp(r"^([a-z A-Z']+)$")
+                                    //       .hasMatch(value.toString())) {
+                                    //     return 'Please enter a valid name';
+                                    //   }
+                                    //   return null;
+                                    // },
+                                    // decoration: const InputDecoration(
+                                    //     hintText: "Name",
+                                    //     enabledBorder: OutlineInputBorder(
+                                    //         borderSide:
+                                    //         BorderSide(color: Colors.grey)),
+                                    //     focusedBorder: OutlineInputBorder(
+                                    //         borderSide: BorderSide(
+                                    //             color: Colors.grey))),
+                                  ),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: TextFormField(
+                                          validator: (value) {
+                                            if (offerImage.file == null) {
+                                              if (!Uri.parse(offerImage
+                                                      .urlController.text)
+                                                  .isAbsolute) {
+                                                return "Please enter a url or upload a model";
+                                              }
+                                            }
+                                            return null;
+                                          },
+                                          controller: offerImage.urlController,
+                                          decoration: InputDecoration(
+                                            hintText:
+                                                "uploading discount picture",
+                                            enabled: offerImage.file == null
+                                                ? true
+                                                : false,
+                                            enabledBorder:
+                                                const OutlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color: Colors.grey)),
+                                            focusedBorder:
+                                                const OutlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color: Colors.grey)),
+                                          ),
+                                        ),
+                                      ),
+                                      IconButton(
+                                          onPressed: () async {
+                                            print("hello");
+                                            await getFile(offerImage,
+                                                isImage: true);
+                                          },
+                                          icon: const Icon(Icons.attach_file)),
+                                      if (offerImage.file != null)
+                                        IconButton(
+                                            onPressed: () async {
+                                              setState(() {
+                                                offerImage.file = null;
+                                                offerImage.urlController.text =
+                                                    "";
+                                              });
+                                              // await getImage();
+                                            },
+                                            icon: const Icon(Icons.delete)),
+                                    ],
+                                  ),
+
+                                  // TextFormField(
+                                  //   validator: (value) {
+                                  //     if (value.toString().isEmpty) {
+                                  //       return "Please enter description";
+                                  //     }
+                                  //     return null;
+                                  //   },
+                                  //   decoration: const InputDecoration(
+                                  //       hintText: "Description",
+                                  //       enabledBorder: OutlineInputBorder(
+                                  //           borderSide:
+                                  //           BorderSide(color: Colors.grey)),
+                                  //       focusedBorder: OutlineInputBorder(
+                                  //           borderSide: BorderSide(
+                                  //               color: Colors.grey))),
+                                  //   controller: descriptionController,
+                                  // ),
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Expanded(
+                                        child: Container(
+                                          height: 150,
+                                          // width: 100,
+                                          child: ListView.builder(
+                                            itemBuilder: (context, index) {
+                                              return buildExpansionTile(
+                                                  sharedProperties[index]
+                                                      .colorName
+                                                      .text,
+                                                  sharedProperties[index],
+                                                  index);
+                                            },
+                                            itemCount: sharedProperties.length,
+                                          ),
+                                        ),
+                                      ),
+                                      // Column(
+                                      //   children: [
+                                      //     IconButton(
+                                      //       splashRadius: 15,
+                                      //       icon: const Icon(Icons.add),
+                                      //       onPressed: () {
+                                      //         setState(() {
+                                      //           sharedProperties
+                                      //               .add(SharedProperties(
+                                      //             color:
+                                      //             TextEditingController(),
+                                      //             colorName:
+                                      //             TextEditingController(),
+                                      //             discount:
+                                      //             TextEditingController(),
+                                      //             image: FileOrURL(
+                                      //                 urlController:
+                                      //                 TextEditingController()),
+                                      //             price:
+                                      //             TextEditingController(),
+                                      //             quantity:
+                                      //             TextEditingController(),
+                                      //           ));
+                                      //         });
+                                      //       },
+                                      //     ),
+                                      //   ],
+                                      // ),
+                                    ],
+                                  ),
+                                  state is UploadingFurnitureInProgressState
+                                      ? const Center(
+                                          child: CircularProgressIndicator(),
+                                        )
+                                      : ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            minimumSize: const Size(50, 50),
+                                            backgroundColor: primaryColor,
+                                          ),
+                                          onPressed: () async {
+                                            List<String> color = [];
+                                            var category;
+                                            var furnID;
+                                            var image;
+                                            // List<String> discount =[];
+                                            var flag = 0;
+                                            for (int i = 0;
+                                                i < sharedProperties.length;
+                                                i++) {
+                                              print('HERÈrtrtrt');
+                                              print(widget.furniture.shared[i]
+                                                  .discount);
+                                              print(sharedProperties[i]
+                                                  .discount
+                                                  .text);
+                                              // discount.add(sharedProperties[i].discount.text);
+                                              if ((widget.furniture.shared[i]
+                                                          .discount ==
+                                                      '0') &&
+                                                  (widget.furniture.shared[i]
+                                                          .discount !=
+                                                      sharedProperties[i]
+                                                          .discount
+                                                          .text)) {
+                                                print('Entered!!!');
+                                                flag = 1;
+                                                color.add(sharedProperties[i]
+                                                    .colorName
+                                                    .text);
+                                                category =
+                                                    widget.furniture.category;
+                                                furnID = widget
+                                                    .furniture.furnitureId;
+                                                image = offerImage
+                                                    .urlController.text;
+                                                print('------------------');
+                                                print(widget.furniture.shared[i]
+                                                    .discount);
+                                                print(sharedProperties[i]
+                                                    .discount
+                                                    .text);
+                                                print('------------------');
+                                              }
+                                              // color.add(sharedProperties[i].colorName.text);
+                                            }
+                                            if (flag == 1) {
+                                              createOffer(
+                                                  category: category,
+                                                  furnID: furnID,
+                                                  color: color,
+                                                  image: image);
+                                              print("Offer should be added");
+                                            }
+
+                                            print(descriptionController.text);
+                                            if (_formKey.currentState!
+                                                .validate()) {
+                                              print("aho");
+                                              print(sharedProperties[0]
+                                                  .image
+                                                  .urlController
+                                                  .text);
+                                              print(descriptionController.text);
+                                              await BlocProvider.of<AdminCubit>(
+                                                      context)
+                                                  .updateFurniture(context,
+                                                      furnitureName:
+                                                          nameController.text,
+                                                      model: model,
+                                                      furnitureDescription:
+                                                          descriptionController
+                                                              .text,
+                                                      myShared:
+                                                          sharedProperties,
+                                                      oldFurniture:
+                                                          widget.furniture);
+                                            }
+                                            // final discount = sharedProperties[0].discount.text;
+                                            // print(discount);
+                                            // print(nameController.text);
+                                            // createOffer(discount : discount);
+                                            // print("Offer should be added");
+                                          },
+                                          child: const Text("Add Offer"))
+                                ],
+                              ),
                             ),
-                            state is UploadingFurnitureInProgressState?const Center(child: CircularProgressIndicator(),):
-                            ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  minimumSize: const Size(50, 50),
-                                  backgroundColor: primaryColor,
-                                ),
-                                onPressed: () async {
-
-                                  List<String> color =[];
-                                  var category;
-                                  var furnID;
-                                  var image;
-                                  // List<String> discount =[];
-                                  var flag =0;
-                                  for (int i=0;i<sharedProperties.length;i++){
-                                    print('HERÈrtrtrt');
-                                    print(widget.furniture.shared[i].discount);
-                                    print(sharedProperties[i].discount.text);
-                                    // discount.add(sharedProperties[i].discount.text);
-                                    if((widget.furniture.shared[i].discount == '0' )&& (widget.furniture.shared[i].discount!= sharedProperties[i].discount.text)){
-                                      print('Entered!!!');
-                                      flag =1;
-                                      color.add(sharedProperties[i].colorName.text);
-                                      category = widget.furniture.category;
-                                      furnID = widget.furniture.furnitureId;
-                                      image=offerModel.urlController.text;
-                                      print('------------------');
-                                      print(widget.furniture.shared[i].discount);
-                                      print(sharedProperties[i].discount.text);
-                                      print('------------------');
-                                    }
-                                    // color.add(sharedProperties[i].colorName.text);
-                                  }
-                                  if (flag ==1){
-                                    createOffer(category : category, furnID: furnID,color : color,image:image);
-                                    print("Offer should be added");}
-
-                                  print(descriptionController.text);
-                                  if (_formKey.currentState!.validate()) {
-                                    print("aho");
-                                    print(sharedProperties[0]
-                                        .image
-                                        .urlController.text);
-                                    print(descriptionController.text);
-                                    await BlocProvider.of<AdminCubit>(context)
-                                        .updateFurniture(context,
-                                        furnitureName:
-                                        nameController.text,
-                                        model: model,
-
-                                        furnitureDescription:
-                                        descriptionController.text,
-                                        myShared: sharedProperties, oldFurniture: widget.furniture);
-                                  }
-                                  // final discount = sharedProperties[0].discount.text;
-                                  // print(discount);
-                                  // print(nameController.text);
-                                  // createOffer(discount : discount);
-                                  // print("Offer should be added");
-
-
-                                },
-                                child: const Text("Add Offer"))
-                          ],
+                          ),
                         ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            ),
-          ),
-        );
+              );
       },
     );
   }
@@ -631,7 +741,8 @@ class _OffersScreenState extends State<OffersScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(variant),
-          if (sharedProperties.length != 1 && index>=widget.furniture.shared.length)
+          if (sharedProperties.length != 1 &&
+              index >= widget.furniture.shared.length)
             IconButton(
                 splashRadius: 15,
                 onPressed: () {
@@ -646,47 +757,47 @@ class _OffersScreenState extends State<OffersScreen> {
       ),
       children: [
         Row(
-          // children: [
-          //   Expanded(
-          //     child: TextFormField(
-          //       validator: (value) {
-          //         if (sharedProperty.image.file == null) {
-          //           if (!Uri.parse(
-          //               sharedProperty.image.urlController.text)
-          //               .isAbsolute) {
-          //             return "Please enter a url or upload an image";
-          //           }
-          //         }
-          //         return null;
-          //       },
-          //       enabled: sharedProperty.image.file == null ? true : false,
-          //       controller: sharedProperty.image.urlController,
-          //       decoration: const InputDecoration(
-          //           hintText: "Image link or upload",
-          //           enabledBorder: OutlineInputBorder(
-          //               borderSide: BorderSide(color: Colors.grey)),
-          //           focusedBorder: OutlineInputBorder(
-          //               borderSide: BorderSide(color: Colors.grey))),
-          //     ),
-          //   ),
-          //   IconButton(
-          //       onPressed: () async {
-          //
-          //         await getFile(sharedProperty.image,isImage:true);
-          //       },
-          //       icon: const Icon(Icons.attach_file)),
-          //   if (sharedProperty.image.file != null)
-          //     IconButton(
-          //         onPressed: () async {
-          //           setState(() {
-          //             sharedProperty.image.file = null;
-          //             sharedProperty.image.urlController.text = "";
-          //           });
-          //           // await getImage();
-          //         },
-          //         icon: const Icon(Icons.delete)),
-          // ],
-        ),
+            // children: [
+            //   Expanded(
+            //     child: TextFormField(
+            //       validator: (value) {
+            //         if (sharedProperty.image.file == null) {
+            //           if (!Uri.parse(
+            //               sharedProperty.image.urlController.text)
+            //               .isAbsolute) {
+            //             return "Please enter a url or upload an image";
+            //           }
+            //         }
+            //         return null;
+            //       },
+            //       enabled: sharedProperty.image.file == null ? true : false,
+            //       controller: sharedProperty.image.urlController,
+            //       decoration: const InputDecoration(
+            //           hintText: "Image link or upload",
+            //           enabledBorder: OutlineInputBorder(
+            //               borderSide: BorderSide(color: Colors.grey)),
+            //           focusedBorder: OutlineInputBorder(
+            //               borderSide: BorderSide(color: Colors.grey))),
+            //     ),
+            //   ),
+            //   IconButton(
+            //       onPressed: () async {
+            //
+            //         await getFile(sharedProperty.image,isImage:true);
+            //       },
+            //       icon: const Icon(Icons.attach_file)),
+            //   if (sharedProperty.image.file != null)
+            //     IconButton(
+            //         onPressed: () async {
+            //           setState(() {
+            //             sharedProperty.image.file = null;
+            //             sharedProperty.image.urlController.text = "";
+            //           });
+            //           // await getImage();
+            //         },
+            //         icon: const Icon(Icons.delete)),
+            // ],
+            ),
         // TextFormField(
         //   validator: (value){
         //     if(value.toString().isEmpty){
@@ -707,11 +818,11 @@ class _OffersScreenState extends State<OffersScreen> {
         //           borderSide: BorderSide(color: Colors.grey))),
         // ),
         TextFormField(
-          validator: (value){
-            if(value.toString().isEmpty){
+          validator: (value) {
+            if (value.toString().isEmpty) {
               return "Please enter a valid discount";
             }
-            if(int.parse(value.toString())>100){
+            if (int.parse(value.toString()) > 100) {
               return "Please enter a valid discount which is less than 100";
             }
             return null;
@@ -802,14 +913,18 @@ class _OffersScreenState extends State<OffersScreen> {
     );
   }
 
-  Future createOffer({required String category,required String furnID,required List<String> color, required image}) async{
+  Future createOffer(
+      {required String category,
+      required String furnID,
+      required List<String> color,
+      required image}) async {
     final docUser = FirebaseFirestore.instance.collection('offer').doc();
 
     final json = {
-      'category':category,
-      'colors':color,
-      'img':image,
-      'salesID':furnID
+      'category': category,
+      'colors': color,
+      'img': image,
+      'salesID': furnID
     };
     await docUser.set(json);
   }
