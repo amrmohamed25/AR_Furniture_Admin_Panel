@@ -401,7 +401,7 @@ class IconContent extends StatelessWidget {
                     style: TextStyle(
                       decoration: TextDecoration.lineThrough,
                       color: Colors.red,
-                      fontSize: MediaQuery.of(context).size.width >= 850 ? MediaQuery.of(context).size.width * 0.018 : 10.0,
+                      fontSize: MediaQuery.of(context).size.width >= 850 ? MediaQuery.of(context).size.width * 0.018 : MediaQuery.of(context).size.width * 0.022,
                     ),
                   ) : Text(""),
                   SizedBox(width: 10.0,),
@@ -411,7 +411,7 @@ class IconContent extends StatelessWidget {
                         .toString() + " L.E",
                     style: TextStyle(
                       color: primaryColor,
-                      fontSize: MediaQuery.of(context).size.width >= 850 ? MediaQuery.of(context).size.width * 0.018 : 10.0,
+                      fontSize: MediaQuery.of(context).size.width >= 850 ? MediaQuery.of(context).size.width * 0.018 : MediaQuery.of(context).size.width * 0.022,
                       fontWeight: FontWeight.bold,
                     ),
                   ) : Text(""),
