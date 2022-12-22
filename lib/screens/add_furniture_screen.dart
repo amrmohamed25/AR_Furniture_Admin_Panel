@@ -43,6 +43,7 @@ class AddFurnitureScreen extends StatefulWidget {
 
 class _AddFurnitureScreenState extends State<AddFurnitureScreen> {
   var nameController = TextEditingController();
+  final Controller = TextEditingController();
   var categoryController = TextEditingController();
   FileOrURL model = FileOrURL(urlController: TextEditingController());
   var descriptionController = TextEditingController();
