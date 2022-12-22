@@ -286,11 +286,6 @@ class OrderDetailsScreen extends StatelessWidget {
                                           Row(
                                             children: [
                                               Text(
-                                                // "Order id: ${myOrder.orderId}",
-                                                // overflow: TextOverflow.ellipsis,
-                                                // style: GoogleFonts.raleway(
-                                                //   textStyle: const TextStyle(
-                                                //       fontSize: 18, fontWeight: FontWeight.bold),
                                                 " price : ",
                                                 style: TextStyle(
                                                   //fontFamily: "Montserrat",
@@ -351,11 +346,6 @@ class OrderDetailsScreen extends StatelessWidget {
                                           ),
 
                                           Text(
-                                            // "Order id: ${myOrder.orderId}",
-                                            // overflow: TextOverflow.ellipsis,
-                                            // style: GoogleFonts.raleway(
-                                            //   textStyle: const TextStyle(
-                                            //       fontSize: 18, fontWeight: FontWeight.bold),
                                               " Color :${orderFurniture[index]["colorName"]}",
                                               style: TextStyle(
                                                 //  fontFamily: "Montserrat",
@@ -368,11 +358,6 @@ class OrderDetailsScreen extends StatelessWidget {
                                             width: MediaQuery.of(context).size.width/5,
                                           ),
                                           Text(
-                                            // "Order id: ${myOrder.orderId}",
-                                            // overflow: TextOverflow.ellipsis,
-                                            // style: GoogleFonts.raleway(
-                                            //   textStyle: const TextStyle(
-                                            //       fontSize: 18, fontWeight: FontWeight.bold),
                                             " Quantity :${orderFurniture[index]["quantity"]}",
                                             style: TextStyle(
                                               //fontFamily: "Montserrat",
@@ -430,11 +415,6 @@ class OrderDetailsScreen extends StatelessWidget {
                             Expanded(
                               flex: 2,
                               child: Text(
-                                // "Order id: ${myOrder.orderId}",
-                                // overflow: TextOverflow.ellipsis,
-                                // style: GoogleFonts.raleway(
-                                //   textStyle: const TextStyle(
-                                //       fontSize: 18, fontWeight: FontWeight.bold),
                                 "(added 14% tax) :  ${totalPrice} L.E",
                                 style: TextStyle(
                                   //fontFamily: "Montserrat",
@@ -514,11 +494,6 @@ class OrderDetailsScreen extends StatelessWidget {
                           children: [
                             Text(
                               "Order id: ${myOrder.orderId}",
-                              // overflow: TextOverflow.ellipsis,
-                              // style: GoogleFonts.raleway(
-                              //   textStyle: const TextStyle(
-                              //       fontSize: 18, fontWeight: FontWeight.bold),
-                              // "Order id :",
                               style: TextStyle(
                                   fontFamily: "Montserrat",
                                   fontSize: 16,
@@ -590,11 +565,6 @@ class OrderDetailsScreen extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    // "Order id: ${myOrder.orderId}",
-                                    // overflow: TextOverflow.ellipsis,
-                                    // style: GoogleFonts.raleway(
-                                    //   textStyle: const TextStyle(
-                                    //       fontSize: 18, fontWeight: FontWeight.bold),
                                     "Mobile number :${myOrder.mobileNumber}",
                                     style: TextStyle(
                                       fontStyle: FontStyle.italic,
@@ -605,11 +575,6 @@ class OrderDetailsScreen extends StatelessWidget {
                                     height: 10,
                                   ),
                                   Text(
-                                    // "Order id: ${myOrder.orderId}",
-                                    // overflow: TextOverflow.ellipsis,
-                                    // style: GoogleFonts.raleway(
-                                    //   textStyle: const TextStyle(
-                                    //       fontSize: 18, fontWeight: FontWeight.bold),
                                     "Street Name : ${myOrder.streetName}",
                                     style: TextStyle(
                                       fontStyle: FontStyle.italic,
@@ -620,11 +585,6 @@ class OrderDetailsScreen extends StatelessWidget {
                                     height: 10,
                                   ),
                                   Text(
-                                    // "Order id: ${myOrder.orderId}",
-                                    // overflow: TextOverflow.ellipsis,
-                                    // style: GoogleFonts.raleway(
-                                    //   textStyle: const TextStyle(
-                                    //       fontSize: 18, fontWeight: FontWeight.bold),
                                     "Building Name : ${myOrder.buildingNumber}",
                                     style: TextStyle(
                                       fontStyle: FontStyle.italic,
