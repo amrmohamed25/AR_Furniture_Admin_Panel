@@ -46,6 +46,7 @@ class _ViewFurnitureScreenState extends State<ViewFurnitureScreen> {
         padding: const EdgeInsets.all(8.0),
         child: SingleChildScrollView(
           child: Stack(
+            clipBehavior: Clip.none,
             children: [
           Positioned(
           top: MediaQuery
@@ -121,7 +122,7 @@ class _ViewFurnitureScreenState extends State<ViewFurnitureScreen> {
                             );
                           }),
                     ),
-                    SizedBox(height: 50.0,),
+                    SizedBox(height: MediaQuery.of(context).size.width >= 850 ? 50.0 : 40.0,),
                     Container(
                       height: MediaQuery.of(context).size.width >= 850 ? MediaQuery.of(context).size.width * 0.04 : MediaQuery.of(context).size.width * 0.05,
                       child: ElevatedButton(
@@ -212,6 +213,7 @@ class _ViewFurnitureScreenState extends State<ViewFurnitureScreen> {
                                     icon: Icons.star,
                                     label: 'Average Rating',
                                     value: widget.selectedFurniture
+                                        .calculateAverageRating().toString() == 'NaN' ? '0' : widget.selectedFurniture
                                         .calculateAverageRating().toString(),
                                     discount: widget.selectedFurniture
                                         .shared[selectedColorIndex].discount,
@@ -243,7 +245,10 @@ class _ViewFurnitureScreenState extends State<ViewFurnitureScreen> {
                       ),
                     ),
                     SizedBox(height: MediaQuery.of(context).size.width >= 850 ? 20.0 : 15.0,),
-                    rows.length == 0 ? Padding(
+                    widget.selectedFurniture.ratings.length == 0 ? Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text("No reviews yet !", style: TextStyle(color: Colors.red, fontSize: MediaQuery.of(context).size.width >= 850 ? MediaQuery.of(context).size.width * 0.014 : MediaQuery.of(context).size.width * 0.026,),),
+                    ) : rows.length == 0 ? Padding(
                       padding: const EdgeInsets.all(20.0),
                       child: CircularProgressIndicator(color: thirdColor,),
                     ) : DataTable(
@@ -391,25 +396,25 @@ class IconContent extends StatelessWidget {
                         fontSize: MediaQuery.of(context).size.width >= 850 ? MediaQuery.of(context).size.width * 0.018 : MediaQuery.of(context).size.width * 0.03,
                         fontWeight: FontWeight.bold,
                     ),
-                  ) : discount != "0.0" ? Text(
+                  ) : discount != "0.0" && discount != "0" ? Text(
                     value! + " L.E",
                     style: TextStyle(
                       decoration: TextDecoration.lineThrough,
                       color: Colors.red,
-                      fontSize: MediaQuery.of(context).size.width >= 850 ? MediaQuery.of(context).size.width * 0.018 : 10.0,
+                      fontSize: MediaQuery.of(context).size.width >= 850 ? MediaQuery.of(context).size.width * 0.018 : MediaQuery.of(context).size.width * 0.022,
                     ),
                   ) : Text(""),
                   SizedBox(width: 10.0,),
-                  label == "Price" ? (discount != "0" ? Text(
+                  label == "Price" ? Text(
                     (double.parse(value!) -
                         double.parse(discount!) / 100 * double.parse(value!))
                         .toString() + " L.E",
                     style: TextStyle(
                       color: primaryColor,
-                      fontSize: MediaQuery.of(context).size.width >= 850 ? MediaQuery.of(context).size.width * 0.018 : 10.0,
+                      fontSize: MediaQuery.of(context).size.width >= 850 ? MediaQuery.of(context).size.width * 0.018 : MediaQuery.of(context).size.width * 0.022,
                       fontWeight: FontWeight.bold,
                     ),
-                  ) : Text("")) : Text(""),
+                  ) : Text(""),
                 ],
               ),
             ],
