@@ -110,6 +110,12 @@ class _DashboardScreen extends State<DashboardScreen> {
                             ),
                             ListTile(
                               onTap: () {
+                                FurnitureScreen.selectedCategoryName =
+                                BlocProvider.of<AdminCubit>(context)
+                                    .categories
+                                    .first["name"];
+                                FurnitureScreen.selectedCategoryIndex =
+                                0;
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
