@@ -45,48 +45,193 @@ class _ViewFurnitureScreenState extends State<ViewFurnitureScreen> {
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: SingleChildScrollView(
-          child: Stack(
-            clipBehavior: Clip.none,
+          child: Row(
             children: [
-          Positioned(
-          top: MediaQuery
-              .of(context)
-              .size
-              .width >= 850 ? -MediaQuery.of(context).size.width * 0.15: -MediaQuery
-              .of(context)
-              .size
-              .width * 0.33,
-          right: MediaQuery
-              .of(context)
-              .size
-              .width >= 850 ? -MediaQuery.of(context).size.width * 0.11: -MediaQuery
-              .of(context)
-              .size
-              .width * 0.26,
-          child: CustomCircleAvatar(
-            radius: MediaQuery.of(context).size.width >= 850 ? MediaQuery.of(context).size.width * 0.15 : MediaQuery.of(context).size.width * 0.25,
-            CavatarColor: primaryColor,
-          ),
-          ),
-              Positioned(
-                top: 0,
-                right: 5.0,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      height: MediaQuery
-                    .of(context)
-                    .size
-                    .width * 0.25,
-                      width: MediaQuery
-                          .of(context)
-                          .size
-                          .width * 0.25,
-                      child: Image.network(
-                        widget.selectedFurniture.shared[selectedColorIndex].image,
-                        fit: BoxFit.contain,
+
+              Expanded(
+                flex:6,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 15.0, top: 15.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.selectedFurniture.name,
+                        style: TextStyle(
+                          fontSize: MediaQuery.of(context).size.width >= 850 ? MediaQuery.of(context).size.width * 0.028 : MediaQuery.of(context).size.width * 0.033,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
+                      widget.selectedFurniture.description == null ? SizedBox(
+                        height: 10.0,) : Text(
+                        widget.selectedFurniture.description!,
+                        style: TextStyle(
+                          fontStyle: FontStyle.italic,
+                          fontSize: MediaQuery.of(context).size.width >= 850 ? MediaQuery.of(context).size.width * 0.023 : MediaQuery.of(context).size.width * 0.028,
+                          color: Colors.black54,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20.0,
+                      ),
+                      Column(
+                        children: [
+                          Row(
+                            children: [
+                              Expanded(
+                                  child: ReusableCard(
+                                    color: secondaryColor,
+                                    cardChild: IconContent(
+                                      icon: FontAwesomeIcons.dollarSign,
+                                      label: 'Price',
+                                      value: widget.selectedFurniture
+                                          .shared[selectedColorIndex].price,
+                                      discount: widget.selectedFurniture
+                                          .shared[selectedColorIndex].discount,
+                                    ),
+                                  )),
+                              Expanded(
+                                  child: ReusableCard(
+                                    color: secondaryColor,
+                                    cardChild: IconContent(
+                                      icon: Icons.percent,
+                                      label: 'Sale',
+                                      value: double.parse(widget.selectedFurniture
+                                          .shared[selectedColorIndex].discount)
+                                          .toInt()
+                                          .toString(),
+                                      discount: widget.selectedFurniture
+                                          .shared[selectedColorIndex].discount,
+                                    ),
+                                  )),
+                              //Container(width: MediaQuery.of(context).size.width >= 850 ? MediaQuery.of(context).size.width*0.2 : MediaQuery.of(context).size.width*0.1,),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Expanded(
+                                  child: ReusableCard(
+                                    color: secondaryColor,
+                                    cardChild: IconContent(
+                                      icon: Icons.star,
+                                      label: 'Average Rating',
+                                      value: widget.selectedFurniture
+                                          .calculateAverageRating().toString() == 'NaN' ? '0' : widget.selectedFurniture
+                                          .calculateAverageRating().toString(),
+                                      discount: widget.selectedFurniture
+                                          .shared[selectedColorIndex].discount,
+                                    ),
+                                  )),
+                              Expanded(
+                                  child: ReusableCard(
+                                    color: secondaryColor,
+                                    cardChild: IconContent(
+                                      icon: FontAwesomeIcons.hashtag,
+                                      label: 'Available Quantity',
+                                      value: widget.selectedFurniture
+                                          .shared[selectedColorIndex].quantity,
+                                      discount: widget.selectedFurniture
+                                          .shared[selectedColorIndex].discount,
+                                    ),
+                                  )),
+                              // Spacer(),
+                            ],
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: MediaQuery.of(context).size.width >= 850 ? 35.0: 25.0,),
+                      Text(
+                        "Reviews",
+                        style: TextStyle(
+                          fontSize: MediaQuery.of(context).size.width >= 850 ? MediaQuery.of(context).size.width * 0.02 : MediaQuery.of(context).size.width * 0.033,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: MediaQuery.of(context).size.width >= 850 ? 20.0 : 15.0,),
+                      widget.selectedFurniture.ratings.length == 0 ? Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text("No reviews yet !", style: TextStyle(color: Colors.red, fontSize: MediaQuery.of(context).size.width >= 850 ? MediaQuery.of(context).size.width * 0.014 : MediaQuery.of(context).size.width * 0.026,),),
+                      ) : rows.length == 0 ? Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: CircularProgressIndicator(color: thirdColor,),
+                      ) : DataTable(
+                        decoration: BoxDecoration(
+                          border:
+                          Border.all(color: Colors.grey.shade400),
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        columns: <DataColumn>[
+                          DataColumn(
+                            label: Expanded(
+                              child: Text(
+                                'Name',
+                                style: TextStyle(fontStyle: FontStyle.italic, fontWeight: FontWeight.bold, fontSize: MediaQuery.of(context).size.width >= 850 ? MediaQuery.of(context).size.width * 0.012 : MediaQuery.of(context).size.width * 0.023),
+                              ),
+                            ),
+                          ),
+                          DataColumn(
+                            label: Expanded(
+                              child: Text(
+                                'Rating',
+                                style: TextStyle(fontStyle: FontStyle.italic, fontWeight: FontWeight.bold, fontSize: MediaQuery.of(context).size.width >= 850 ? MediaQuery.of(context).size.width * 0.012 : MediaQuery.of(context).size.width * 0.023),
+                              ),
+                            ),
+                          ),
+                        ],
+                        rows: rows,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Expanded(
+                flex:3,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        Positioned(
+                          top: MediaQuery
+                              .of(context)
+                              .size
+                              .width >= 850 ? -MediaQuery.of(context).size.width * 0.15: -MediaQuery
+                              .of(context)
+                              .size
+                              .width * 0.33,
+                          right: MediaQuery
+                              .of(context)
+                              .size
+                              .width >= 850 ? -MediaQuery.of(context).size.width * 0.11: -MediaQuery
+                              .of(context)
+                              .size
+                              .width * 0.26,
+                          child: CustomCircleAvatar(
+                            radius: MediaQuery.of(context).size.width >= 850 ? MediaQuery.of(context).size.width * 0.15 : MediaQuery.of(context).size.width * 0.25,
+                            CavatarColor: primaryColor,
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.topRight,
+                          // top: -MediaQuery.of(context).size.width * 0.2,
+                          child: Container(
+                            width: MediaQuery
+                                .of(context)
+                                .size
+                                .width * 0.3,
+                            // width: double.infinity,
+                            height: MediaQuery
+                                .of(context)
+                                .size
+                                .width * 0.25,
+                            child: Image.network(
+                              widget.selectedFurniture.shared[selectedColorIndex].image,
+                              fit: BoxFit.contain,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                     Container(
                       width: MediaQuery.of(context).size.width >= 850 ? MediaQuery.of(context).size.width * 0.1 : MediaQuery.of(context).size.width * 0.2,
@@ -143,139 +288,6 @@ class _ViewFurnitureScreenState extends State<ViewFurnitureScreen> {
                             Text("Edit", style: TextStyle(fontSize: MediaQuery.of(context).size.width >= 850 ? MediaQuery.of(context).size.width * 0.012 : MediaQuery.of(context).size.width * 0.02,),),
                           ],
                         ),),
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 15.0, top: 15.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      widget.selectedFurniture.name,
-                      style: TextStyle(
-                        fontSize: MediaQuery.of(context).size.width >= 850 ? MediaQuery.of(context).size.width * 0.028 : MediaQuery.of(context).size.width * 0.033,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    widget.selectedFurniture.description == null ? SizedBox(
-                      height: 10.0,) : Text(
-                      widget.selectedFurniture.description!,
-                      style: TextStyle(
-                        fontStyle: FontStyle.italic,
-                        fontSize: MediaQuery.of(context).size.width >= 850 ? MediaQuery.of(context).size.width * 0.023 : MediaQuery.of(context).size.width * 0.028,
-                        color: Colors.black54,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 20.0,
-                    ),
-                    Column(
-                      children: [
-                        Row(
-                          children: [
-                            Expanded(
-                                child: ReusableCard(
-                                  color: secondaryColor,
-                                  cardChild: IconContent(
-                                    icon: FontAwesomeIcons.dollarSign,
-                                    label: 'Price',
-                                    value: widget.selectedFurniture
-                                        .shared[selectedColorIndex].price,
-                                    discount: widget.selectedFurniture
-                                        .shared[selectedColorIndex].discount,
-                                  ),
-                                )),
-                            Expanded(
-                                child: ReusableCard(
-                                  color: secondaryColor,
-                                  cardChild: IconContent(
-                                    icon: Icons.percent,
-                                    label: 'Sale',
-                                    value: double.parse(widget.selectedFurniture
-                                        .shared[selectedColorIndex].discount)
-                                        .toInt()
-                                        .toString(),
-                                    discount: widget.selectedFurniture
-                                        .shared[selectedColorIndex].discount,
-                                  ),
-                                )),
-                            Spacer(),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Expanded(
-                                child: ReusableCard(
-                                  color: secondaryColor,
-                                  cardChild: IconContent(
-                                    icon: Icons.star,
-                                    label: 'Average Rating',
-                                    value: widget.selectedFurniture
-                                        .calculateAverageRating().toString() == 'NaN' ? '0' : widget.selectedFurniture
-                                        .calculateAverageRating().toString(),
-                                    discount: widget.selectedFurniture
-                                        .shared[selectedColorIndex].discount,
-                                  ),
-                                )),
-                            Expanded(
-                                child: ReusableCard(
-                                  color: secondaryColor,
-                                  cardChild: IconContent(
-                                    icon: FontAwesomeIcons.hashtag,
-                                    label: 'Available Quantity',
-                                    value: widget.selectedFurniture
-                                        .shared[selectedColorIndex].quantity,
-                                    discount: widget.selectedFurniture
-                                        .shared[selectedColorIndex].discount,
-                                  ),
-                                )),
-                            Spacer(),
-                          ],
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: MediaQuery.of(context).size.width >= 850 ? 35.0: 25.0,),
-                    Text(
-                      "Reviews",
-                      style: TextStyle(
-                        fontSize: MediaQuery.of(context).size.width >= 850 ? MediaQuery.of(context).size.width * 0.02 : MediaQuery.of(context).size.width * 0.033,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: MediaQuery.of(context).size.width >= 850 ? 20.0 : 15.0,),
-                    widget.selectedFurniture.ratings.length == 0 ? Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text("No reviews yet !", style: TextStyle(color: Colors.red, fontSize: MediaQuery.of(context).size.width >= 850 ? MediaQuery.of(context).size.width * 0.014 : MediaQuery.of(context).size.width * 0.026,),),
-                    ) : rows.length == 0 ? Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: CircularProgressIndicator(color: thirdColor,),
-                    ) : DataTable(
-                      decoration: BoxDecoration(
-                        border:
-                        Border.all(color: Colors.grey.shade400),
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      columns: <DataColumn>[
-                        DataColumn(
-                          label: Expanded(
-                            child: Text(
-                              'Name',
-                              style: TextStyle(fontStyle: FontStyle.italic, fontWeight: FontWeight.bold, fontSize: MediaQuery.of(context).size.width >= 850 ? MediaQuery.of(context).size.width * 0.012 : MediaQuery.of(context).size.width * 0.023),
-                            ),
-                          ),
-                        ),
-                        DataColumn(
-                          label: Expanded(
-                            child: Text(
-                              'Rating',
-                              style: TextStyle(fontStyle: FontStyle.italic, fontWeight: FontWeight.bold, fontSize: MediaQuery.of(context).size.width >= 850 ? MediaQuery.of(context).size.width * 0.012 : MediaQuery.of(context).size.width * 0.023),
-                            ),
-                          ),
-                        ),
-                      ],
-                      rows: rows,
                     ),
                   ],
                 ),
