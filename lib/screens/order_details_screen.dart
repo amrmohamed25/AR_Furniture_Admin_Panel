@@ -9,8 +9,38 @@ class OrderDetailsScreen extends StatelessWidget {
   //List<Map<String,dynamic>> furniture = [];
  OrderModel myOrder;
  OrderDetailsScreen(this.myOrder);
+
+
+
   @override
   Widget build(BuildContext context) {
+    int quantity = 0;
+    double totalPrice = 0;
+    double subTotalPrice =0;
+    List<Map<String,dynamic>> orderFurniture = [];
+    myOrder.order
+        .forEach((key, shared) {
+      for (int j = 0; j < shared.length; j++) {
+
+        Map<String,dynamic> furniture={};
+        print("lol");
+        print(shared[j].image);
+        furniture["image"]=shared[j].image;
+        furniture["price"] = shared[j].price;
+        furniture["quantity"]=shared[j].quantityCart;
+        furniture["discount"]=shared[j].discount;
+        furniture["colorName"]=shared[j].colorName;
+        print(key.split("|")[1]);
+        furniture["name"]=key.split("|")[1];
+        orderFurniture.add(furniture);
+        // quantity = json["quantity"];
+        // discount = json["discount"];
+        // // print(furniture.shared.first.colorName);
+        // // print(furniture.shared.length);
+        // orderFurniture.add(furniture);
+
+
+      } });
     return DashboardScreen(Responsive(
       mobile: Container(),
       desktop: Container(
@@ -155,7 +185,7 @@ class OrderDetailsScreen extends StatelessWidget {
                                     ),
                                   ),
                                   SizedBox(
-                                    width: MediaQuery.of(context).size.width /5,
+                                    width: MediaQuery.of(context).size.width /7,
                                   ),
                                   Text(
                                     // "Order id: ${myOrder.orderId}",
@@ -194,7 +224,7 @@ class OrderDetailsScreen extends StatelessWidget {
                                     ),
                                   ),
                                   SizedBox(
-                                    width: MediaQuery.of(context).size.width /3.8,
+                                    width: MediaQuery.of(context).size.width /5.5,
                                   ),
                                   Text(
                                     // "Order id: ${myOrder.orderId}",
@@ -282,144 +312,206 @@ class OrderDetailsScreen extends StatelessWidget {
                           //   borderRadius: BorderRadius.circular(10),
                             //color: Color(0xffFFF5EE),
                          // ),
-                           ListView.builder(
-                             // physics: NeverScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              itemCount: 4,
-                              itemBuilder: (BuildContext context, int index) {
-                                return Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Material(
-                                    elevation: 10,
-                                    color:  Color(0xffFFF5EE),
-                                    borderRadius: BorderRadius.circular(20),
-                                    shadowColor: Color(0xffFFF5EE),
-                                    child: Row(
-                                      children: [
-                                        Column(
-                                            //mainAxisAlignment: MainAxisAlignment.start,
-                                            children: [
-                                              Container(
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width / 2.3,
-                                                height: MediaQuery.of(context).size.height/17,
-                                                // color:Colors.red,
-                                                child: Row(
-                                                  children: [
-                                                    Padding(
-                                                      padding: const EdgeInsets.all(10.0),
-                                                      child: Text(
-                                                        // "Order id: ${myOrder.orderId}",
-                                                        // overflow: TextOverflow.ellipsis,
-                                                        // style: GoogleFonts.raleway(
-                                                        //   textStyle: const TextStyle(
-                                                        //       fontSize: 18, fontWeight: FontWeight.bold),
+                           Container(
+                             height: orderFurniture.length * MediaQuery
+                                 .of(context)
+                                 .size
+                                 .height / 5.5,
+                             width: MediaQuery
+                                 .of(context)
+                                 .size
+                                 .width - 10,
+                             decoration: BoxDecoration(
+                                 borderRadius: BorderRadius.circular(20),
+                                // color: Colors.grey[300]),
+                               ),
+                             child: ListView.builder(
+                               // physics: NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                itemCount: orderFurniture.length,
+                                itemBuilder: (BuildContext context, int index) {
 
-                                                        " Furniture Name : ",
-                                                        style: TextStyle(
-                                                           // fontFamily: "Montserrat",
-                                                            fontSize: 15,
-                                                            fontStyle: FontStyle.italic,
-                                                            fontWeight: FontWeight.bold),
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                      width: MediaQuery.of(context).size.width /6.5,
-                                                    ),
-                                                    //Spacer(),
-                                                    Padding(
-                                                      padding: const EdgeInsets.all(10.0),
-                                                      child: Text(
-                                                        // "Order id: ${myOrder.orderId}",
-                                                        // overflow: TextOverflow.ellipsis,
-                                                        // style: GoogleFonts.raleway(
-                                                        //   textStyle: const TextStyle(
-                                                        //       fontSize: 18, fontWeight: FontWeight.bold),
-                                                        " Color :",
-                                                        style: TextStyle(
-                                                          //  fontFamily: "Montserrat",
-                                                            fontSize: 15,
-                                                            fontStyle: FontStyle.italic,
-                                                           fontWeight: FontWeight.bold,)
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                height: 10,
-                                              ),
-                                              Container(
-                                                width: MediaQuery.of(context)
-                                                    .size
-                                                    .width / 2.3,
-                                                height: MediaQuery.of(context).size.height / 9,
-                                                child: Row(
-                                                  children: [
-                                                    Padding(
-                                                      padding: const EdgeInsets.all(10.0),
-                                                      child: Text(
-                                                        // "Order id: ${myOrder.orderId}",
-                                                        // overflow: TextOverflow.ellipsis,
-                                                        // style: GoogleFonts.raleway(
-                                                        //   textStyle: const TextStyle(
-                                                        //       fontSize: 18, fontWeight: FontWeight.bold),
-                                                        " price : ",
-                                                        style: TextStyle(
-                                                            //fontFamily: "Montserrat",
-                                                            fontSize: 15,
-                                                            fontStyle: FontStyle.italic,
+                                  return Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Material(
+                                      elevation: 10,
+                                      color:  Color(0xffFFF5EE),
+                                      borderRadius: BorderRadius.circular(20),
+                                      shadowColor: Color(0xffFFF5EE),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Column(
+                                              //mainAxisAlignment: MainAxisAlignment.start,
+                                              children: [
+                                                Container(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width / 2.3,
+                                                  height: MediaQuery.of(context).size.height/17,
+                                                  // color:Colors.red,
+                                                  child: Row(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                    children: [
+                                                      Padding(
+                                                        padding: const EdgeInsets.all(10.0),
+                                                        child: Text(
+                                                          // "Order id: ${myOrder.orderId}",
+                                                          // overflow: TextOverflow.ellipsis,
+                                                          // style: GoogleFonts.raleway(
+                                                          //   textStyle: const TextStyle(
+                                                          //       fontSize: 18, fontWeight: FontWeight.bold),
+                                                          " Furniture Name :  ${orderFurniture[index]["name"]}",
+                                                            overflow: TextOverflow.ellipsis,
+                                                            maxLines: 1,
+                                                          style: TextStyle(
+                                                             // fontFamily: "Montserrat",
+                                                              fontSize: 15,
+                                                              fontStyle: FontStyle.italic,
                                                               fontWeight: FontWeight.bold),
+                                                        ),
                                                       ),
-                                                    ),
-                                                    SizedBox(
-                                                      width: MediaQuery.of(context).size.width /5,
-                                                    ),
-                                                    //Spacer(),
-                                                    Padding(
-                                                      padding: const EdgeInsets.all(10.0),
-                                                      child: Text(
-                                                        // "Order id: ${myOrder.orderId}",
-                                                        // overflow: TextOverflow.ellipsis,
-                                                        // style: GoogleFonts.raleway(
-                                                        //   textStyle: const TextStyle(
-                                                        //       fontSize: 18, fontWeight: FontWeight.bold),
-                                                        " Quantity :",
-                                                        style: TextStyle(
-                                                            //fontFamily: "Montserrat",
-                                                            fontSize: 15,
-                                                            fontStyle: FontStyle.italic,
-                                                            fontWeight: FontWeight.bold),
+                                                      SizedBox(
+                                                        width: MediaQuery.of(context).size.width /6.5,
                                                       ),
-                                                    ),
-                                                  ],
+                                                      //Spacer(),
+                                                      Padding(
+                                                        padding: const EdgeInsets.all(10.0),
+                                                        child: Text(
+                                                          // "Order id: ${myOrder.orderId}",
+                                                          // overflow: TextOverflow.ellipsis,
+                                                          // style: GoogleFonts.raleway(
+                                                          //   textStyle: const TextStyle(
+                                                          //       fontSize: 18, fontWeight: FontWeight.bold),
+                                                          " Color :${orderFurniture[index]["colorName"]}",
+                                                          style: TextStyle(
+                                                            //  fontFamily: "Montserrat",
+                                                              fontSize: 15,
+                                                              fontStyle: FontStyle.italic,
+                                                             fontWeight: FontWeight.bold,)
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ),
-                                              ),
-                                            ]),
-                                        SizedBox(
-                                          width:MediaQuery.of(context).size.width /20,
-                                        ),
-                                        Expanded(
-                                          flex: 10,
-                                          child: Container(
-                                            width: MediaQuery
-                                                .of(context)
-                                                .size
-                                                .width / 4,
-                                            height: MediaQuery
-                                                .of(context)
-                                                .size
-                                                .height / 4,
-                                            //child: Image.network(furniture[index]["image"]),
-                                            color: Colors.grey,
+                                                SizedBox(
+                                                  height: 10,
+                                                ),
+                                                Container(
+                                                  width: MediaQuery.of(context)
+                                                      .size
+                                                      .width / 2.3,
+                                                  height: MediaQuery.of(context).size.height / 9,
+                                                  child: Row(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                    children: [
+                                                      Padding(
+                                                        padding: const EdgeInsets.all(10.0),
+                                                        child: Text(
+                                                          // "Order id: ${myOrder.orderId}",
+                                                          // overflow: TextOverflow.ellipsis,
+                                                          // style: GoogleFonts.raleway(
+                                                          //   textStyle: const TextStyle(
+                                                          //       fontSize: 18, fontWeight: FontWeight.bold),
+                                                          " price : ${orderFurniture[index]["price"]}",
+                                                          style: TextStyle(
+                                                              //fontFamily: "Montserrat",
+                                                              fontSize: 15,
+                                                              fontStyle: FontStyle.italic,
+                                                                fontWeight: FontWeight.bold),
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        width: MediaQuery.of(context).size.width /5,
+                                                      ),
+                                                      //Spacer(),
+                                                      Padding(
+                                                        padding: const EdgeInsets.all(10.0),
+                                                        child: Text(
+                                                          // "Order id: ${myOrder.orderId}",
+                                                          // overflow: TextOverflow.ellipsis,
+                                                          // style: GoogleFonts.raleway(
+                                                          //   textStyle: const TextStyle(
+                                                          //       fontSize: 18, fontWeight: FontWeight.bold),
+                                                          " Quantity :${orderFurniture[index]["quantity"]}",
+                                                          style: TextStyle(
+                                                              //fontFamily: "Montserrat",
+                                                              fontSize: 15,
+                                                              fontStyle: FontStyle.italic,
+                                                              fontWeight: FontWeight.bold),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ]),
+                                          SizedBox(
+                                            width:MediaQuery.of(context).size.width /20,
                                           ),
-                                        ),
-                                      ],
+                                          Expanded(
+                                            flex: 10,
+                                            child: Container(
+                                              width: MediaQuery
+                                                  .of(context)
+                                                  .size
+                                                  .width / 4,
+                                              height: MediaQuery
+                                                  .of(context)
+                                                  .size
+                                                  .height / 4,
+                                              child: Image.network(orderFurniture[index]["image"]),
+                                              color: Colors.transparent,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                );
-                              }),
+                                  );
+                                }),
+                           ),
+                       Container(
+                         child: Row(
+                           children: [
+                             Padding(
+                               padding: const EdgeInsets.all(10.0),
+                               child: Text(
+                                 // "Order id: ${myOrder.orderId}",
+                                 // overflow: TextOverflow.ellipsis,
+                                 // style: GoogleFonts.raleway(
+                                 //   textStyle: const TextStyle(
+                                 //       fontSize: 18, fontWeight: FontWeight.bold),
+                                 " Totalprice: ",
+                                 overflow: TextOverflow.ellipsis,
+                                 maxLines: 1,
+                                 style: TextStyle(
+                                    fontFamily: "Montserrat",
+                                     fontSize: 18,
+                                    // fontStyle: FontStyle.italic,
+                                     fontWeight: FontWeight.bold),
+                               ),
+                             ),
+
+                             Padding(
+                               padding: const EdgeInsets.all(10.0),
+                               child: Text(
+                                 // "Order id: ${myOrder.orderId}",
+                                 // overflow: TextOverflow.ellipsis,
+                                 // style: GoogleFonts.raleway(
+                                 //   textStyle: const TextStyle(
+                                 //       fontSize: 18, fontWeight: FontWeight.bold),
+                                   " value ",
+                                   style: TextStyle(
+                                     fontFamily: "Montserrat",
+                                     fontSize: 18,
+                                     //fontStyle: FontStyle.italic,
+                                     fontWeight: FontWeight.bold,)
+                               ),
+                             ),
+                           ],
+                         ),
+
+
+                       )
                        // )
 
                       ])),
