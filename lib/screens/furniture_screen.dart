@@ -251,6 +251,7 @@ class FurnitureScreenState extends State<FurnitureScreen> {
                                                                             Expanded(
                                                                               child: TextFormField(
                                                                                 validator: (value) {
+
                                                                                   if (categoryImg.file == null) {
                                                                                     if (!Uri.parse(
                                                                                         categoryImg.urlController.text)
@@ -281,13 +282,26 @@ class FurnitureScreenState extends State<FurnitureScreen> {
                                                                                 onPressed: () async {
                                                                                   print("hello");
                                                                                   await getFile(categoryImg,isImage:true);
+                                                                                  setState((){});
+
                                                                                 },
                                                                                 icon: const Icon(Icons.attach_file)),
+                                                                            if (categoryImg.file != null)
+                                                                              IconButton(
+                                                                                  onPressed: () async {
+                                                                                    setState(() {
+                                                                                      categoryImg.file = null;
+                                                                                      categoryImg.urlController.text = "";
+                                                                                    });
+                                                                                    // await getImage();
+                                                                                  },
+                                                                                  icon: const Icon(Icons.delete)),
                                                                           ],
                                                                         ),
                                                                       ),
                                                                       actions: [
-                                                                        TextButton(onPressed: ()async{
+                                                                        TextButton(onPressed: categoryImg.file==null&&categoryImg.urlController.text==""?null:()async{
+
                                                                           await BlocProvider.of<AdminCubit>(context).updateCategory(context,index:index,image:categoryImg);
                                                                           Navigator.of(context).pop();
                                                                           }, child:Text("Save")),
