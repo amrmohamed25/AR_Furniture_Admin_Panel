@@ -27,3 +27,7 @@ class UpdatingFurnitureInProgressState extends AdminStates{}
 class UpdatedFurnitureSuccessState extends AdminStates{}
 
 class UpdatedFurnitureErrorState extends AdminStates{}
+
+class AddingCategory extends AdminStates{}
+
+class AddedCategory extends AdminStates{}

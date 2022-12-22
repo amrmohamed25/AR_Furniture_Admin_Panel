@@ -2,6 +2,7 @@ import 'package:ar_furniture_admin_panel/constants.dart';
 import 'package:ar_furniture_admin_panel/cubits/admin_states.dart';
 import 'package:ar_furniture_admin_panel/models/furniture_model.dart';
 import 'package:ar_furniture_admin_panel/responsive.dart';
+import 'package:ar_furniture_admin_panel/screens/add_category_screen.dart';
 import 'package:ar_furniture_admin_panel/screens/add_furniture_screen.dart';
 import 'package:ar_furniture_admin_panel/screens/dashboard_screen.dart';
 import 'package:ar_furniture_admin_panel/screens/edit_furniture_screen.dart';
@@ -103,14 +104,13 @@ class FurnitureScreenState extends State<FurnitureScreen> {
                             // margin: EdgeInsets.only(top: 2.0),
                             height: MediaQuery.of(context).size.height / 7,
                             child: ListView.builder(
-                                itemCount: BlocProvider.of<AdminCubit>(context)
-                                    .categories
-                                    .length,
+                                itemCount: BlocProvider.of<AdminCubit>(context).categories.length + 1,
                                 scrollDirection: Axis.horizontal,
                                 itemBuilder: (context, index) {
                                   return Container(
                                       margin: const EdgeInsets.all(10),
-                                      child: InkWell(
+                                      child: (index != BlocProvider.of<AdminCubit>(context).categories.length )?
+                                      InkWell(
                                         onTap: () {
                                           setState(() {
                                             FurnitureScreen.selectedCategoryName =
@@ -181,7 +181,44 @@ class FurnitureScreenState extends State<FurnitureScreen> {
                                             ),
                                           ),
                                         ),
-                                      ));
+                                      ):
+                                      InkWell(
+                                        onTap: () {
+                                          Navigator.push(context, MaterialPageRoute(builder: (context) => AddCategoryScreen()));
+                                        },
+                                        child: Container(
+                                          margin: const EdgeInsets.all(10),
+                                          width:
+                                          MediaQuery.of(context).size.width / 5.2,
+                                          decoration: BoxDecoration(
+                                              boxShadow: const [
+                                                BoxShadow(
+                                                  blurRadius: 3,
+                                                  color: primaryColor,
+                                                )
+                                              ],
+                                              borderRadius: BorderRadius.circular(
+                                                  MediaQuery.of(context).size.width / 2.5),
+                                              color: thirdColor),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8),
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: const [
+                                                Text(
+                                                  "Add Category  ",
+                                                  overflow: TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                    color:Colors.white,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                Icon(Icons.add, color: Colors.white,),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),);
                                 }),
                           ),
                           SizedBox(height: MediaQuery.of(context).size.height / 28),
