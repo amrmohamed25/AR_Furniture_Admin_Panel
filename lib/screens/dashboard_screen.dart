@@ -34,7 +34,7 @@ class _DashboardScreen extends State<DashboardScreen> {
                   mobile: Scaffold(
                     key: scaffoldKey,
                     drawer: Container(
-                        width: MediaQuery.of(context).size.width * 0.4,
+                        width: MediaQuery.of(context).size.width * 0.53,
                         color: secondaryColor,
                         child: Column(
                           children: [
