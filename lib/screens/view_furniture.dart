@@ -49,7 +49,7 @@ class _ViewFurnitureScreenState extends State<ViewFurnitureScreen> {
             children: [
 
               Expanded(
-                flex:6,
+                flex:5,
                 child: Padding(
                   padding: const EdgeInsets.only(left: 5.0, top: 15.0),
                   child: Column(
@@ -353,8 +353,8 @@ class ReusableCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 1,vertical: 4),
-      height: MediaQuery.of(context).size.height*0.1,
+      margin: EdgeInsets.symmetric(horizontal: 1,vertical: 5),
+      height: MediaQuery.of(context).size.height*0.15,
 
       decoration: BoxDecoration(
         color: color,
