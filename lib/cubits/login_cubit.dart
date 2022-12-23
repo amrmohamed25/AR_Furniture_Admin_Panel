@@ -7,6 +7,7 @@ class LoginCubit extends Cubit<LoginState>{
   LoginCubit():super(InitialLoginState());
 
   login(email,pass,context) async{
+    emit(LoadingLoginState());
     try{
     await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: pass).then((value){
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Logging In successfully!")));

@@ -8,3 +8,4 @@ class LoginErrorState extends LoginState{}
 
 class LoginToggleVisibility extends LoginState{}
 
+class LoadingLoginState extends LoginState{}
