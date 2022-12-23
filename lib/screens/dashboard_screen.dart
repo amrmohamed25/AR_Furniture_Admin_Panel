@@ -73,16 +73,42 @@ class _DashboardScreen extends State<DashboardScreen> {
                                 color: Colors.black, fontSize: 12),
                           ),
                         ),
+                        // ListTile(
+                        //   onTap: () {},
+                        //   horizontalTitleGap: 0.0,
+                        //   leading: Icon(
+                        //     Icons.category,
+                        //     color: Colors.black,
+                        //     size: 10,
+                        //   ),
+                        //   title: Text(
+                        //     "Category",
+                        //     style: TextStyle(
+                        //         color: Colors.black, fontSize: 12),
+                        //   ),
+                        // ),
                         ListTile(
-                          onTap: () {},
+                          onTap: () {
+                            FurnitureScreen.selectedCategoryName =
+                            BlocProvider.of<AdminCubit>(context)
+                                .categories
+                                .first["name"];
+                            FurnitureScreen.selectedCategoryIndex =
+                            0;
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        FurnitureScreen()));
+                          },
                           horizontalTitleGap: 0.0,
                           leading: Icon(
-                            Icons.category,
+                            Icons.event_seat,
                             color: Colors.black,
-                            size: 10,
+                            size: 12,
                           ),
                           title: Text(
-                            "Category",
+                            "Furniture",
                             style: TextStyle(
                                 color: Colors.black, fontSize: 12),
                           ),
@@ -106,32 +132,6 @@ class _DashboardScreen extends State<DashboardScreen> {
                           ),
                           title: Text(
                             "Orders",
-                            style: TextStyle(
-                                color: Colors.black, fontSize: 12),
-                          ),
-                        ),
-                        ListTile(
-                          onTap: () {
-                            FurnitureScreen.selectedCategoryName =
-                            BlocProvider.of<AdminCubit>(context)
-                                .categories
-                                .first["name"];
-                            FurnitureScreen.selectedCategoryIndex =
-                            0;
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        FurnitureScreen()));
-                          },
-                          horizontalTitleGap: 0.0,
-                          leading: Icon(
-                            Icons.event_seat,
-                            color: Colors.black,
-                            size: 12,
-                          ),
-                          title: Text(
-                            "Furniture",
                             style: TextStyle(
                                 color: Colors.black, fontSize: 12),
                           ),
@@ -224,15 +224,40 @@ class _DashboardScreen extends State<DashboardScreen> {
                                         color: Colors.black, fontSize: 15),
                                   ),
                                 ),
+                                // ListTile(
+                                //   onTap: () {},
+                                //   horizontalTitleGap: 0.0,
+                                //   leading: Icon(
+                                //     Icons.category,
+                                //     color: Colors.black,
+                                //   ),
+                                //   title: Text(
+                                //     "Category",
+                                //     style: TextStyle(
+                                //         color: Colors.black, fontSize: 15),
+                                //   ),
+                                // ),
                                 ListTile(
-                                  onTap: () {},
+                                  onTap: () {
+                                    FurnitureScreen.selectedCategoryName =
+                                    BlocProvider.of<AdminCubit>(context)
+                                        .categories
+                                        .first["name"];
+                                    FurnitureScreen.selectedCategoryIndex =
+                                    0;
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                FurnitureScreen()));
+                                  },
                                   horizontalTitleGap: 0.0,
                                   leading: Icon(
-                                    Icons.category,
+                                    Icons.event_seat,
                                     color: Colors.black,
                                   ),
                                   title: Text(
-                                    "Category",
+                                    "Furniture",
                                     style: TextStyle(
                                         color: Colors.black, fontSize: 15),
                                   ),
@@ -258,31 +283,6 @@ class _DashboardScreen extends State<DashboardScreen> {
                                   ),
                                   title: Text(
                                     "Orders",
-                                    style: TextStyle(
-                                        color: Colors.black, fontSize: 15),
-                                  ),
-                                ),
-                                ListTile(
-                                  onTap: () {
-                                    FurnitureScreen.selectedCategoryName =
-                                    BlocProvider.of<AdminCubit>(context)
-                                        .categories
-                                        .first["name"];
-                                    FurnitureScreen.selectedCategoryIndex =
-                                    0;
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                FurnitureScreen()));
-                                  },
-                                  horizontalTitleGap: 0.0,
-                                  leading: Icon(
-                                    Icons.event_seat,
-                                    color: Colors.black,
-                                  ),
-                                  title: Text(
-                                    "Furniture",
                                     style: TextStyle(
                                         color: Colors.black, fontSize: 15),
                                   ),
