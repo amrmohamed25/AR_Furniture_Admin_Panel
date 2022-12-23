@@ -12,11 +12,11 @@ class OrderDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    int quantity = 0;
+    List<Map<String, dynamic>> orderFurniture = [];
+    double tax = 0;
+    double estimatingTax = 0.14;
     double totalPrice = 0;
     double subTotalPrice = 0;
-    List<Map<String, dynamic>> orderFurniture = [];
-
     myOrder.order.forEach((key, shared) {
       for (int j = 0; j < shared.length; j++) {
         Map<String, dynamic> furniture = {};
@@ -36,19 +36,25 @@ class OrderDetailsScreen extends StatelessWidget {
         // // print(furniture.shared.length);
         // orderFurniture.add(furniture);
       }
+
+
     });
     for (var singleFurn in orderFurniture) {
-      totalPrice += double.parse(singleFurn["price"]) *
-              double.parse(singleFurn["quantity"]) -
-          double.parse(singleFurn["price"]) *
-              double.parse(singleFurn["quantity"]) *
-              double.parse(singleFurn["discount"]) /
-              100;
+      if (double.parse(singleFurn["quantity"])!=0){
+    subTotalPrice += double.parse(singleFurn["quantity"]) *
+    ( double.parse(singleFurn["price"]) -
+    (double.parse(singleFurn["discount"]) /
+    100)*
+    double.parse(singleFurn["price"] )
+    );
     }
-    totalPrice += totalPrice + totalPrice * 0.14;
+    }
+    tax = subTotalPrice * estimatingTax;
+    totalPrice = subTotalPrice + tax;
+
     return DashboardScreen(
       Responsive(
-        mobile:         Container(
+        mobile:Container(
           // height: MediaQuery
           //     .of(context)
           //   .size
@@ -307,10 +313,10 @@ class OrderDetailsScreen extends StatelessWidget {
                                                     2) +
                                                     ' L.E',
                                                 style: TextStyle(
-                                                  decoration: orderFurniture[
+                                                  decoration: double.parse(orderFurniture[
                                                   index][
-                                                  "discount"] !=
-                                                      "0"
+                                                  "discount"]).toInt()!=
+                                                      0
                                                       ? TextDecoration
                                                       .lineThrough
                                                       : null,
@@ -320,7 +326,7 @@ class OrderDetailsScreen extends StatelessWidget {
                                                   color: Colors.black,
                                                 ),
                                               ),
-                                              if(double.parse(orderFurniture[index]["discount"])!=0)
+                                              if(double.parse(orderFurniture[index]["discount"]).toInt()!=0)
                                                 Text(
                                                   (double.parse(
                                                       orderFurniture[
@@ -341,6 +347,18 @@ class OrderDetailsScreen extends StatelessWidget {
                                                     color: Colors.black,
                                                   ),
                                                 ),
+                                              // SizedBox(width: 10,),
+                                              // if(orderFurniture[index]["discount"]!="0")
+                                              //
+                                              //   Text(
+                                              //
+                                              //     '${(double.parse(orderFurniture[index]["price"]) -( (double.parse(orderFurniture[index]["discount"])/100)*double.parse(orderFurniture[index]["price"]))).toStringAsFixed(2)} L.E',
+                                              //     style: TextStyle(
+                                              //       fontSize: 15.0,
+                                              //       fontWeight: FontWeight.w600,
+                                              //       color: Colors.black,
+                                              //     ),
+                                              //   ),
 
                                             ],
                                           ),
@@ -379,7 +397,9 @@ class OrderDetailsScreen extends StatelessWidget {
                                           height:
                                           MediaQuery.of(context).size.height / 4,
                                           child: Image.network(
-                                              orderFurniture[index]["image"]),
+                                              orderFurniture[index]["image"],
+                                          fit: BoxFit.contain,),
+
                                           color: Colors.transparent,
                                         ),
                                       ),
@@ -511,17 +531,63 @@ class OrderDetailsScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(10),
                             //color: Color(0xffFFF5EE),
                           ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
 
-                              Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
+                                Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+
+                                      Text(
+                                        "User Name : ${myOrder.userName}",
+                                        style: TextStyle(
+                                          fontStyle: FontStyle.italic,
+                                          fontSize: 15,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      Text(
+                                        "Order time : ${myOrder.time.toDate().year.toString()}-${myOrder.time.toDate().month.toString()}-${myOrder.time.toDate().day.toString()}",
+                                        style: TextStyle(
+                                          fontStyle: FontStyle.italic,
+                                          fontSize: 15,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      Text(
+                                        "Area :${myOrder.area}",
+                                        style: TextStyle(
+                                          fontStyle: FontStyle.italic,
+                                          fontSize: 15,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      Text(
+                                        "Floor number :${myOrder.floorNumber}",
+                                        style: TextStyle(
+                                          fontStyle: FontStyle.italic,
+                                          fontSize: 15,
+                                        ),
+                                      ),
+                                    ]),
+                                SizedBox(
+                                  width: MediaQuery.of(context).size.width / 4,
+                                ),
+                                Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-
                                     Text(
-                                      "User Name : ${myOrder.userName}",
+                                      "Mobile number :${myOrder.mobileNumber}",
                                       style: TextStyle(
                                         fontStyle: FontStyle.italic,
                                         fontSize: 15,
@@ -531,7 +597,7 @@ class OrderDetailsScreen extends StatelessWidget {
                                       height: 10,
                                     ),
                                     Text(
-                                      "Order time : ${myOrder.time.toDate().year.toString()}-${myOrder.time.toDate().month.toString()}-${myOrder.time.toDate().day.toString()}",
+                                      "Street Name : ${myOrder.streetName}",
                                       style: TextStyle(
                                         fontStyle: FontStyle.italic,
                                         fontSize: 15,
@@ -541,59 +607,16 @@ class OrderDetailsScreen extends StatelessWidget {
                                       height: 10,
                                     ),
                                     Text(
-                                      "Area :${myOrder.area}",
+                                      "Building Name : ${myOrder.buildingNumber}",
                                       style: TextStyle(
                                         fontStyle: FontStyle.italic,
                                         fontSize: 15,
                                       ),
                                     ),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    Text(
-                                      "Floor number :${myOrder.floorNumber}",
-                                      style: TextStyle(
-                                        fontStyle: FontStyle.italic,
-                                        fontSize: 15,
-                                      ),
-                                    ),
-                                  ]),
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width / 4,
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Mobile number :${myOrder.mobileNumber}",
-                                    style: TextStyle(
-                                      fontStyle: FontStyle.italic,
-                                      fontSize: 15,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Text(
-                                    "Street Name : ${myOrder.streetName}",
-                                    style: TextStyle(
-                                      fontStyle: FontStyle.italic,
-                                      fontSize: 15,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Text(
-                                    "Building Name : ${myOrder.buildingNumber}",
-                                    style: TextStyle(
-                                      fontStyle: FontStyle.italic,
-                                      fontSize: 15,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                         Row(
@@ -703,10 +726,9 @@ class OrderDetailsScreen extends StatelessWidget {
                                                                     2) +
                                                                     ' L.E',
                                                                 style: TextStyle(
-                                                                  decoration: orderFurniture[
+                                                                  decoration: double.parse(orderFurniture[
                                                                   index][
-                                                                  "discount"] !=
-                                                                      "0"
+                                                                  "discount"] ).toInt()!= 0
                                                                       ? TextDecoration
                                                                       .lineThrough
                                                                       : null,
@@ -716,23 +738,31 @@ class OrderDetailsScreen extends StatelessWidget {
                                                                   color: Colors.black,
                                                                 ),
                                                               ),
+                                                              SizedBox(width: 10,),
+                                                              if(double.parse(orderFurniture[index]["discount"]).toInt()!=0)
+
+                                                                Text(
+
+                                                                  '${(double.parse(orderFurniture[index]["price"]) -( (double.parse(orderFurniture[index]["discount"])/100)*double.parse(orderFurniture[index]["price"]))).toStringAsFixed(2)} L.E',
+                                                                  style: TextStyle(
+                                                                    fontSize: 15.0,
+                                                                    fontWeight: FontWeight.w600,
+                                                                    color: Colors.black,
+                                                                  ),
+                                                                ),
                                                             ]),
                                                       ],
                                                     ),
 
+                                                    SizedBox(width: 40,),
                                                     Column(
                                                       mainAxisAlignment: MainAxisAlignment.start,
                                                       crossAxisAlignment: CrossAxisAlignment.start,
                                                       children: [
                                                         Padding(
                                                           padding:
-                                                          const EdgeInsets.all(10.0),
+                                                          const EdgeInsets.all(5.0),
                                                           child: Text(
-                                                            // "Order id: ${myOrder.orderId}",
-                                                            // overflow: TextOverflow.ellipsis,
-                                                            // style: GoogleFonts.raleway(
-                                                            //   textStyle: const TextStyle(
-                                                            //       fontSize: 18, fontWeight: FontWeight.bold),
                                                               " Color :${orderFurniture[index]["colorName"]}",
                                                               style: TextStyle(
                                                                 //  fontFamily: "Montserrat",
@@ -743,17 +773,12 @@ class OrderDetailsScreen extends StatelessWidget {
                                                         ),
 
                                                         SizedBox(
-                                                          width: MediaQuery.of(context).size.width/5,
+                                                          height: MediaQuery.of(context).size.height/50,
                                                         ),
                                                         Padding(
                                                           padding:
-                                                          const EdgeInsets.all(10.0),
+                                                          const EdgeInsets.all(5.0),
                                                           child: Text(
-                                                            // "Order id: ${myOrder.orderId}",
-                                                            // overflow: TextOverflow.ellipsis,
-                                                            // style: GoogleFonts.raleway(
-                                                            //   textStyle: const TextStyle(
-                                                            //       fontSize: 18, fontWeight: FontWeight.bold),
                                                             " Quantity :${orderFurniture[index]["quantity"]}",
                                                             style: TextStyle(
                                                               //fontFamily: "Montserrat",
@@ -769,18 +794,19 @@ class OrderDetailsScreen extends StatelessWidget {
                                                 ),
                                               ),
                                             ]),
-                                        SizedBox(
-                                          width: MediaQuery.of(context).size.width / 20,
-                                        ),
+                                        // SizedBox(
+                                        //   width: MediaQuery.of(context).size.width / 20,
+                                        // ),
                                         Expanded(
-                                          flex: 10,
+                                          flex: 2,
                                           child: Container(
                                             width:
                                             MediaQuery.of(context).size.width / 4,
                                             height:
                                             MediaQuery.of(context).size.height / 4,
                                             child: Image.network(
-                                                orderFurniture[index]["image"]),
+                                                orderFurniture[index]["image"]
+                                              ,fit: BoxFit.contain,),
                                             color: Colors.transparent,
                                           ),
                                         ),
