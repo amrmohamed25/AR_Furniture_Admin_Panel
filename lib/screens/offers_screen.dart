@@ -376,11 +376,14 @@ class _OffersScreenState extends State<OffersScreen> {
                                               // color.add(sharedProperties[i].colorName.text);
                                             }
                                             if (flag == 1) {
-                                              createOffer(
-                                                  category: category,
-                                                  furnID: furnID,
-                                                  color: color,
-                                                  image: image);
+                                              // createOffer(
+                                              //     category: category,
+                                              //     furnID: furnID,
+                                              //     color: color,
+                                              //     image: image);
+                                              if (_formKey.currentState!.validate()) {
+                                                await BlocProvider.of<AdminCubit>(context).addOffer(context,  category: category, furnID: furnID, color: color, image: image);
+                                              }
                                               print("Offer should be added");
                                             }
 
@@ -514,18 +517,18 @@ class _OffersScreenState extends State<OffersScreen> {
                                               if (!Uri.parse(offerImage
                                                       .urlController.text)
                                                   .isAbsolute) {
-                                                return "Please enter a url or upload a model";
+                                                return "Please enter a url or upload an image";
                                               }
                                             }
                                             return null;
                                           },
+                                          enabled: offerImage.file == null
+                                              ? true
+                                              : false,
                                           controller: offerImage.urlController,
                                           decoration: InputDecoration(
                                             hintText:
                                                 "uploading discount picture",
-                                            enabled: offerImage.file == null
-                                                ? true
-                                                : false,
                                             enabledBorder:
                                                 const OutlineInputBorder(
                                                     borderSide: BorderSide(
@@ -639,7 +642,6 @@ class _OffersScreenState extends State<OffersScreen> {
                                             List<String> color = [];
                                             var category;
                                             var furnID;
-                                            var image;
                                             // List<String> discount =[];
                                             var flag = 0;
                                             for (int i = 0;
@@ -669,8 +671,7 @@ class _OffersScreenState extends State<OffersScreen> {
                                                     widget.furniture.category;
                                                 furnID = widget
                                                     .furniture.furnitureId;
-                                                image = offerImage
-                                                    .urlController.text;
+
                                                 print('------------------');
                                                 print(widget.furniture.shared[i]
                                                     .discount);
@@ -682,11 +683,14 @@ class _OffersScreenState extends State<OffersScreen> {
                                               // color.add(sharedProperties[i].colorName.text);
                                             }
                                             if (flag == 1) {
-                                              createOffer(
-                                                  category: category,
-                                                  furnID: furnID,
-                                                  color: color,
-                                                  image: image);
+                                              // createOffer(
+                                              //     category: category,
+                                              //     furnID: furnID,
+                                              //     color: color,
+                                              //     image: image);
+                                              await BlocProvider.of<AdminCubit>(
+                                                  context)
+                                                  .addOffer(context, category: category, furnID: furnID, color: color, image: offerImage);
                                               print("Offer should be added");
                                             }
 
@@ -924,7 +928,7 @@ class _OffersScreenState extends State<OffersScreen> {
       'category': category,
       'colors': color,
       'img': image,
-      'salesID': furnID
+      'salesId': furnID
     };
     await docUser.set(json);
   }
