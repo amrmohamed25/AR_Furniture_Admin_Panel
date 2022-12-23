@@ -23,6 +23,7 @@ List<Widget> body(context, double width, bool isWeb){
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: primaryColor,
+                padding: EdgeInsets.all(15.0),
               ),
               onPressed: (){
                 Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen()));
