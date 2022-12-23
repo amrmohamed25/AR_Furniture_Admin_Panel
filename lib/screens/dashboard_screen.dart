@@ -73,20 +73,20 @@ class _DashboardScreen extends State<DashboardScreen> {
                                 color: Colors.black, fontSize: 12),
                           ),
                         ),
-                        ListTile(
-                          onTap: () {},
-                          horizontalTitleGap: 0.0,
-                          leading: Icon(
-                            Icons.category,
-                            color: Colors.black,
-                            size: 10,
-                          ),
-                          title: Text(
-                            "Category",
-                            style: TextStyle(
-                                color: Colors.black, fontSize: 12),
-                          ),
-                        ),
+                        // ListTile(
+                        //   onTap: () {},
+                        //   horizontalTitleGap: 0.0,
+                        //   leading: Icon(
+                        //     Icons.category,
+                        //     color: Colors.black,
+                        //     size: 10,
+                        //   ),
+                        //   title: Text(
+                        //     "Category",
+                        //     style: TextStyle(
+                        //         color: Colors.black, fontSize: 12),
+                        //   ),
+                        // ),
                         ListTile(
                           onTap: () async {
                             print("mmmmm");
@@ -224,19 +224,19 @@ class _DashboardScreen extends State<DashboardScreen> {
                                         color: Colors.black, fontSize: 15),
                                   ),
                                 ),
-                                ListTile(
-                                  onTap: () {},
-                                  horizontalTitleGap: 0.0,
-                                  leading: Icon(
-                                    Icons.category,
-                                    color: Colors.black,
-                                  ),
-                                  title: Text(
-                                    "Category",
-                                    style: TextStyle(
-                                        color: Colors.black, fontSize: 15),
-                                  ),
-                                ),
+                                // ListTile(
+                                //   onTap: () {},
+                                //   horizontalTitleGap: 0.0,
+                                //   leading: Icon(
+                                //     Icons.category,
+                                //     color: Colors.black,
+                                //   ),
+                                //   title: Text(
+                                //     "Category",
+                                //     style: TextStyle(
+                                //         color: Colors.black, fontSize: 15),
+                                //   ),
+                                // ),
                                 ListTile(
                                   onTap: () async {
                                     print("mmmmm");
