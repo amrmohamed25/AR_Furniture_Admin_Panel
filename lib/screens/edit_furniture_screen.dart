@@ -131,13 +131,13 @@ class _EditFurnitureScreenState extends State<EditFurnitureScreen> {
                       ),
                     ),
                     centerTitle: true,
-                    title: const Text(
-                      "Lem 3afshk",
-                      style: TextStyle(
-                          fontFamily: "Montserrat",
-                          fontSize: 20,
-                          color: Colors.black),
-                    ),
+                    // title: const Text(
+                    //   "Lem 3afshk",
+                    //   style: TextStyle(
+                    //       fontFamily: "Montserrat",
+                    //       fontSize: 20,
+                    //       color: Colors.black),
+                    // ),
                     backgroundColor: Colors.transparent,
                     elevation: 0,
                   ),
@@ -374,25 +374,25 @@ class _EditFurnitureScreenState extends State<EditFurnitureScreen> {
                 desktop: Scaffold(
                   appBar: AppBar(
                     leading: Container(),
-                    title: MaterialButton(
-                      hoverColor: Colors.transparent,
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    DashboardScreen(Container())));
-
-                        //TODO: navigate to HOMESCREEN
-                      },
-                      child: const Text(
-                        "Lem 3afshk",
-                        style: TextStyle(
-                            fontFamily: "Montserrat",
-                            fontSize: 20,
-                            color: Colors.black),
-                      ),
-                    ),
+                    // title: MaterialButton(
+                    //   hoverColor: Colors.transparent,
+                    //   onPressed: () {
+                    //     Navigator.push(
+                    //         context,
+                    //         MaterialPageRoute(
+                    //             builder: (context) =>
+                    //                 DashboardScreen(Container())));
+                    //
+                    //     //TODO: navigate to HOMESCREEN
+                    //   },
+                    //   child: const Text(
+                    //     "Lem 3afshk",
+                    //     style: TextStyle(
+                    //         fontFamily: "Montserrat",
+                    //         fontSize: 20,
+                    //         color: Colors.black),
+                    //   ),
+                    // ),
                     backgroundColor: Colors.transparent,
                     elevation: 0,
                   ),
