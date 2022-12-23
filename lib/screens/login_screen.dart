@@ -1,5 +1,6 @@
 import 'package:ar_furniture_admin_panel/constants.dart';
 import 'package:ar_furniture_admin_panel/cubits/login_cubit.dart';
+import 'package:ar_furniture_admin_panel/screens/dashboard_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -23,26 +24,22 @@ class _LoginScreenState extends State<LoginScreen> {
     return BlocProvider(
       create: (context)=>LoginCubit(),
       child: BlocConsumer<LoginCubit,LoginState>(
-        listener:(context,state){},
+        listener:(context,state){
+          if(state is LoginSuccessState){
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>DashboardScreen(Container())));
+          }
+        },
         builder:(context,state){return Responsive(
             mobile:  Scaffold(
               extendBodyBehindAppBar: true,
 
               appBar: AppBar(
-                title: MaterialButton(
-                  // child:Text(""),
-                  // splashColor: null,
-
-                  hoverColor: Colors.transparent,
-                  onPressed:(){
-
-                },child: const Text("Lem 3afshk",style: TextStyle(fontFamily: "Montserrat",fontSize: 20,color: Colors.black),),)
-                ,backgroundColor: Colors.transparent,
+               backgroundColor: Colors.transparent,
                 elevation: 0,
               ),
               body: Container(
-                decoration: BoxDecoration(
-                  image: const DecorationImage(image: AssetImage("assets/images/login_img.jpg"),fit: BoxFit.fill),
+                decoration: const BoxDecoration(
+                  image:  DecorationImage(image: NetworkImage("https://firebasestorage.googleapis.com/v0/b/ar-furniture-7fb69.appspot.com/o/login_screen%2Flogin_img.jpg?alt=media&token=fecdcd0d-be5d-4449-b632-709bed3250ed"),fit: BoxFit.fill),
 
                 ),
                 child: Center(
@@ -106,6 +103,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                               ),
                               const SizedBox(height: 10,),
+                             state is LoadingLoginState?Center(child: CircularProgressIndicator(),):
                               ElevatedButton(
                                   style: ElevatedButton.styleFrom(
                                       minimumSize: const Size(50,50),
@@ -127,15 +125,12 @@ class _LoginScreenState extends State<LoginScreen> {
           extendBodyBehindAppBar: true,
 
           appBar: AppBar(
-            title: TextButton(onPressed:(){
-
-            },child: const Text("Lem 3afshk",style: TextStyle(fontFamily: "Montserrat",fontSize: 20,color: Colors.black),),)
-            ,backgroundColor: Colors.transparent,
+            backgroundColor: Colors.transparent,
             elevation: 0,
           ),
           body: Container(
-            decoration: BoxDecoration(
-              image: const DecorationImage(image: AssetImage("assets/images/login_img.jpg"),fit: BoxFit.fill),
+            decoration: const BoxDecoration(
+              image: DecorationImage(image: NetworkImage("https://firebasestorage.googleapis.com/v0/b/ar-furniture-7fb69.appspot.com/o/login_screen%2Flogin_img.jpg?alt=media&token=fecdcd0d-be5d-4449-b632-709bed3250ed"),fit: BoxFit.fill),
 
             ),
             child: Center(
@@ -197,6 +192,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                       const SizedBox(height: 10,),
+                      state is LoadingLoginState?Center(child: CircularProgressIndicator(),):
+
                       ElevatedButton(
                           style: ElevatedButton.styleFrom(
                               minimumSize: const Size(50,50),
