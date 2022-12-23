@@ -137,96 +137,99 @@ class OrderDetailsScreen extends StatelessWidget {
                               borderRadius: BorderRadius.circular(10),
                               //color: Color(0xffFFF5EE),
                             ),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.vertical,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
 
-                                Text(
-                                  "User Name : ${myOrder.userName}",
-                                  style: TextStyle(
-                                    fontStyle: FontStyle.italic,
-                                    fontSize: 15,
+                                  Text(
+                                    "User Name : ${myOrder.userName}",
+                                    style: TextStyle(
+                                      fontStyle: FontStyle.italic,
+                                      fontSize: 15,
 
-                                  ),),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Text(
-                                  "Order time : ${myOrder.time.toDate().year.toString()}-${myOrder.time.toDate().month.toString()}-${myOrder.time.toDate().day.toString()}",
-                                  style: TextStyle(
-                                    fontStyle: FontStyle.italic,
-                                    fontSize: 15,
+                                    ),),
+                                  SizedBox(
+                                    height: 10,
                                   ),
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Text(
-                                  "Area :${myOrder.area}",
-                                  style: TextStyle(
-                                    fontStyle: FontStyle.italic,
-                                    fontSize: 15,
+                                  Text(
+                                    "Order time : ${myOrder.time.toDate().year.toString()}-${myOrder.time.toDate().month.toString()}-${myOrder.time.toDate().day.toString()}",
+                                    style: TextStyle(
+                                      fontStyle: FontStyle.italic,
+                                      fontSize: 15,
+                                    ),
                                   ),
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Text(
-                                  "Floor number :${myOrder.floorNumber}",
-                                  style: TextStyle(
-                                    fontStyle: FontStyle.italic,
-                                    fontSize: 15,
+                                  SizedBox(
+                                    height: 10,
                                   ),
-                                ),
+                                  Text(
+                                    "Area :${myOrder.area}",
+                                    style: TextStyle(
+                                      fontStyle: FontStyle.italic,
+                                      fontSize: 15,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text(
+                                    "Floor number :${myOrder.floorNumber}",
+                                    style: TextStyle(
+                                      fontStyle: FontStyle.italic,
+                                      fontSize: 15,
+                                    ),
+                                  ),
 
 
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Text(
-                                  // "Order id: ${myOrder.orderId}",
-                                  // overflow: TextOverflow.ellipsis,
-                                  // style: GoogleFonts.raleway(
-                                  //   textStyle: const TextStyle(
-                                  //       fontSize: 18, fontWeight: FontWeight.bold),
-                                  "Mobile number :${myOrder.mobileNumber}",
-                                  style: TextStyle(
-                                    fontStyle: FontStyle.italic,
-                                    fontSize: 15,
+                                  SizedBox(
+                                    height: 10,
                                   ),
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Text(
-                                  // "Order id: ${myOrder.orderId}",
-                                  // overflow: TextOverflow.ellipsis,
-                                  // style: GoogleFonts.raleway(
-                                  //   textStyle: const TextStyle(
-                                  //       fontSize: 18, fontWeight: FontWeight.bold),
-                                  "Street Name : ${myOrder.streetName}",
-                                  style: TextStyle(
-                                    fontStyle: FontStyle.italic,
-                                    fontSize: 15,
+                                  Text(
+                                    // "Order id: ${myOrder.orderId}",
+                                    // overflow: TextOverflow.ellipsis,
+                                    // style: GoogleFonts.raleway(
+                                    //   textStyle: const TextStyle(
+                                    //       fontSize: 18, fontWeight: FontWeight.bold),
+                                    "Mobile number :${myOrder.mobileNumber}",
+                                    style: TextStyle(
+                                      fontStyle: FontStyle.italic,
+                                      fontSize: 15,
+                                    ),
                                   ),
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Text(
-                                  // "Order id: ${myOrder.orderId}",
-                                  // overflow: TextOverflow.ellipsis,
-                                  // style: GoogleFonts.raleway(
-                                  //   textStyle: const TextStyle(
-                                  //       fontSize: 18, fontWeight: FontWeight.bold),
-                                  "Building Name : ${myOrder.buildingNumber}",
-                                  style: TextStyle(
-                                    fontStyle: FontStyle.italic,
-                                    fontSize: 15,
+                                  SizedBox(
+                                    height: 10,
                                   ),
-                                ),
-                              ],
+                                  Text(
+                                    // "Order id: ${myOrder.orderId}",
+                                    // overflow: TextOverflow.ellipsis,
+                                    // style: GoogleFonts.raleway(
+                                    //   textStyle: const TextStyle(
+                                    //       fontSize: 18, fontWeight: FontWeight.bold),
+                                    "Street Name : ${myOrder.streetName}",
+                                    style: TextStyle(
+                                      fontStyle: FontStyle.italic,
+                                      fontSize: 15,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text(
+                                    // "Order id: ${myOrder.orderId}",
+                                    // overflow: TextOverflow.ellipsis,
+                                    // style: GoogleFonts.raleway(
+                                    //   textStyle: const TextStyle(
+                                    //       fontSize: 18, fontWeight: FontWeight.bold),
+                                    "Building Name : ${myOrder.buildingNumber}",
+                                    style: TextStyle(
+                                      fontStyle: FontStyle.italic,
+                                      fontSize: 15,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                           Row(
@@ -462,77 +465,78 @@ class OrderDetailsScreen extends StatelessWidget {
             decoration: BoxDecoration(color: secondaryColor),
             child: Padding(
               padding: const EdgeInsets.all(20.0),
-              child: Column(children: [
-                Container(
-                  height: MediaQuery.of(context).size.height - 40,
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      // borderRadius: BorderRadius.only(
-                      // topRight: Radius.circular(20), topLeft: Radius.circular(20)),
-                      borderRadius: BorderRadius.all(Radius.circular(20))),
+              child: Container(
+                height: MediaQuery.of(context).size.height - 40,
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    // borderRadius: BorderRadius.only(
+                    // topRight: Radius.circular(20), topLeft: Radius.circular(20)),
+                    borderRadius: BorderRadius.all(Radius.circular(20))),
 
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    child: SingleChildScrollView(
-                        physics: BouncingScrollPhysics(),
-                        child: Column(children: [
-                          SizedBox(
-                            height: 30,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                " Order Details ",
-                                style: TextStyle(
-                                    fontFamily: "Montserrat",
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Container(
-                                height: 4,
-                                width: 100,
-                                decoration: BoxDecoration(
-                                    color: primaryColor,
-                                    borderRadius: BorderRadius.circular(20)),
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 30,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Order id: ${myOrder.orderId}",
-                                style: TextStyle(
-                                    fontFamily: "Montserrat",
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Container(
-                            height: MediaQuery.of(context).size.height / 4,
-                            width: MediaQuery.of(context).size.width - 10,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              //color: Color(0xffFFF5EE),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: SingleChildScrollView(
+                      physics: BouncingScrollPhysics(),
+                      child: Column(children: [
+                        SizedBox(
+                          height: 30,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              " Order Details ",
+                              style: TextStyle(
+                                  fontFamily: "Montserrat",
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold),
                             ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              height: 4,
+                              width: 100,
+                              decoration: BoxDecoration(
+                                  color: primaryColor,
+                                  borderRadius: BorderRadius.circular(20)),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 30,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Order id: ${myOrder.orderId}",
+                              style: TextStyle(
+                                  fontFamily: "Montserrat",
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                          height: MediaQuery.of(context).size.height / 4,
+                          width: MediaQuery.of(context).size.width - 10,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            //color: Color(0xffFFF5EE),
+                          ),
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
                             child: SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
+                              scrollDirection: Axis.vertical,
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
@@ -619,58 +623,61 @@ class OrderDetailsScreen extends StatelessWidget {
                               ),
                             ),
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text(
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(
 
-                                "Products :",
-                                style: TextStyle(
-                                    fontFamily: "Montserrat",
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-
-                          Container(
-                            height: orderFurniture.length *
-                                MediaQuery.of(context).size.height /
-                                5.5,
-                            width: MediaQuery.of(context).size.width - 10,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              // color: Colors.grey[300]),
+                              "Products :",
+                              style: TextStyle(
+                                  fontFamily: "Montserrat",
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold),
                             ),
-                            child: ListView.builder(
-                              //physics: NeverScrollableScrollPhysics(),
-                                shrinkWrap: true,
-                                itemCount: orderFurniture.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  return Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Material(
-                                      elevation: 10,
-                                      color: Color(0xffFFF5EE),
-                                      borderRadius: BorderRadius.circular(20),
-                                      shadowColor: Color(0xffFFF5EE),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        children: [
-                                          Column(
-                                              mainAxisAlignment: MainAxisAlignment.start,
-                                              children: [
-                                                Container(
-                                                  width:
-                                                  MediaQuery.of(context).size.width /
-                                                      2.3,
-                                                  height:
-                                                  MediaQuery.of(context).size.height /
-                                                      8,
-                                                  // color:Colors.red,
+                          ],
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+
+                        Container(
+                          height: orderFurniture.length *
+                              MediaQuery.of(context).size.height /
+                              5.5,
+                          width: MediaQuery.of(context).size.width - 10,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            // color: Colors.grey[300]),
+                          ),
+                          child: ListView.builder(
+                            //physics: NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemCount: orderFurniture.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Material(
+                                    elevation: 10,
+                                    color: Color(0xffFFF5EE),
+                                    borderRadius: BorderRadius.circular(20),
+                                    shadowColor: Color(0xffFFF5EE),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: [
+                                        Column(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            children: [
+                                              Container(
+                                                width:
+                                                MediaQuery.of(context).size.width /
+                                                    2.3,
+                                                height:
+                                                MediaQuery.of(context).size.height /
+                                                    8,
+                                                // color:Colors.red,
+                                                child: SingleChildScrollView(
+                                                  scrollDirection: Axis.vertical,
                                                   child: Row(
                                                     mainAxisAlignment:
                                                     MainAxisAlignment.start,
@@ -793,74 +800,73 @@ class OrderDetailsScreen extends StatelessWidget {
                                                     ],
                                                   ),
                                                 ),
-                                              ]),
-                                          // SizedBox(
-                                          //   width: MediaQuery.of(context).size.width / 20,
-                                          // ),
-                                          Expanded(
-                                            flex: 2,
-                                            child: Container(
-                                              width:
-                                              MediaQuery.of(context).size.width / 4,
-                                              height:
-                                              MediaQuery.of(context).size.height / 4,
-                                              child: Image.network(
-                                                orderFurniture[index]["image"]
-                                                ,fit: BoxFit.contain,),
-                                              color: Colors.transparent,
-                                            ),
+                                              ),
+                                            ]),
+                                        // SizedBox(
+                                        //   width: MediaQuery.of(context).size.width / 20,
+                                        // ),
+                                        Expanded(
+                                          flex: 2,
+                                          child: Container(
+                                            width:
+                                            MediaQuery.of(context).size.width / 4,
+                                            height:
+                                            MediaQuery.of(context).size.height / 4,
+                                            child: Image.network(
+                                              orderFurniture[index]["image"]
+                                              ,fit: BoxFit.contain,),
+                                            color: Colors.transparent,
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
-                                  );
-                                }),
-                          ),
-                          Container(
-                            child: Row(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: Text(
-                                    // "Order id: ${myOrder.orderId}",
-                                    // overflow: TextOverflow.ellipsis,
-                                    // style: GoogleFonts.raleway(
-                                    //   textStyle: const TextStyle(
-                                    //       fontSize: 18, fontWeight: FontWeight.bold),
-                                    " Totalprice",
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                    style: TextStyle(
-                                        fontFamily: "Montserrat",
-                                        fontSize: 18,
-                                        // fontStyle: FontStyle.italic,
-                                        fontWeight: FontWeight.bold),
                                   ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(2.0),
-                                  child: Text(
-                                    // "Order id: ${myOrder.orderId}",
-                                    // overflow: TextOverflow.ellipsis,
-                                    // style: GoogleFonts.raleway(
-                                    //   textStyle: const TextStyle(
-                                    //       fontSize: 18, fontWeight: FontWeight.bold),
-                                    "(added 14% tax) :  ${totalPrice} L.E",
-                                    style: TextStyle(
-                                      //fontFamily: "Montserrat",
+                                );
+                              }),
+                        ),
+                        Container(
+                          child: Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: Text(
+                                  // "Order id: ${myOrder.orderId}",
+                                  // overflow: TextOverflow.ellipsis,
+                                  // style: GoogleFonts.raleway(
+                                  //   textStyle: const TextStyle(
+                                  //       fontSize: 18, fontWeight: FontWeight.bold),
+                                  " Totalprice",
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                  style: TextStyle(
+                                      fontFamily: "Montserrat",
                                       fontSize: 18,
-                                      fontStyle: FontStyle.italic,
-                                      //fontWeight: FontWeight.bold,)
-                                    ),
+                                      // fontStyle: FontStyle.italic,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(2.0),
+                                child: Text(
+                                  // "Order id: ${myOrder.orderId}",
+                                  // overflow: TextOverflow.ellipsis,
+                                  // style: GoogleFonts.raleway(
+                                  //   textStyle: const TextStyle(
+                                  //       fontSize: 18, fontWeight: FontWeight.bold),
+                                  "(added 14% tax) :  ${totalPrice} L.E",
+                                  style: TextStyle(
+                                    //fontFamily: "Montserrat",
+                                    fontSize: 18,
+                                    fontStyle: FontStyle.italic,
+                                    //fontWeight: FontWeight.bold,)
                                   ),
                                 ),
-                              ],
-                            ),
-                          )
-                        ])),
-                  ),
+                              ),
+                            ],
+                          ),
+                        )
+                      ])),
                 ),
-              ]
               ),
             ),
           ),

@@ -3,6 +3,7 @@ import 'package:ar_furniture_admin_panel/models/furniture_model.dart';
 import 'package:ar_furniture_admin_panel/models/shared_model.dart';
 import 'package:ar_furniture_admin_panel/screens/dashboard_screen.dart';
 import 'package:ar_furniture_admin_panel/screens/login_screen.dart';
+import 'package:ar_furniture_admin_panel/screens/order_details_screen.dart';
 import 'package:ar_furniture_admin_panel/screens/order_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ar_furniture_admin_panel/screens/view_furniture.dart';
@@ -54,7 +55,7 @@ class MyApp extends StatelessWidget {
             ),
             primarySwatch: Colors.blue,
           ),
-          home: LoginScreen(),
+          home: DashboardScreen(Container()),
         );}
       ),
 
