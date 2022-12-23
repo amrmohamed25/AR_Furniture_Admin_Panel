@@ -1,47 +1,50 @@
 import 'package:ar_furniture_admin_panel/constants.dart';
-import 'package:ar_furniture_admin_panel/screens/NavBar.dart';
+import 'package:ar_furniture_admin_panel/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 
-List<Widget> body(double width, bool isWeb){
-  return [Container(
-    width: width,
-    child: Padding(
-      padding: isWeb? const EdgeInsets.symmetric(horizontal: 25, vertical: 100):const EdgeInsets.symmetric(horizontal: 2),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text("Augmented Reality", style: TextStyle(color: Color(0xFF0E4732), fontWeight: FontWeight.bold, fontSize: 60.0,),),
-          const Text("Furniture", style: TextStyle(color: primaryColor, fontWeight: FontWeight.bold, fontSize: 60.0,),),
-          const SizedBox(
-            height: 20,
-          ),
-          const Text("Augmented Reality Furniture Admin Panel", style: TextStyle(fontSize: 16.0),),
-          const SizedBox(
-            height: 20,
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: primaryColor,
+List<Widget> body(context, double width, bool isWeb){
+  return [
+    Container(
+      width: width,
+      child: Padding(
+        padding: isWeb? const EdgeInsets.symmetric(horizontal: 25, vertical: 100):const EdgeInsets.symmetric(horizontal: 2),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("Augmented Reality", style: TextStyle(fontFamily: "Montserrat", color: const Color(0xFF0E4732), fontWeight: FontWeight.bold, fontSize: isWeb? 60.0 : 20.0,),),
+            Text("Furniture", style: TextStyle(fontFamily: "Montserrat", color: primaryColor, fontWeight: FontWeight.bold, fontSize: isWeb? 60.0 : 20.0,),),
+            const SizedBox(
+              height: 20,
             ),
-            onPressed: (){
-            },
-            child: const Text(
-              "Login",
-              style: TextStyle(
-                color: backgroundColor,
-                fontSize: 20,
+            const Text("Augmented Reality Furniture Admin Panel", style: TextStyle(fontFamily: "Montserrat", fontSize: 16.0),),
+            const SizedBox(
+              height: 20,
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: primaryColor,
+              ),
+              onPressed: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen()));
+              },
+              child: Text(
+                "Login",
+                style: TextStyle(
+                  fontFamily: "Montserrat",
+                  color: backgroundColor,
+                  fontSize: isWeb? 25:15,
+                ),
               ),
             ),
-          ),
-
-        ],
+          ],
+        ),
       ),
     ),
-  ),
-  Image.asset(
-  "assets/images/company1.png",
-  width: width,
-  )];
+    Image.network(
+        "https://firebasestorage.googleapis.com/v0/b/ar-furniture-7fb69.appspot.com/o/login_screen%2Flandingpage.png?alt=media&token=8ff3a75d-9e77-4724-a961-1bb43d04fc1f",
+      width: width,
+    ),
+  ];
 }
 
 class LandingPage extends StatelessWidget {
@@ -68,7 +71,23 @@ class LandingPage extends StatelessWidget {
             color: const Color(0xFFFFFFF0),
             child: Column(
               children: [
-                NavBar(),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                        "AR Furniture",
+                        style: TextStyle(
+                          fontFamily: "Montserrat",
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                          fontSize: (MediaQuery.of(context).size.width > 800) ? 50 : 30,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                 LandingPageBody(),
               ],
             ),
@@ -91,11 +110,11 @@ class LandingPageBody extends StatelessWidget {
           if (constraints.maxWidth > 800){
             return Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: body(constraints.biggest.width/2, true),
+              children: body(context, constraints.biggest.width/2, true),
             );
           } else {
             return Column(
-              children: body(constraints.biggest.width, false),
+              children: body(context, constraints.biggest.width, false),
             );
           }
         },
