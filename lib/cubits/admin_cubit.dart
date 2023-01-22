@@ -212,7 +212,7 @@ class AdminCubit extends Cubit<AdminStates> {
     }
     newOffer["img"] = image.urlController.text;
     newOffer["colors"] = color;
-    newOffer["salesID"] = furnID;
+    newOffer["salesId"] = furnID;
     newOffer["category"] = category;
     offers.add(newOffer);
 
