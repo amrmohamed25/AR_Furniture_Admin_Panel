@@ -88,10 +88,11 @@ class _AddFurnitureScreenState extends State<AddFurnitureScreen> {
   Widget build(BuildContext context) {
     return BlocConsumer<AdminCubit, AdminStates>(
       listener: (context, state) {
-        if (state is! LoadingAllData && value!="") {
-          value = BlocProvider.of<AdminCubit>(context).categories.last["name"];
-        }
+        // if (state is! LoadingAllData && value!="") {
+        //   value = BlocProvider.of<AdminCubit>(context).categories.last["name"];
+        // }
         if(state is UploadingFurnitureSuccessState){
+          value="";
           nameController.text ="" ;
           categoryController.text ="";
           model.file=null;

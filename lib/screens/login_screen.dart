@@ -61,7 +61,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              const Text("Login Screen",style: TextStyle(fontSize: 26,fontWeight: FontWeight.bold),),
+                              const Text("Login",style: TextStyle(fontSize: 26,fontWeight: FontWeight.bold),),
                               const SizedBox(
                                 height: 60,
                               ),
@@ -98,7 +98,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                           isPassword=!isPassword;
                                         });
                                       },
-                                      icon: Icon(isPassword?Icons.visibility:Icons.visibility_off),
+                                      icon: Icon(isPassword?Icons.visibility_off:Icons.visibility),
                                     )
                                 ),
                               ),
@@ -150,7 +150,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      const Text("Login Screen",style: TextStyle(fontSize: 26,fontWeight: FontWeight.bold),),
+                      const Text("Login",style: TextStyle(fontSize: 26,fontWeight: FontWeight.bold),),
                       const SizedBox(
                         height: 60,
                       ),
@@ -187,7 +187,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   isPassword=!isPassword;
                                 });
                               },
-                              icon: Icon(isPassword?Icons.visibility:Icons.visibility_off),
+                              icon: Icon(isPassword?Icons.visibility_off:Icons.visibility),
                             )
                         ),
                       ),
