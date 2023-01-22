@@ -88,10 +88,11 @@ class _AddFurnitureScreenState extends State<AddFurnitureScreen> {
   Widget build(BuildContext context) {
     return BlocConsumer<AdminCubit, AdminStates>(
       listener: (context, state) {
-        if (state is! LoadingAllData && value!="") {
-          value = BlocProvider.of<AdminCubit>(context).categories.last["name"];
-        }
+        // if (state is! LoadingAllData && value!="") {
+        //   value = BlocProvider.of<AdminCubit>(context).categories.last["name"];
+        // }
         if(state is UploadingFurnitureSuccessState){
+          value="";
           nameController.text ="" ;
           categoryController.text ="";
           model.file=null;
@@ -124,13 +125,13 @@ class _AddFurnitureScreenState extends State<AddFurnitureScreen> {
                       icon: const Icon(Icons.keyboard_backspace,color: Colors.black,),
                     ),
                     centerTitle: true,
-                    title: const Text(
-                      "Lem 3afshk",
-                      style: TextStyle(
-                          fontFamily: "Montserrat",
-                          fontSize: 20,
-                          color: Colors.black),
-                    ),
+                    // title: const Text(
+                    //   "Lem 3afshk",
+                    //   style: TextStyle(
+                    //       fontFamily: "Montserrat",
+                    //       fontSize: 20,
+                    //       color: Colors.black),
+                    // ),
                     backgroundColor: Colors.transparent,
                     elevation: 0,
                   ),
@@ -376,19 +377,19 @@ class _AddFurnitureScreenState extends State<AddFurnitureScreen> {
                 ),
                 desktop: Scaffold(
                   appBar: AppBar(
-                    title: MaterialButton(
-                      hoverColor: Colors.transparent,
-                      onPressed: () {
-                        //TODO: navigate to HOMESCREEN
-                      },
-                      child: const Text(
-                        "Lem 3afshk",
-                        style: TextStyle(
-                            fontFamily: "Montserrat",
-                            fontSize: 20,
-                            color: Colors.black),
-                      ),
-                    ),
+                    // title: MaterialButton(
+                    //   hoverColor: Colors.transparent,
+                    //   onPressed: () {
+                    //     //TODO: navigate to HOMESCREEN
+                    //   },
+                    //   child: const Text(
+                    //     "Lem 3afshk",
+                    //     style: TextStyle(
+                    //         fontFamily: "Montserrat",
+                    //         fontSize: 20,
+                    //         color: Colors.black),
+                    //   ),
+                    // ),
                     backgroundColor: Colors.transparent,
                     elevation: 0,
                   ),

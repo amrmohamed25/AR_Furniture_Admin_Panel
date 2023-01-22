@@ -296,7 +296,7 @@ class FurnitureScreenState extends State<FurnitureScreen> {
                                           : InkWell(
                                         borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width / 2.5),
                                         onTap: () {
-                                          Navigator.push(context, MaterialPageRoute(builder: (context) => AddCategoryScreen()));
+                                          Navigator.push(context, MaterialPageRoute(builder: (context) => DashboardScreen(AddCategoryScreen())));
                                           },
                                         child: Container(
                                           margin: const EdgeInsets.all(10),
@@ -388,7 +388,7 @@ class FurnitureScreenState extends State<FurnitureScreen> {
                                                         context,
                                                         MaterialPageRoute(
                                                             builder: (context) =>
-                                                                AddFurnitureScreen()));
+                                                                DashboardScreen(AddFurnitureScreen())));
                                                   },
                                                   child: Row(
                                                     mainAxisSize:
@@ -640,7 +640,7 @@ class FurnitureScreenState extends State<FurnitureScreen> {
                                             height: 15,
                                           )
                                         : Container(),
-                                    searchR.length < 10
+                                    (searchR.length < 10 && BlocProvider.of<AdminCubit>(context).moreFurnitureCategory[FurnitureScreen.selectedCategoryName] == true)
                                         ? Row(
                                             mainAxisSize: MainAxisSize.max,
                                             children: [
@@ -746,7 +746,7 @@ class FurnitureScreenState extends State<FurnitureScreen> {
                       context,
                       MaterialPageRoute(
                           builder: (context) =>
-                              EditFurnitureScreen(furniture)));
+                              DashboardScreen(EditFurnitureScreen(furniture))));
                   //action code when clicked
                   print("The icon edit is clicked");
                 },
@@ -796,7 +796,7 @@ class FurnitureScreenState extends State<FurnitureScreen> {
                 child: const Icon(Icons.percent),
                 onTap: () {
                   //action code when clicked
-                  Navigator.push(context,MaterialPageRoute(builder: (context)=>OffersScreen(furniture)));
+                  Navigator.push(context,MaterialPageRoute(builder: (context)=>DashboardScreen(OffersScreen(furniture))));
                   print("The icon discount offer is clicked");
                 },
               ),

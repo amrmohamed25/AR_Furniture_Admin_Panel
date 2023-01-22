@@ -334,7 +334,7 @@ class _OrderScreen extends State<OrderScreen> {
                                   ],
                                 ),
                                 style: ElevatedButton.styleFrom(
-                                  primary: secondaryColor,
+                                  backgroundColor: thirdColor,
                                 ),
                               ),
                             ],
@@ -370,7 +370,7 @@ class _OrderScreen extends State<OrderScreen> {
                       MaterialPageRoute(
                           builder: (context) => OrderDetailsScreen(orders)));},
                   child:
-                      Text("Details", style: TextStyle(color: secondaryColor))),
+                      Text("Details", style: TextStyle(color: thirdColor))),
             ],
           ),
         ),
