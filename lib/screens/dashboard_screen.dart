@@ -88,29 +88,6 @@ class _DashboardScreen extends State<DashboardScreen> {
                         //   ),
                         // ),
                         ListTile(
-                          onTap: () async {
-                            print("mmmmm");
-                            if (BlocProvider.of<AdminCubit>(context).orders.isEmpty) {
-                              await BlocProvider.of<AdminCubit>(context).getOrders();
-                            }
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => OrderScreen()));
-                          },
-                          horizontalTitleGap: 0.0,
-                          leading: Icon(
-                            Icons.shopping_cart,
-                            color: Colors.black,
-                            size: 12,
-                          ),
-                          title: Text(
-                            "Orders",
-                            style: TextStyle(
-                                color: Colors.black, fontSize: 12),
-                          ),
-                        ),
-                        ListTile(
                           onTap: () {
                             FurnitureScreen.selectedCategoryName =
                             BlocProvider.of<AdminCubit>(context)
@@ -132,6 +109,29 @@ class _DashboardScreen extends State<DashboardScreen> {
                           ),
                           title: Text(
                             "Furniture",
+                            style: TextStyle(
+                                color: Colors.black, fontSize: 12),
+                          ),
+                        ),
+                        ListTile(
+                          onTap: () async {
+                            print("mmmmm");
+                            if (BlocProvider.of<AdminCubit>(context).orders.isEmpty) {
+                              await BlocProvider.of<AdminCubit>(context).getOrders();
+                            }
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => OrderScreen()));
+                          },
+                          horizontalTitleGap: 0.0,
+                          leading: Icon(
+                            Icons.shopping_cart,
+                            color: Colors.black,
+                            size: 12,
+                          ),
+                          title: Text(
+                            "Orders",
                             style: TextStyle(
                                 color: Colors.black, fontSize: 12),
                           ),
@@ -238,31 +238,6 @@ class _DashboardScreen extends State<DashboardScreen> {
                                 //   ),
                                 // ),
                                 ListTile(
-                                  onTap: () async {
-                                    print("mmmmm");
-                                    if (BlocProvider.of<AdminCubit>(context)
-                                        .orders
-                                        .isEmpty) {
-                                      await BlocProvider.of<AdminCubit>(context)
-                                          .getOrders();
-                                    }
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => OrderScreen()));
-                                  },
-                                  horizontalTitleGap: 0.0,
-                                  leading: Icon(
-                                    Icons.shopping_cart,
-                                    color: Colors.black,
-                                  ),
-                                  title: Text(
-                                    "Orders",
-                                    style: TextStyle(
-                                        color: Colors.black, fontSize: 15),
-                                  ),
-                                ),
-                                ListTile(
                                   onTap: () {
                                     FurnitureScreen.selectedCategoryName =
                                     BlocProvider.of<AdminCubit>(context)
@@ -283,6 +258,31 @@ class _DashboardScreen extends State<DashboardScreen> {
                                   ),
                                   title: Text(
                                     "Furniture",
+                                    style: TextStyle(
+                                        color: Colors.black, fontSize: 15),
+                                  ),
+                                ),
+                                ListTile(
+                                  onTap: () async {
+                                    print("mmmmm");
+                                    if (BlocProvider.of<AdminCubit>(context)
+                                        .orders
+                                        .isEmpty) {
+                                      await BlocProvider.of<AdminCubit>(context)
+                                          .getOrders();
+                                    }
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => OrderScreen()));
+                                  },
+                                  horizontalTitleGap: 0.0,
+                                  leading: Icon(
+                                    Icons.shopping_cart,
+                                    color: Colors.black,
+                                  ),
+                                  title: Text(
+                                    "Orders",
                                     style: TextStyle(
                                         color: Colors.black, fontSize: 15),
                                   ),

@@ -640,7 +640,7 @@ class FurnitureScreenState extends State<FurnitureScreen> {
                                             height: 15,
                                           )
                                         : Container(),
-                                    searchR.length < 10
+                                    (searchR.length < 10 && BlocProvider.of<AdminCubit>(context).moreFurnitureCategory[FurnitureScreen.selectedCategoryName] == true)
                                         ? Row(
                                             mainAxisSize: MainAxisSize.max,
                                             children: [

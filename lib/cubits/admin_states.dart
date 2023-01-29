@@ -41,3 +41,7 @@ class deletedFurnitureSucessfullyState extends AdminStates{}
 class AddingCategory extends AdminStates{}
 
 class AddedCategory extends AdminStates{}
+
+class AddingOffer extends AdminStates{}
+
+class AddedOffer extends AdminStates{}

@@ -14,6 +14,7 @@ class AdminCubit extends Cubit<AdminStates> {
   AdminCubit() : super(InitialAdminState());
 
   List<Map<String, dynamic>> categories = [];
+  List<Map<String, dynamic>> offers = [];
   List<OrderModel> orders = [];
   List<FurnitureModel> furnitureList = [];
   List<String> returnedCategory = [];
@@ -184,6 +185,42 @@ class AdminCubit extends Cubit<AdminStates> {
 
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Category $categoryName added successfully")));
     emit (AddedCategory());
+  }
+
+  addOffer(context, {required String category,
+    required String furnID,
+    required List<String> color,
+    required FileOrURL image}) async {
+    emit(AddingOffer());
+
+
+    // get id
+    var documentId = await FirebaseFirestore.instance.collection("offer").doc().id;
+
+
+    // add to offers
+    Map<String, dynamic> newOffer = {};
+
+    if (image.file != null) {
+      await FirebaseStorage.instance.ref(
+          'offers/${image.urlController.text}')
+          .putData(image.file!)
+          .then((p0) async {
+        String url = await p0.ref.getDownloadURL();
+        image.urlController.text = url;
+      });
+    }
+    newOffer["img"] = image.urlController.text;
+    newOffer["colors"] = color;
+    newOffer["salesId"] = furnID;
+    newOffer["category"] = category;
+    offers.add(newOffer);
+
+    // add category to firebase
+    await FirebaseFirestore.instance.collection("offer").doc(documentId).set(newOffer);
+
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("offer  added successfully")));
+    emit (AddedOffer());
   }
 
   getOrders({limit = 0}) async {
