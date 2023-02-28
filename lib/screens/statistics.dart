@@ -22,23 +22,23 @@ class _StatisticScreenState extends State<StatisticScreen> {
   late List<_ChartData> data = [];
   late TooltipBehavior _tooltip;
 
-  Map<String, dynamic> monthlyOrders = {
-    "Jan": 0,
-    "Feb": 5,
-    "Mar": 0,
-    "Apr": 0,
-    "May": 0,
-    "Jun": 0,
-    "Jul": 0,
-    "Aug": 0,
-    "Sep": 0,
-    "Oct": 0,
-    "Nov": 0,
-    "Dec": 0
-  };
+  // Map<String, dynamic> monthlyOrders = {
+  //   "Jan": 0,
+  //   "Feb": 5,
+  //   "Mar": 0,
+  //   "Apr": 0,
+  //   "May": 0,
+  //   "Jun": 0,
+  //   "Jul": 0,
+  //   "Aug": 0,
+  //   "Sep": 0,
+  //   "Oct": 0,
+  //   "Nov": 0,
+  //   "Dec": 0
+  // };
 
-  String totalNumberOfOrders = "50";
-  String totalIncome = "1250";
+  // String totalNumberOfOrders = "50";
+  // String totalIncome = "1250";
 
   List<String> categories = ["Beds", "Chairs", "Sofas", "Tables"];
   Map<String, dynamic> categoriesIncome = {
@@ -48,7 +48,7 @@ class _StatisticScreenState extends State<StatisticScreen> {
     "Tables": "12"
   };
 
-  double maxMonthlyOrders = 0;
+  // double maxMonthlyOrders = 0;
   double maxIncome = 0;
 
   // StatisticScreen({required this.monthlyOrders, required this.totalNumberOfOrders, required this.totalIncome});
@@ -57,11 +57,11 @@ class _StatisticScreenState extends State<StatisticScreen> {
   void initState() {
     dropdownValue = yearsList.first;
 
-    monthlyOrders.forEach((key, value) {
-      if (value > maxMonthlyOrders) {
-        maxMonthlyOrders = value;
-      }
-    });
+    // monthlyOrders.forEach((key, value) {
+    //   if (value > maxMonthlyOrders) {
+    //     maxMonthlyOrders = value;
+    //   }
+    // });
 
     for (int i = 0; i < categories.length; i++) {
       if (double.parse(categoriesIncome[categories[i]]) > maxIncome) {
@@ -89,7 +89,11 @@ class _StatisticScreenState extends State<StatisticScreen> {
     return BlocConsumer<AdminCubit, AdminStates>(
         listener: (context, state) {},
         builder: (context, state) {
-          return DashboardScreen(
+          print("Statssssssss");
+          print(state);
+          print(BlocProvider.of<AdminCubit>(context).monthlyOrders.keys);
+          print(BlocProvider.of<AdminCubit>(context).monthlyOrders.values);
+          return state is LoadedAllData ? DashboardScreen(
             Column(
               children: [
                 Container(
@@ -160,8 +164,8 @@ class _StatisticScreenState extends State<StatisticScreen> {
                               child: Container(
                                 padding: EdgeInsets.only(top: 20.0),
                                 child: BarChartDiagram(
-                                  monthlyOrdersCount: monthlyOrders,
-                                  maxOrdersCount: maxMonthlyOrders,
+                                  monthlyOrdersCount: BlocProvider.of<AdminCubit>(context).monthlyOrders,
+                                  maxOrdersCount: BlocProvider.of<AdminCubit>(context).maxMonthlyOrders,
                                 ),
                               ),
                             ),
@@ -205,7 +209,7 @@ class _StatisticScreenState extends State<StatisticScreen> {
                                         height: 15.0,
                                       ),
                                       Text(
-                                        totalNumberOfOrders,
+                                        BlocProvider.of<AdminCubit>(context).totalOrders.toString(),
                                         style: TextStyle(
                                             fontSize: 25.0,
                                             fontWeight: FontWeight.bold,
@@ -246,7 +250,7 @@ class _StatisticScreenState extends State<StatisticScreen> {
                                         height: 15.0,
                                       ),
                                       Text(
-                                        totalIncome,
+                                        BlocProvider.of<AdminCubit>(context).totalIncome.toString(),
                                         style: TextStyle(
                                             fontSize: 25.0,
                                             fontWeight: FontWeight.bold,
@@ -332,7 +336,7 @@ class _StatisticScreenState extends State<StatisticScreen> {
                 ),
               ],
             ),
-          );
+          ) : Center(child: CircularProgressIndicator(),);
         });
   }
 }
@@ -483,7 +487,7 @@ class BarChartDiagram extends StatelessWidget {
           x: 1,
           barRods: [
             BarChartRodData(
-              toY: monthlyOrdersCount['Feb'],
+              toY: double.parse(monthlyOrdersCount['Feb']),
               gradient: _barsGradient,
             )
           ],

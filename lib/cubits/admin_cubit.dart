@@ -61,7 +61,7 @@ class AdminCubit extends Cubit<AdminStates> {
 
       await getFurniture(categories[i]["name"], limit: 6);
     }
-    // await getStatisticsByYear("2023");
+    await getStatisticsByYear("2023");
     ///////// await getOrders();
     emit(LoadedAllData());
   }
@@ -536,7 +536,7 @@ class AdminCubit extends Cubit<AdminStates> {
       }).catchError((error) => print("Error: " + error.toString()));
     //}
       statisticsData[year]?.forEach((element) {
-        monthlyOrders[months[int.parse(element.month) - 1]] = element.ordersNumber;
+        monthlyOrders[months[int.parse(element.month) - 1]] = double.parse(element.ordersNumber);
         if (double.parse(element.ordersNumber) > maxMonthlyOrders) {
           maxMonthlyOrders = double.parse(element.ordersNumber);
         }
