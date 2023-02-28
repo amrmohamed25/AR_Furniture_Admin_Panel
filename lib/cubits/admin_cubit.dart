@@ -6,7 +6,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import '../models/statistics_model.dart';
 import '../models/order_model.dart';
 import '../screens/add_furniture_screen.dart';
 
@@ -27,9 +27,17 @@ class AdminCubit extends Cubit<AdminStates> {
   DocumentSnapshot? _lastDocumentSearch;
   DocumentSnapshot? lastDocumentOrderId ;
   bool moreOrdersAvailable = true;
+  //Statistics
+  Map<String, List<Statistics>> statisticsData = {};
 
   getAllData() async {
     emit(LoadingAllData());
+    await getStatisticsByYear("2023");
+    print("----------------------------------------");
+    await getStatisticsByYear("2023");
+    print("----------------------------------------");
+    await getStatisticsByYear("2022");
+    print("----------------------------------------");
     await getCategories();
 
     for (int i = 0; i < categories.length; i++) {
@@ -474,6 +482,30 @@ class AdminCubit extends Cubit<AdminStates> {
     if (sizeFurniture == furnitureList.length) {
       moreFurnitureAvailable = false;
     }
+  }
+
+  getStatisticsByYear(String year) async{
+    //if(!statisticsData.containsKey(year)) {
+      await FirebaseFirestore.instance.collection("statistics").where("year", isEqualTo: year).get()
+          .then((snapshot) {
+            statisticsData[year] = [];
+            if(snapshot.docs.isNotEmpty) {
+              for (var element in snapshot.docs) {
+                Statistics tempStatistics = Statistics.fromJson(element.data());
+                statisticsData[year]?.add(tempStatistics);
+              }
+            }
+      }).catchError((error) => print("Error: " + error.toString()));
+    //}
+      statisticsData[year]?.forEach((element) {
+        print(element.month);
+        print(element.year);
+        print(element.income);
+        print(element.ordersNumber);
+        print(element.category);
+      });
+    
+    return statisticsData[year];
   }
 
   updateFurniture(BuildContext context,
