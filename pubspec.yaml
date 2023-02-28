@@ -45,6 +45,8 @@ dependencies:
   font_awesome_flutter: ^10.3.0
   flutter_rating_bar: ^4.0.1
   rflutter_alert: ^2.0.4
+  fl_chart: ^0.61.0
+  syncfusion_flutter_charts: ^20.4.51
 
 
 

@@ -1,6 +1,7 @@
 import 'package:ar_furniture_admin_panel/constants.dart';
 import 'package:ar_furniture_admin_panel/cubits/login_cubit.dart';
 import 'package:ar_furniture_admin_panel/screens/dashboard_screen.dart';
+import 'package:ar_furniture_admin_panel/screens/statistics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -27,7 +28,7 @@ class _LoginScreenState extends State<LoginScreen> {
       child: BlocConsumer<LoginCubit,LoginState>(
         listener:(context,state){
           if(state is LoginSuccessState){
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>DashboardScreen(Container())));
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>DashboardScreen(StatisticScreen())));
           }
         },
         builder:(context,state){return Form(

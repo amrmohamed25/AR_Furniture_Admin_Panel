@@ -3,6 +3,7 @@ import 'package:ar_furniture_admin_panel/cubits/admin_states.dart';
 import 'package:ar_furniture_admin_panel/responsive.dart';
 import 'package:ar_furniture_admin_panel/screens/furniture_screen.dart';
 import 'package:ar_furniture_admin_panel/screens/order_screen.dart';
+import 'package:ar_furniture_admin_panel/screens/statistics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -60,7 +61,14 @@ class _DashboardScreen extends State<DashboardScreen> {
                           ),
                         ),
                         ListTile(
-                          onTap: () {},
+                          onTap: () {
+                            print("stats");
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        StatisticScreen()));
+                          },
                           horizontalTitleGap: 0.0,
                           leading: Icon(
                             Icons.dashboard,
@@ -212,7 +220,13 @@ class _DashboardScreen extends State<DashboardScreen> {
                                 //
                                 //     ]),
                                 ListTile(
-                                  onTap: () {},
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                StatisticScreen()));
+                                  },
                                   horizontalTitleGap: 0.0,
                                   leading: Icon(
                                     Icons.dashboard,
