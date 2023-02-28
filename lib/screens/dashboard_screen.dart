@@ -61,8 +61,9 @@ class _DashboardScreen extends State<DashboardScreen> {
                           ),
                         ),
                         ListTile(
-                          onTap: () {
+                          onTap: () async {
                             print("stats");
+                            await BlocProvider.of<AdminCubit>(context).getStatisticsByYear(BlocProvider.of<AdminCubit>(context).years.last);
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(

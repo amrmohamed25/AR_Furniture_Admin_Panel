@@ -1,12 +1,9 @@
-import 'package:ar_furniture_admin_panel/constants.dart';
-import 'package:ar_furniture_admin_panel/models/statistics_model.dart';
 import 'package:ar_furniture_admin_panel/screens/dashboard_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-
 import '../cubits/admin_cubit.dart';
 import '../cubits/admin_states.dart';
 
@@ -16,70 +13,15 @@ class StatisticScreen extends StatefulWidget {
 }
 
 class _StatisticScreenState extends State<StatisticScreen> {
-  List<String> yearsList = <String>['2020', '2021', '2022', '2023'];
-  List<Statistics> yearStats = [];
+  // List<String> yearsList = <String>['2020', '2021', '2022', '2023'];
   String dropdownValue = "";
   late List<_ChartData> data = [];
   late TooltipBehavior _tooltip;
-
-  // Map<String, dynamic> monthlyOrders = {
-  //   "Jan": 0,
-  //   "Feb": 5,
-  //   "Mar": 0,
-  //   "Apr": 0,
-  //   "May": 0,
-  //   "Jun": 0,
-  //   "Jul": 0,
-  //   "Aug": 0,
-  //   "Sep": 0,
-  //   "Oct": 0,
-  //   "Nov": 0,
-  //   "Dec": 0
-  // };
-
-  // String totalNumberOfOrders = "50";
-  // String totalIncome = "1250";
-
-  List<String> categories = ["Beds", "Chairs", "Sofas", "Tables"];
-  Map<String, dynamic> categoriesIncome = {
-    "Beds": "8",
-    "Chairs": "30",
-    "Sofas": "15",
-    "Tables": "12"
-  };
-
-  // double maxMonthlyOrders = 0;
-  double maxIncome = 0;
-
-  // StatisticScreen({required this.monthlyOrders, required this.totalNumberOfOrders, required this.totalIncome});
+  List<String> categories = [];
+  bool flag = false;
 
   @override
   void initState() {
-    dropdownValue = yearsList.first;
-
-    // monthlyOrders.forEach((key, value) {
-    //   if (value > maxMonthlyOrders) {
-    //     maxMonthlyOrders = value;
-    //   }
-    // });
-
-    for (int i = 0; i < categories.length; i++) {
-      if (double.parse(categoriesIncome[categories[i]]) > maxIncome) {
-        maxIncome = double.parse(categoriesIncome[categories[i]]);
-      }
-    }
-
-    for (int i = 0; i < categories.length; i++) {
-      data.add(_ChartData(
-          categories[i], double.parse(categoriesIncome[categories[i]])));
-    }
-
-    // data = [
-    //   _ChartData('Beds', 12),
-    //   _ChartData('Chairs', 15),
-    //   _ChartData('Sofas', 30),
-    //   _ChartData('Tables', 6.4),
-    // ];
     _tooltip = TooltipBehavior(enable: true);
     super.initState();
   }
@@ -89,10 +31,21 @@ class _StatisticScreenState extends State<StatisticScreen> {
     return BlocConsumer<AdminCubit, AdminStates>(
         listener: (context, state) {},
         builder: (context, state) {
-          print("Statssssssss");
-          print(state);
-          print(BlocProvider.of<AdminCubit>(context).monthlyOrders.keys);
-          print(BlocProvider.of<AdminCubit>(context).monthlyOrders.values);
+          if(state is LoadedAllData && !flag) {
+            flag = true;
+
+            dropdownValue = BlocProvider.of<AdminCubit>(context).years.last;
+
+            for(int i = 0; i < BlocProvider.of<AdminCubit>(context).categories.length; i++) {
+              categories.add(BlocProvider.of<AdminCubit>(context).categories[i]["name"]);
+            }
+
+            for (int i = 0; i < categories.length; i++) {
+              data.add(_ChartData(
+                  categories[i], BlocProvider.of<AdminCubit>(context).categoriesIncome[categories[i]]));
+            }
+          }
+
           return state is LoadedAllData ? DashboardScreen(
             Column(
               children: [
@@ -100,7 +53,6 @@ class _StatisticScreenState extends State<StatisticScreen> {
                   alignment: Alignment.center,
                   width: MediaQuery.of(context).size.width / 5,
                   height: MediaQuery.of(context).size.height / 12,
-                  //margin: const EdgeInsets.all(5),
                   child: const Text(
                     'Statistics',
                     style: TextStyle(
@@ -122,14 +74,13 @@ class _StatisticScreenState extends State<StatisticScreen> {
                       color: Colors.deepPurpleAccent,
                     ),
                     onChanged: (String? value) async {
-                      // This is called when the user selects an item.
                       setState(() {
                         dropdownValue = value!;
                       });
-                      yearStats = await BlocProvider.of<AdminCubit>(context).getStatisticsByYear(dropdownValue);
+                      await BlocProvider.of<AdminCubit>(context).getStatisticsByYear(dropdownValue);
                     },
                     items:
-                        yearsList.map<DropdownMenuItem<String>>((String value) {
+                    BlocProvider.of<AdminCubit>(context).years.map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
                         child: Text(value),
@@ -298,6 +249,7 @@ class _StatisticScreenState extends State<StatisticScreen> {
                                   Expanded(
                                       child: PieChartSample2(
                                     categories: categories,
+                                        categoriesOrders: BlocProvider.of<AdminCubit>(context).categoriesOrders,
                                   )),
                                 ],
                               ))),
@@ -313,8 +265,8 @@ class _StatisticScreenState extends State<StatisticScreen> {
                             primaryXAxis: CategoryAxis(),
                             primaryYAxis: NumericAxis(
                                 minimum: 0,
-                                maximum: maxIncome + 10,
-                                interval: 10),
+                                maximum: BlocProvider.of<AdminCubit>(context).maxIncome + 4000,
+                                interval: 1000),
                             tooltipBehavior: _tooltip,
                             series: <ChartSeries<_ChartData, String>>[
                               BarSeries<_ChartData, String>(
@@ -328,8 +280,8 @@ class _StatisticScreenState extends State<StatisticScreen> {
                                   Colors.orange,
                                   Colors.yellowAccent
                                 ]),
-                              )
-                            ]),
+                              ),
+                            ],),
                       )),
                     ],
                   ),
@@ -487,7 +439,7 @@ class BarChartDiagram extends StatelessWidget {
           x: 1,
           barRods: [
             BarChartRodData(
-              toY: double.parse(monthlyOrdersCount['Feb']),
+              toY: monthlyOrdersCount['Feb'],
               gradient: _barsGradient,
             )
           ],
@@ -596,28 +548,13 @@ class BarChartDiagram extends StatelessWidget {
       ];
 }
 
-// class BarChartSample3 extends StatefulWidget {
-//   const BarChartSample3({super.key});
-//
-//   @override
-//   State<StatefulWidget> createState() => BarChartSample3State();
-// }
-//
-// class BarChartSample3State extends State<BarChartSample3> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return const AspectRatio(
-//       aspectRatio: 1.6,
-//       child: BarChartDiagram(),
-//     );
-//   }
-// }
 
 // Pie Chart
 class PieChartSample2 extends StatefulWidget {
   List<String> categories = [];
+  Map<String, dynamic> categoriesOrders = {};
 
-  PieChartSample2({required this.categories});
+  PieChartSample2({required this.categories, required this.categoriesOrders});
 
   @override
   State<StatefulWidget> createState() => PieChart2State();
@@ -638,12 +575,6 @@ class PieChart2State extends State<PieChartSample2> {
     Colors.indigo,
     Colors.brown
   ];
-  Map<String, dynamic> categoriesOrders = {
-    "Beds": "40",
-    "Chairs": "30",
-    "Sofas": "15",
-    "Tables": "15"
-  };
 
   List<Widget> getPieChartCategories() {
     List<Widget> indicatorWidgets =
@@ -696,39 +627,6 @@ class PieChart2State extends State<PieChartSample2> {
             mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: getPieChartCategories(),
-            // Indicator(
-            //   color: Colors.blue,
-            //   text: 'Beds',
-            //   isSquare: true,
-            // ),
-            // SizedBox(
-            //   height: 4,
-            // ),
-            // Indicator(
-            //   color: Colors.yellow,
-            //   text: 'Chairs',
-            //   isSquare: true,
-            // ),
-            // SizedBox(
-            //   height: 4,
-            // ),
-            // Indicator(
-            //   color: Colors.purple,
-            //   text: 'Sofas',
-            //   isSquare: true,
-            // ),
-            // SizedBox(
-            //   height: 4,
-            // ),
-            // Indicator(
-            //   color: Colors.green,
-            //   text: 'Tables',
-            //   isSquare: true,
-            // ),
-            // SizedBox(
-            //   height: 18,
-            // ),
-            // ],
           ),
           const SizedBox(
             width: 28,
@@ -746,8 +644,8 @@ class PieChart2State extends State<PieChartSample2> {
       const shadows = [Shadow(color: Colors.black, blurRadius: 2)];
       return PieChartSectionData(
         color: colors[i],
-        value: double.parse(categoriesOrders[widget.categories[i]]),
-        title: categoriesOrders[widget.categories[i]] + "%",
+        value: widget.categoriesOrders[widget.categories[i]],
+        title: widget.categoriesOrders[widget.categories[i]].toStringAsFixed(1) + "%",
         radius: radius,
         titleStyle: TextStyle(
           fontSize: fontSize,
@@ -756,62 +654,6 @@ class PieChart2State extends State<PieChartSample2> {
           shadows: shadows,
         ),
       );
-      // switch (i) {
-      //   case 0:
-      //     return PieChartSectionData(
-      //       color: colors[i],
-      //       value: 40,
-      //       title: '40%',
-      //       radius: radius,
-      //       titleStyle: TextStyle(
-      //         fontSize: fontSize,
-      //         fontWeight: FontWeight.bold,
-      //         color: Colors.white,
-      //         shadows: shadows,
-      //       ),
-      //     );
-      //   case 1:
-      //     return PieChartSectionData(
-      //       color: Colors.yellow,
-      //       value: 30,
-      //       title: '30%',
-      //       radius: radius,
-      //       titleStyle: TextStyle(
-      //         fontSize: fontSize,
-      //         fontWeight: FontWeight.bold,
-      //         color: Colors.white,
-      //         shadows: shadows,
-      //       ),
-      //     );
-      //   case 2:
-      //     return PieChartSectionData(
-      //       color: Colors.purple,
-      //       value: 15,
-      //       title: '15%',
-      //       radius: radius,
-      //       titleStyle: TextStyle(
-      //         fontSize: fontSize,
-      //         fontWeight: FontWeight.bold,
-      //         color: Colors.white,
-      //         shadows: shadows,
-      //       ),
-      //     );
-      //   case 3:
-      //     return PieChartSectionData(
-      //       color: Colors.green,
-      //       value: 15,
-      //       title: '15%',
-      //       radius: radius,
-      //       titleStyle: TextStyle(
-      //         fontSize: fontSize,
-      //         fontWeight: FontWeight.bold,
-      //         color: Colors.white,
-      //         shadows: shadows,
-      //       ),
-      //     );
-      //   default:
-      //     throw Error();
-      // }
     });
   }
 }
@@ -873,28 +715,3 @@ class _ChartData {
   final String x;
   final double y;
 }
-
-// class ReusableCard extends StatelessWidget {
-//   // Custom Widget
-//
-//   final Color color; // const can't be used at run time so, we use final
-//   final Widget? cardChild;
-//   final VoidCallback? onPress;
-//
-//   ReusableCard({required this.color, this.cardChild, this.onPress});
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return GestureDetector(
-//       onTap: onPress,
-//       child: Container(
-//         margin: EdgeInsets.all(15.0),
-//         decoration: BoxDecoration(
-//           color: color,
-//           borderRadius: BorderRadius.circular(10.0),
-//         ),
-//         child: cardChild,
-//       ),
-//     );
-//   }
-// }
