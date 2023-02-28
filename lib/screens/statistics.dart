@@ -23,18 +23,18 @@ class _StatisticScreenState extends State<StatisticScreen> {
   late TooltipBehavior _tooltip;
 
   Map<String, dynamic> monthlyOrders = {
-    "Jan": 8,
-    "Feb": 10,
-    "Mar": 14,
-    "Apr": 15,
-    "May": 13,
-    "Jun": 10,
-    "Jul": 16,
-    "Aug": 8,
-    "Sep": 20,
-    "Oct": 12,
-    "Nov": 5,
-    "Dec": 25
+    "Jan": 0,
+    "Feb": 5,
+    "Mar": 0,
+    "Apr": 0,
+    "May": 0,
+    "Jun": 0,
+    "Jul": 0,
+    "Aug": 0,
+    "Sep": 0,
+    "Oct": 0,
+    "Nov": 0,
+    "Dec": 0
   };
 
   String totalNumberOfOrders = "50";

@@ -32,12 +32,12 @@ class AdminCubit extends Cubit<AdminStates> {
 
   getAllData() async {
     emit(LoadingAllData());
-    await getStatisticsByYear("2023");
-    print("----------------------------------------");
-    await getStatisticsByYear("2023");
-    print("----------------------------------------");
-    await getStatisticsByYear("2022");
-    print("----------------------------------------");
+    // await getStatisticsByYear("2023");
+    // print("----------------------------------------");
+    // await getStatisticsByYear("2023");
+    // print("----------------------------------------");
+    // await getStatisticsByYear("2022");
+    // print("----------------------------------------");
     await getCategories();
 
     for (int i = 0; i < categories.length; i++) {
@@ -504,7 +504,7 @@ class AdminCubit extends Cubit<AdminStates> {
         print(element.ordersNumber);
         print(element.category);
       });
-    
+
     return statisticsData[year];
   }
 
