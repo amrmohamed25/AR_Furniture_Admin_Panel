@@ -1,10 +1,14 @@
 import 'package:ar_furniture_admin_panel/constants.dart';
+import 'package:ar_furniture_admin_panel/models/statistics_model.dart';
 import 'package:ar_furniture_admin_panel/screens/dashboard_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
+import '../cubits/admin_cubit.dart';
+import '../cubits/admin_states.dart';
 
 class StatisticScreen extends StatefulWidget {
   @override
@@ -13,6 +17,7 @@ class StatisticScreen extends StatefulWidget {
 
 class _StatisticScreenState extends State<StatisticScreen> {
   List<String> yearsList = <String>['2020', '2021', '2022', '2023'];
+  List<Statistics> yearStats = [];
   String dropdownValue = "";
   late List<_ChartData> data = [];
   late TooltipBehavior _tooltip;
@@ -53,19 +58,20 @@ class _StatisticScreenState extends State<StatisticScreen> {
     dropdownValue = yearsList.first;
 
     monthlyOrders.forEach((key, value) {
-      if(value > maxMonthlyOrders) {
+      if (value > maxMonthlyOrders) {
         maxMonthlyOrders = value;
       }
     });
 
-    for(int i = 0; i < categories.length; i++) {
-      if(double.parse(categoriesIncome[categories[i]]) > maxIncome) {
+    for (int i = 0; i < categories.length; i++) {
+      if (double.parse(categoriesIncome[categories[i]]) > maxIncome) {
         maxIncome = double.parse(categoriesIncome[categories[i]]);
       }
     }
 
-    for(int i = 0; i < categories.length; i++) {
-      data.add(_ChartData(categories[i], double.parse(categoriesIncome[categories[i]])));
+    for (int i = 0; i < categories.length; i++) {
+      data.add(_ChartData(
+          categories[i], double.parse(categoriesIncome[categories[i]])));
     }
 
     // data = [
@@ -77,182 +83,61 @@ class _StatisticScreenState extends State<StatisticScreen> {
     _tooltip = TooltipBehavior(enable: true);
     super.initState();
   }
-  
+
   @override
   Widget build(BuildContext context) {
-    return DashboardScreen(
-      Column(
-        children: [
-          Container(
-            alignment: Alignment.center,
-            width: MediaQuery.of(context).size.width / 5,
-            height: MediaQuery.of(context).size.height / 12,
-            //margin: const EdgeInsets.all(5),
-            child: const Text(
-              'Statistics',
-              style: TextStyle(
-                  fontFamily: "Montserrat",
-                  fontSize: 20,
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold),
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.all(5.0),
-            child: DropdownButton<String>(
-              value: dropdownValue,
-              icon: const Icon(Icons.arrow_downward),
-              elevation: 16,
-              style: const TextStyle(color: Colors.deepPurple),
-              underline: Container(
-                height: 2,
-                color: Colors.deepPurpleAccent,
-              ),
-              onChanged: (String? value) {
-                // This is called when the user selects an item.
-                setState(() {
-                  dropdownValue = value!;
-                });
-              },
-              items: yearsList.map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-            ),
-          ),
-          Expanded(
-            child: Row(
+    return BlocConsumer<AdminCubit, AdminStates>(
+        listener: (context, state) {},
+        builder: (context, state) {
+          return DashboardScreen(
+            Column(
               children: [
+                Container(
+                  alignment: Alignment.center,
+                  width: MediaQuery.of(context).size.width / 5,
+                  height: MediaQuery.of(context).size.height / 12,
+                  //margin: const EdgeInsets.all(5),
+                  child: const Text(
+                    'Statistics',
+                    style: TextStyle(
+                        fontFamily: "Montserrat",
+                        fontSize: 20,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.all(5.0),
+                  child: DropdownButton<String>(
+                    value: dropdownValue,
+                    icon: const Icon(Icons.arrow_downward),
+                    elevation: 16,
+                    style: const TextStyle(color: Colors.deepPurple),
+                    underline: Container(
+                      height: 2,
+                      color: Colors.deepPurpleAccent,
+                    ),
+                    onChanged: (String? value) async {
+                      // This is called when the user selects an item.
+                      setState(() {
+                        dropdownValue = value!;
+                      });
+                      yearStats = await BlocProvider.of<AdminCubit>(context).getStatisticsByYear(dropdownValue);
+                    },
+                    items:
+                        yearsList.map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                  ),
+                ),
                 Expanded(
-                    child: Container(
-                  margin: EdgeInsets.all(10.0),
-                  padding: EdgeInsets.only(top: 10.0),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20.0),
-                    color: Colors.yellow.shade200,
-                  ),
-                  child: Column(
-                    children: [
-                      Text(
-                        "Number of Orders",
-                        style: TextStyle(
-                          fontSize: 15.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10.0,
-                      ),
-                      Expanded(
-                        child: Container(
-                          padding: EdgeInsets.only(top: 20.0),
-                          child: BarChartDiagram(monthlyOrdersCount: monthlyOrders, maxOrdersCount: maxMonthlyOrders,),
-                        ),
-                      ),
-                    ],
-                  ),
-                )),
-                Expanded(
-                    child: Container(
-                  margin: EdgeInsets.all(10.0),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20.0),
-                    color: Colors.transparent,
-                  ),
                   child: Row(
                     children: [
                       Expanded(
-                        child: Container(
-                          margin: EdgeInsets.all(15.0),
-                          decoration: BoxDecoration(
-                            color: Colors.yellow.shade200,
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(Icons.numbers),
-                                  Text(
-                                    "Total number of orders",
-                                    style: TextStyle(
-                                      fontSize: 20.0,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                height: 15.0,
-                              ),
-                              Text(
-                                totalNumberOfOrders,
-                                style: TextStyle(
-                                    fontSize: 25.0,
-                                    fontWeight: FontWeight.bold,
-                                    fontStyle: FontStyle.italic),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 5.0,
-                      ),
-                      Expanded(
-                        child: Container(
-                          margin: EdgeInsets.all(15.0),
-                          decoration: BoxDecoration(
-                            color: Colors.yellow.shade200,
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(FontAwesomeIcons.dollarSign),
-                                  Text(
-                                    "Total Income",
-                                    style: TextStyle(
-                                      fontSize: 20.0,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                height: 15.0,
-                              ),
-                              Text(
-                                totalIncome,
-                                style: TextStyle(
-                                    fontSize: 25.0,
-                                    fontWeight: FontWeight.bold,
-                                    fontStyle: FontStyle.italic),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),),
-              ],
-            ),
-          ),
-          // Expanded(child: _BarChart()),
-          Expanded(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Expanded(
-                    child: Container(
+                          child: Container(
                         margin: EdgeInsets.all(10.0),
                         padding: EdgeInsets.only(top: 10.0),
                         decoration: BoxDecoration(
@@ -260,57 +145,195 @@ class _StatisticScreenState extends State<StatisticScreen> {
                           color: Colors.yellow.shade200,
                         ),
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            Center(
-                              child: Text(
-                                "Ordered items count from each category",
-                                style: TextStyle(
-                                  fontSize: 15.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                            Text(
+                              "Number of Orders",
+                              style: TextStyle(
+                                fontSize: 15.0,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
                             SizedBox(
                               height: 10.0,
                             ),
-                            Expanded(child: PieChartSample2(categories: categories,)),
+                            Expanded(
+                              child: Container(
+                                padding: EdgeInsets.only(top: 20.0),
+                                child: BarChartDiagram(
+                                  monthlyOrdersCount: monthlyOrders,
+                                  maxOrdersCount: maxMonthlyOrders,
+                                ),
+                              ),
+                            ),
                           ],
-                        ))),
-                Expanded(
-                    child: Container(
-                  margin: EdgeInsets.all(10.0),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20.0),
-                    color: Colors.yellow.shade200,
+                        ),
+                      )),
+                      Expanded(
+                        child: Container(
+                          margin: EdgeInsets.all(10.0),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20.0),
+                            color: Colors.transparent,
+                          ),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Container(
+                                  margin: EdgeInsets.all(15.0),
+                                  decoration: BoxDecoration(
+                                    color: Colors.yellow.shade200,
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Icon(Icons.numbers),
+                                          Text(
+                                            "Total number of orders",
+                                            style: TextStyle(
+                                              fontSize: 20.0,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 15.0,
+                                      ),
+                                      Text(
+                                        totalNumberOfOrders,
+                                        style: TextStyle(
+                                            fontSize: 25.0,
+                                            fontWeight: FontWeight.bold,
+                                            fontStyle: FontStyle.italic),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                width: 5.0,
+                              ),
+                              Expanded(
+                                child: Container(
+                                  margin: EdgeInsets.all(15.0),
+                                  decoration: BoxDecoration(
+                                    color: Colors.yellow.shade200,
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Icon(FontAwesomeIcons.dollarSign),
+                                          Text(
+                                            "Total Income",
+                                            style: TextStyle(
+                                              fontSize: 20.0,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 15.0,
+                                      ),
+                                      Text(
+                                        totalIncome,
+                                        style: TextStyle(
+                                            fontSize: 25.0,
+                                            fontWeight: FontWeight.bold,
+                                            fontStyle: FontStyle.italic),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                  child: SfCartesianChart(
-                      title: ChartTitle(text: "Income Graph"),
-                      primaryXAxis: CategoryAxis(),
-                      primaryYAxis:
-                          NumericAxis(minimum: 0, maximum: maxIncome + 10, interval: 10),
-                      tooltipBehavior: _tooltip,
-                      series: <ChartSeries<_ChartData, String>>[
-                        BarSeries<_ChartData, String>(
-                          dataSource: data,
-                          xValueMapper: (_ChartData data, _) => data.x,
-                          yValueMapper: (_ChartData data, _) => data.y,
-                          name: 'Income',
-                          // color: Colors.orange,
-                          gradient: LinearGradient(colors: [
-                            Colors.red,
-                            Colors.orange,
-                            Colors.yellowAccent
-                          ]),
-                        )
-                      ]),
-                )),
+                ),
+                // Expanded(child: _BarChart()),
+                Expanded(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Expanded(
+                          child: Container(
+                              margin: EdgeInsets.all(10.0),
+                              padding: EdgeInsets.only(top: 10.0),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20.0),
+                                color: Colors.yellow.shade200,
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  Center(
+                                    child: Text(
+                                      "Ordered items count from each category",
+                                      style: TextStyle(
+                                        fontSize: 15.0,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 10.0,
+                                  ),
+                                  Expanded(
+                                      child: PieChartSample2(
+                                    categories: categories,
+                                  )),
+                                ],
+                              ))),
+                      Expanded(
+                          child: Container(
+                        margin: EdgeInsets.all(10.0),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20.0),
+                          color: Colors.yellow.shade200,
+                        ),
+                        child: SfCartesianChart(
+                            title: ChartTitle(text: "Income Graph"),
+                            primaryXAxis: CategoryAxis(),
+                            primaryYAxis: NumericAxis(
+                                minimum: 0,
+                                maximum: maxIncome + 10,
+                                interval: 10),
+                            tooltipBehavior: _tooltip,
+                            series: <ChartSeries<_ChartData, String>>[
+                              BarSeries<_ChartData, String>(
+                                dataSource: data,
+                                xValueMapper: (_ChartData data, _) => data.x,
+                                yValueMapper: (_ChartData data, _) => data.y,
+                                name: 'Income',
+                                // color: Colors.orange,
+                                gradient: LinearGradient(colors: [
+                                  Colors.red,
+                                  Colors.orange,
+                                  Colors.yellowAccent
+                                ]),
+                              )
+                            ]),
+                      )),
+                    ],
+                  ),
+                ),
               ],
             ),
-          ),
-        ],
-      ),
-    );
+          );
+        });
   }
 }
 
@@ -319,7 +342,8 @@ class BarChartDiagram extends StatelessWidget {
   Map<String, dynamic> monthlyOrdersCount = {};
   double maxOrdersCount;
 
-  BarChartDiagram({required this.monthlyOrdersCount, required this.maxOrdersCount});
+  BarChartDiagram(
+      {required this.monthlyOrdersCount, required this.maxOrdersCount});
 
   @override
   Widget build(BuildContext context) {
@@ -598,7 +622,18 @@ class PieChartSample2 extends StatefulWidget {
 class PieChart2State extends State<PieChartSample2> {
   int touchedIndex = -1;
 
-  List<Color> colors = [Colors.blue, Colors.yellow, Colors.purple, Colors.green, Colors.red, Colors.orange, Colors.grey, Colors.black, Colors.indigo, Colors.brown];
+  List<Color> colors = [
+    Colors.blue,
+    Colors.yellow,
+    Colors.purple,
+    Colors.green,
+    Colors.red,
+    Colors.orange,
+    Colors.grey,
+    Colors.black,
+    Colors.indigo,
+    Colors.brown
+  ];
   Map<String, dynamic> categoriesOrders = {
     "Beds": "40",
     "Chairs": "30",
@@ -607,10 +642,14 @@ class PieChart2State extends State<PieChartSample2> {
   };
 
   List<Widget> getPieChartCategories() {
-    List<Widget> indicatorWidgets = List<Widget>.generate(widget.categories.length, (int index) {
-      return Indicator(color: colors[index], text: widget.categories[index], isSquare: true);
+    List<Widget> indicatorWidgets =
+        List<Widget>.generate(widget.categories.length, (int index) {
+      return Indicator(
+          color: colors[index], text: widget.categories[index], isSquare: true);
     });
-    indicatorWidgets.add(SizedBox(height: 14,));
+    indicatorWidgets.add(SizedBox(
+      height: 14,
+    ));
     return indicatorWidgets;
   }
 
@@ -653,38 +692,38 @@ class PieChart2State extends State<PieChartSample2> {
             mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: getPieChartCategories(),
-              // Indicator(
-              //   color: Colors.blue,
-              //   text: 'Beds',
-              //   isSquare: true,
-              // ),
-              // SizedBox(
-              //   height: 4,
-              // ),
-              // Indicator(
-              //   color: Colors.yellow,
-              //   text: 'Chairs',
-              //   isSquare: true,
-              // ),
-              // SizedBox(
-              //   height: 4,
-              // ),
-              // Indicator(
-              //   color: Colors.purple,
-              //   text: 'Sofas',
-              //   isSquare: true,
-              // ),
-              // SizedBox(
-              //   height: 4,
-              // ),
-              // Indicator(
-              //   color: Colors.green,
-              //   text: 'Tables',
-              //   isSquare: true,
-              // ),
-              // SizedBox(
-              //   height: 18,
-              // ),
+            // Indicator(
+            //   color: Colors.blue,
+            //   text: 'Beds',
+            //   isSquare: true,
+            // ),
+            // SizedBox(
+            //   height: 4,
+            // ),
+            // Indicator(
+            //   color: Colors.yellow,
+            //   text: 'Chairs',
+            //   isSquare: true,
+            // ),
+            // SizedBox(
+            //   height: 4,
+            // ),
+            // Indicator(
+            //   color: Colors.purple,
+            //   text: 'Sofas',
+            //   isSquare: true,
+            // ),
+            // SizedBox(
+            //   height: 4,
+            // ),
+            // Indicator(
+            //   color: Colors.green,
+            //   text: 'Tables',
+            //   isSquare: true,
+            // ),
+            // SizedBox(
+            //   height: 18,
+            // ),
             // ],
           ),
           const SizedBox(
@@ -816,7 +855,9 @@ class Indicator extends StatelessWidget {
             )
           ],
         ),
-        SizedBox(height: 4,)
+        SizedBox(
+          height: 4,
+        )
       ],
     );
   }
