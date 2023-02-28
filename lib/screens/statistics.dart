@@ -19,6 +19,7 @@ class _StatisticScreenState extends State<StatisticScreen> {
   late TooltipBehavior _tooltip;
   List<String> categories = [];
   bool flag = false;
+  bool isDropDownInitiallytSet = false;
 
   @override
   void initState() {
@@ -31,22 +32,27 @@ class _StatisticScreenState extends State<StatisticScreen> {
     return BlocConsumer<AdminCubit, AdminStates>(
         listener: (context, state) {},
         builder: (context, state) {
-          if(state is LoadedAllData && !flag) {
+          if(state is LoadedStatistics && !flag) {
             flag = true;
 
-            dropdownValue = BlocProvider.of<AdminCubit>(context).years.last;
+            if(!isDropDownInitiallytSet) {
+              dropdownValue = BlocProvider.of<AdminCubit>(context).years.last;
+              isDropDownInitiallytSet = true;
+            }
 
+            categories = [];
             for(int i = 0; i < BlocProvider.of<AdminCubit>(context).categories.length; i++) {
               categories.add(BlocProvider.of<AdminCubit>(context).categories[i]["name"]);
             }
 
+            data = [];
             for (int i = 0; i < categories.length; i++) {
               data.add(_ChartData(
                   categories[i], BlocProvider.of<AdminCubit>(context).categoriesIncome[categories[i]]));
             }
           }
 
-          return state is LoadedAllData ? DashboardScreen(
+          return state is LoadedStatistics ? DashboardScreen(
             Column(
               children: [
                 Container(
@@ -77,6 +83,7 @@ class _StatisticScreenState extends State<StatisticScreen> {
                       setState(() {
                         dropdownValue = value!;
                       });
+                      flag = false;
                       await BlocProvider.of<AdminCubit>(context).getStatisticsByYear(dropdownValue);
                     },
                     items:

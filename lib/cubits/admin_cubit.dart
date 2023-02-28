@@ -63,9 +63,9 @@ class AdminCubit extends Cubit<AdminStates> {
       await getFurniture(categories[i]["name"], limit: 6);
     }
     await getYearsList();
-    await getStatisticsByYear(years.last);
     ///////// await getOrders();
     emit(LoadedAllData());
+    await getStatisticsByYear(years.last);
   }
 
   getCategories() async {
@@ -517,6 +517,7 @@ class AdminCubit extends Cubit<AdminStates> {
   }
 
   getStatisticsByYear(String year) async{
+    emit(LoadingStatistics());
     print("YEARRRRRRRRRRRRRRRRRRR " + year);
     for (int i = 0; i < categories.length; i++) {
       categoriesIncome[categories[i]["name"]] = 0;
@@ -540,6 +541,8 @@ class AdminCubit extends Cubit<AdminStates> {
     totalOrders = 0;
     maxIncome = 0;
     maxMonthlyOrders = 0;
+    double totalItems = 0;
+
     //if(!statisticsData.containsKey(year)) {
       await FirebaseFirestore.instance.collection("statistics").where("year", isEqualTo: year).get()
           .then((snapshot) {
@@ -563,15 +566,16 @@ class AdminCubit extends Cubit<AdminStates> {
           categoriesOrders[key] = categoriesOrders[key] + double.parse(value.count);
           categoriesIncome[key] = categoriesIncome[key] + double.parse(value.payment);
           // totalIncome = totalIncome + double.parse(value.payment);
-          // totalOrders = totalOrders + double.parse(value.count);
+          totalItems = totalItems + double.parse(value.count);
           if (double.parse(value.payment) > maxIncome) {
             maxIncome = double.parse(value.payment);
           }
         });
       });
       categoriesOrders.forEach((key, value) {
-        categoriesOrders[key] = categoriesOrders[key] / totalOrders * 100;
+        categoriesOrders[key] = categoriesOrders[key] / totalItems * 100;
       });
+      emit(LoadedStatistics());
   }
 
   updateFurniture(BuildContext context,

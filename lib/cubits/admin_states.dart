@@ -45,3 +45,7 @@ class AddedCategory extends AdminStates{}
 class AddingOffer extends AdminStates{}
 
 class AddedOffer extends AdminStates{}
+
+class LoadingStatistics extends AdminStates{}
+
+class LoadedStatistics extends AdminStates{}
