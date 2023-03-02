@@ -1,3 +1,4 @@
+import 'package:ar_furniture_admin_panel/responsive.dart';
 import 'package:ar_furniture_admin_panel/screens/dashboard_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -32,247 +33,528 @@ class _StatisticScreenState extends State<StatisticScreen> {
     return BlocConsumer<AdminCubit, AdminStates>(
         listener: (context, state) {},
         builder: (context, state) {
-          if(state is LoadedStatistics && !flag) {
+          if (state is LoadedStatistics && !flag) {
             flag = true;
 
-            if(!isDropDownInitiallytSet) {
+            if (!isDropDownInitiallytSet) {
               dropdownValue = BlocProvider.of<AdminCubit>(context).years.last;
               isDropDownInitiallytSet = true;
             }
 
             categories = [];
-            for(int i = 0; i < BlocProvider.of<AdminCubit>(context).categories.length; i++) {
-              categories.add(BlocProvider.of<AdminCubit>(context).categories[i]["name"]);
+            for (int i = 0;
+                i < BlocProvider.of<AdminCubit>(context).categories.length;
+                i++) {
+              categories.add(
+                  BlocProvider.of<AdminCubit>(context).categories[i]["name"]);
             }
 
             data = [];
             for (int i = 0; i < categories.length; i++) {
               data.add(_ChartData(
-                  categories[i], BlocProvider.of<AdminCubit>(context).categoriesIncome[categories[i]]));
+                  categories[i],
+                  BlocProvider.of<AdminCubit>(context)
+                      .categoriesIncome[categories[i]].toDouble()));
             }
           }
 
-          return state is LoadedStatistics ? DashboardScreen(
-            Column(
-              children: [
-                Container(
-                  alignment: Alignment.center,
-                  width: MediaQuery.of(context).size.width / 5,
-                  height: MediaQuery.of(context).size.height / 12,
-                  child: const Text(
-                    'Statistics',
-                    style: TextStyle(
-                        fontFamily: "Montserrat",
-                        fontSize: 20,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.all(5.0),
-                  child: DropdownButton<String>(
-                    value: dropdownValue,
-                    icon: const Icon(Icons.arrow_downward),
-                    elevation: 16,
-                    style: const TextStyle(color: Colors.deepPurple),
-                    underline: Container(
-                      height: 2,
-                      color: Colors.deepPurpleAccent,
+          if (state is! LoadedStatistics)
+            return Center(child: CircularProgressIndicator());
+
+          return Responsive(
+            mobile: DashboardScreen(
+              SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(top: 15.0),
+                      alignment: Alignment.center,
+                      width: MediaQuery.of(context).size.width / 4,
+                      height: MediaQuery.of(context).size.height / 20,
+                      child: const Text(
+                        'Statistics',
+                        style: TextStyle(
+                            fontFamily: "Montserrat",
+                            fontSize: 20,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold),
+                      ),
                     ),
-                    onChanged: (String? value) async {
-                      setState(() {
-                        dropdownValue = value!;
-                      });
-                      flag = false;
-                      await BlocProvider.of<AdminCubit>(context).getStatisticsByYear(dropdownValue);
-                    },
-                    items:
-                    BlocProvider.of<AdminCubit>(context).years.map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                  ),
-                ),
-                Expanded(
-                  child: Row(
-                    children: [
-                      Expanded(
-                          child: Container(
-                        margin: EdgeInsets.all(10.0),
-                        padding: EdgeInsets.only(top: 10.0),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20.0),
-                          color: Colors.yellow.shade200,
+                    Container(
+                      margin: EdgeInsets.only(top: 2.0, bottom: 8.0),
+                      child: DropdownButton<String>(
+                        value: dropdownValue,
+                        icon: Icon(Icons.arrow_downward),
+                        elevation: 16,
+                        style: const TextStyle(color: Colors.deepPurple),
+                        underline: Container(
+                          height: 2,
+                          color: Colors.deepPurpleAccent,
                         ),
-                        child: Column(
-                          children: [
-                            Text(
-                              "Number of Orders",
+                        onChanged: (String? value) async {
+                          setState(() {
+                            dropdownValue = value!;
+                          });
+                          flag = false;
+                          await BlocProvider.of<AdminCubit>(context)
+                              .getStatisticsByYear(dropdownValue);
+                        },
+                        items: BlocProvider.of<AdminCubit>(context)
+                            .years
+                            .map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                    Container(
+                      height: MediaQuery.of(context).size.height / 7.7,
+                      width: double.infinity,
+                      margin: EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+                      padding: EdgeInsets.only(top: 5.0, bottom: 5.0),
+                      decoration: BoxDecoration(
+                        color: Colors.yellow.shade200,
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.numbers, size: MediaQuery.of(context).size.height / 40,),
+                              Text(
+                                "Total number of orders",
+                                style: TextStyle(
+                                  fontSize: MediaQuery.of(context).size.height / 40,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height / 80,
+                          ),
+                          Text(
+                            BlocProvider.of<AdminCubit>(context)
+                                .totalOrders
+                                .toString(),
+                            style: TextStyle(
+                                fontSize: MediaQuery.of(context).size.height / 35,
+                                fontWeight: FontWeight.bold,
+                                fontStyle: FontStyle.italic),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      height: MediaQuery.of(context).size.height / 7.7,
+                      width: double.infinity,
+                      margin: EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+                      padding: EdgeInsets.only(top: 5.0, bottom: 5.0),
+                      decoration: BoxDecoration(
+                        color: Colors.yellow.shade200,
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(FontAwesomeIcons.dollarSign, size: MediaQuery.of(context).size.height / 40,),
+                              Text(
+                                "Total Income",
+                                style: TextStyle(
+                                  fontSize: MediaQuery.of(context).size.height / 40,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height / 80,
+                          ),
+                          Text(
+                            BlocProvider.of<AdminCubit>(context)
+                                .totalIncome
+                                .toString(),
+                            style: TextStyle(
+                                fontSize: MediaQuery.of(context).size.height / 35,
+                                fontWeight: FontWeight.bold,
+                                fontStyle: FontStyle.italic),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      height: MediaQuery.of(context).size.height / 3.1,
+                      width: double.infinity,
+                      margin: EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+                      padding: EdgeInsets.only(top: 10.0),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20.0),
+                        color: Colors.yellow.shade200,
+                      ),
+                      child: Column(
+                        children: [
+                          Text(
+                            "Number of Orders",
+                            style: TextStyle(
+                              fontSize: MediaQuery.of(context).size.height / 40,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10.0,
+                          ),
+                          Expanded(
+                            child: Container(
+                              padding: EdgeInsets.only(top: 20.0),
+                              child: BarChartDiagram(
+                                monthlyOrdersCount:
+                                    BlocProvider.of<AdminCubit>(context)
+                                        .monthlyOrders,
+                                maxOrdersCount:
+                                    BlocProvider.of<AdminCubit>(context)
+                                        .maxMonthlyOrders,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      height: MediaQuery.of(context).size.height / 3.1,
+                      width: double.infinity,
+                      margin: EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+                      padding: EdgeInsets.only(top: 10.0),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20.0),
+                        color: Colors.yellow.shade200,
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Center(
+                            child: Text(
+                              "Ordered items count from each category",
                               style: TextStyle(
-                                fontSize: 15.0,
+                                fontSize: MediaQuery.of(context).size.height / 40,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            SizedBox(
-                              height: 10.0,
-                            ),
-                            Expanded(
-                              child: Container(
-                                padding: EdgeInsets.only(top: 20.0),
-                                child: BarChartDiagram(
-                                  monthlyOrdersCount: BlocProvider.of<AdminCubit>(context).monthlyOrders,
-                                  maxOrdersCount: BlocProvider.of<AdminCubit>(context).maxMonthlyOrders,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      )),
-                      Expanded(
-                        child: Container(
+                          ),
+                          SizedBox(
+                            height: 10.0,
+                          ),
+                          Expanded(
+                              child: PieChartSample2(
+                            categories: categories,
+                            categoriesOrders:
+                                BlocProvider.of<AdminCubit>(context)
+                                    .categoriesOrders,
+                          )),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      height: MediaQuery.of(context).size.height / 3.1,
+                      width: double.infinity,
+                      margin: EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+                      decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20.0),
+                    color: Colors.yellow.shade200,
+                      ),
+                      child: SfCartesianChart(
+                    title: ChartTitle(text: "Income Graph"),
+                    primaryXAxis: CategoryAxis(),
+                    primaryYAxis: NumericAxis(
+                        minimum: 0,
+                        maximum:
+                            BlocProvider.of<AdminCubit>(context).maxIncome +
+                                4000,
+                        interval: 1000),
+                    tooltipBehavior: _tooltip,
+                    series: <ChartSeries<_ChartData, String>>[
+                      BarSeries<_ChartData, String>(
+                        dataSource: data,
+                        xValueMapper: (_ChartData data, _) => data.x,
+                        yValueMapper: (_ChartData data, _) => data.y,
+                        name: 'Income',
+                        // color: Colors.orange,
+                        gradient: LinearGradient(colors: [
+                          Colors.red,
+                          Colors.orange,
+                          Colors.yellowAccent
+                        ]),
+                      ),
+                    ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            desktop: DashboardScreen(
+              Column(
+                children: [
+                  Container(
+                    alignment: Alignment.center,
+                    width: MediaQuery.of(context).size.width / 5,
+                    height: MediaQuery.of(context).size.height / 12,
+                    child: const Text(
+                      'Statistics',
+                      style: TextStyle(
+                          fontFamily: "Montserrat",
+                          fontSize: 20,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.all(5.0),
+                    child: DropdownButton<String>(
+                      value: dropdownValue,
+                      icon: const Icon(Icons.arrow_downward),
+                      elevation: 16,
+                      style: const TextStyle(color: Colors.deepPurple),
+                      underline: Container(
+                        height: 2,
+                        color: Colors.deepPurpleAccent,
+                      ),
+                      onChanged: (String? value) async {
+                        setState(() {
+                          dropdownValue = value!;
+                        });
+                        flag = false;
+                        await BlocProvider.of<AdminCubit>(context)
+                            .getStatisticsByYear(dropdownValue);
+                      },
+                      items: BlocProvider.of<AdminCubit>(context)
+                          .years
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                  Expanded(
+                    child: Row(
+                      children: [
+                        Expanded(
+                            child: Container(
                           margin: EdgeInsets.all(10.0),
+                          padding: EdgeInsets.only(top: 10.0),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(20.0),
-                            color: Colors.transparent,
+                            color: Colors.yellow.shade200,
                           ),
-                          child: Row(
+                          child: Column(
                             children: [
-                              Expanded(
-                                child: Container(
-                                  margin: EdgeInsets.all(15.0),
-                                  decoration: BoxDecoration(
-                                    color: Colors.yellow.shade200,
-                                    borderRadius: BorderRadius.circular(10.0),
-                                  ),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Icon(Icons.numbers),
-                                          Text(
-                                            "Total number of orders",
-                                            style: TextStyle(
-                                              fontSize: 20.0,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        height: 15.0,
-                                      ),
-                                      Text(
-                                        BlocProvider.of<AdminCubit>(context).totalOrders.toString(),
-                                        style: TextStyle(
-                                            fontSize: 25.0,
-                                            fontWeight: FontWeight.bold,
-                                            fontStyle: FontStyle.italic),
-                                      ),
-                                    ],
-                                  ),
+                              Text(
+                                "Number of Orders",
+                                style: TextStyle(
+                                  fontSize: 15.0,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
                               SizedBox(
-                                width: 5.0,
+                                height: 10.0,
                               ),
                               Expanded(
                                 child: Container(
-                                  margin: EdgeInsets.all(15.0),
-                                  decoration: BoxDecoration(
-                                    color: Colors.yellow.shade200,
-                                    borderRadius: BorderRadius.circular(10.0),
-                                  ),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Icon(FontAwesomeIcons.dollarSign),
-                                          Text(
-                                            "Total Income",
-                                            style: TextStyle(
-                                              fontSize: 20.0,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        height: 15.0,
-                                      ),
-                                      Text(
-                                        BlocProvider.of<AdminCubit>(context).totalIncome.toString(),
-                                        style: TextStyle(
-                                            fontSize: 25.0,
-                                            fontWeight: FontWeight.bold,
-                                            fontStyle: FontStyle.italic),
-                                      ),
-                                    ],
+                                  padding: EdgeInsets.only(top: 20.0),
+                                  child: BarChartDiagram(
+                                    monthlyOrdersCount:
+                                        BlocProvider.of<AdminCubit>(context)
+                                            .monthlyOrders,
+                                    maxOrdersCount:
+                                        BlocProvider.of<AdminCubit>(context)
+                                            .maxMonthlyOrders,
                                   ),
                                 ),
                               ),
                             ],
                           ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                // Expanded(child: _BarChart()),
-                Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Expanded(
+                        )),
+                        Expanded(
                           child: Container(
-                              margin: EdgeInsets.all(10.0),
-                              padding: EdgeInsets.only(top: 10.0),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20.0),
-                                color: Colors.yellow.shade200,
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: [
-                                  Center(
-                                    child: Text(
-                                      "Ordered items count from each category",
-                                      style: TextStyle(
-                                        fontSize: 15.0,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                            margin: EdgeInsets.all(10.0),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20.0),
+                              color: Colors.transparent,
+                            ),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Container(
+                                    margin: EdgeInsets.all(15.0),
+                                    decoration: BoxDecoration(
+                                      color: Colors.yellow.shade200,
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Row(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Icon(Icons.numbers, size: MediaQuery.of(context).size.width * 0.0142,),
+                                            MediaQuery.of(context).size.width < 1320 ? Column(
+                                              children: [
+                                                Text(
+                                                  "Total number",
+                                                  style: TextStyle(
+                                                    fontSize: MediaQuery.of(context).size.width * 0.0142,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  "of orders",
+                                                  style: TextStyle(
+                                                    fontSize: MediaQuery.of(context).size.width * 0.0142,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ],
+                                            ) : Text(
+                                              "Total number of orders",
+                                              style: TextStyle(
+                                                fontSize: MediaQuery.of(context).size.width * 0.0142,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          height: 15.0,
+                                        ),
+                                        Text(
+                                          BlocProvider.of<AdminCubit>(context)
+                                              .totalOrders
+                                              .toString(),
+                                          style: TextStyle(
+                                              fontSize: MediaQuery.of(context).size.width * 0.019,
+                                              fontWeight: FontWeight.bold,
+                                              fontStyle: FontStyle.italic),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                  SizedBox(
-                                    height: 10.0,
+                                ),
+                                SizedBox(
+                                  width: 5.0,
+                                ),
+                                Expanded(
+                                  child: Container(
+                                    margin: EdgeInsets.all(15.0),
+                                    decoration: BoxDecoration(
+                                      color: Colors.yellow.shade200,
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Icon(FontAwesomeIcons.dollarSign, size: MediaQuery.of(context).size.width * 0.0142,),
+                                            Text(
+                                              "Total Income",
+                                              style: TextStyle(
+                                                fontSize: MediaQuery.of(context).size.width * 0.0142,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          height: 15.0,
+                                        ),
+                                        Text(
+                                          BlocProvider.of<AdminCubit>(context)
+                                              .totalIncome
+                                              .toString(),
+                                          style: TextStyle(
+                                              fontSize: MediaQuery.of(context).size.width * 0.019,
+                                              fontWeight: FontWeight.bold,
+                                              fontStyle: FontStyle.italic),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                  Expanded(
-                                      child: PieChartSample2(
-                                    categories: categories,
-                                        categoriesOrders: BlocProvider.of<AdminCubit>(context).categoriesOrders,
-                                  )),
-                                ],
-                              ))),
-                      Expanded(
-                          child: Container(
-                        margin: EdgeInsets.all(10.0),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20.0),
-                          color: Colors.yellow.shade200,
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
-                        child: SfCartesianChart(
+                      ],
+                    ),
+                  ),
+                  // Expanded(child: _BarChart()),
+                  Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Expanded(
+                            child: Container(
+                                margin: EdgeInsets.all(10.0),
+                                padding: EdgeInsets.only(top: 10.0),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                  color: Colors.yellow.shade200,
+                                ),
+                                child: Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
+                                  children: [
+                                    Center(
+                                      child: Text(
+                                        "Ordered items count from each category",
+                                        style: TextStyle(
+                                          fontSize: 15.0,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 10.0,
+                                    ),
+                                    Expanded(
+                                        child: PieChartSample2(
+                                      categories: categories,
+                                      categoriesOrders:
+                                          BlocProvider.of<AdminCubit>(context)
+                                              .categoriesOrders,
+                                    )),
+                                  ],
+                                ))),
+                        Expanded(
+                            child: Container(
+                          margin: EdgeInsets.all(10.0),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20.0),
+                            color: Colors.yellow.shade200,
+                          ),
+                          child: SfCartesianChart(
                             title: ChartTitle(text: "Income Graph"),
                             primaryXAxis: CategoryAxis(),
                             primaryYAxis: NumericAxis(
                                 minimum: 0,
-                                maximum: BlocProvider.of<AdminCubit>(context).maxIncome + 4000,
+                                maximum: BlocProvider.of<AdminCubit>(context)
+                                        .maxIncome +
+                                    4000,
                                 interval: 1000),
                             tooltipBehavior: _tooltip,
                             series: <ChartSeries<_ChartData, String>>[
@@ -288,14 +570,16 @@ class _StatisticScreenState extends State<StatisticScreen> {
                                   Colors.yellowAccent
                                 ]),
                               ),
-                            ],),
-                      )),
-                    ],
+                            ],
+                          ),
+                        )),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ) : Center(child: CircularProgressIndicator(),);
+          );
         });
   }
 }
@@ -436,7 +720,7 @@ class BarChartDiagram extends StatelessWidget {
           x: 0,
           barRods: [
             BarChartRodData(
-              toY: monthlyOrdersCount['Jan'],
+              toY: monthlyOrdersCount['Jan'].toDouble(),
               gradient: _barsGradient,
             )
           ],
@@ -446,7 +730,7 @@ class BarChartDiagram extends StatelessWidget {
           x: 1,
           barRods: [
             BarChartRodData(
-              toY: monthlyOrdersCount['Feb'],
+              toY: monthlyOrdersCount['Feb'].toDouble(),
               gradient: _barsGradient,
             )
           ],
@@ -456,7 +740,7 @@ class BarChartDiagram extends StatelessWidget {
           x: 2,
           barRods: [
             BarChartRodData(
-              toY: monthlyOrdersCount['Mar'],
+              toY: monthlyOrdersCount['Mar'].toDouble(),
               gradient: _barsGradient,
             )
           ],
@@ -466,7 +750,7 @@ class BarChartDiagram extends StatelessWidget {
           x: 3,
           barRods: [
             BarChartRodData(
-              toY: monthlyOrdersCount['Apr'],
+              toY: monthlyOrdersCount['Apr'].toDouble(),
               gradient: _barsGradient,
             )
           ],
@@ -476,7 +760,7 @@ class BarChartDiagram extends StatelessWidget {
           x: 4,
           barRods: [
             BarChartRodData(
-              toY: monthlyOrdersCount['May'],
+              toY: monthlyOrdersCount['May'].toDouble(),
               gradient: _barsGradient,
             )
           ],
@@ -486,7 +770,7 @@ class BarChartDiagram extends StatelessWidget {
           x: 5,
           barRods: [
             BarChartRodData(
-              toY: monthlyOrdersCount['Jun'],
+              toY: monthlyOrdersCount['Jun'].toDouble(),
               gradient: _barsGradient,
             )
           ],
@@ -496,7 +780,7 @@ class BarChartDiagram extends StatelessWidget {
           x: 6,
           barRods: [
             BarChartRodData(
-              toY: monthlyOrdersCount['Jul'],
+              toY: monthlyOrdersCount['Jul'].toDouble(),
               gradient: _barsGradient,
             )
           ],
@@ -506,7 +790,7 @@ class BarChartDiagram extends StatelessWidget {
           x: 7,
           barRods: [
             BarChartRodData(
-              toY: monthlyOrdersCount['Aug'],
+              toY: monthlyOrdersCount['Aug'].toDouble(),
               gradient: _barsGradient,
             )
           ],
@@ -516,7 +800,7 @@ class BarChartDiagram extends StatelessWidget {
           x: 8,
           barRods: [
             BarChartRodData(
-              toY: monthlyOrdersCount['Sep'],
+              toY: monthlyOrdersCount['Sep'].toDouble(),
               gradient: _barsGradient,
             )
           ],
@@ -526,7 +810,7 @@ class BarChartDiagram extends StatelessWidget {
           x: 9,
           barRods: [
             BarChartRodData(
-              toY: monthlyOrdersCount['Oct'],
+              toY: monthlyOrdersCount['Oct'].toDouble(),
               gradient: _barsGradient,
             )
           ],
@@ -536,7 +820,7 @@ class BarChartDiagram extends StatelessWidget {
           x: 10,
           barRods: [
             BarChartRodData(
-              toY: monthlyOrdersCount['Nov'],
+              toY: monthlyOrdersCount['Nov'].toDouble(),
               gradient: _barsGradient,
             )
           ],
@@ -546,7 +830,7 @@ class BarChartDiagram extends StatelessWidget {
           x: 11,
           barRods: [
             BarChartRodData(
-              toY: monthlyOrdersCount['Dec'],
+              toY: monthlyOrdersCount['Dec'].toDouble(),
               gradient: _barsGradient,
             )
           ],
@@ -554,7 +838,6 @@ class BarChartDiagram extends StatelessWidget {
         ),
       ];
 }
-
 
 // Pie Chart
 class PieChartSample2 extends StatefulWidget {
@@ -624,7 +907,7 @@ class PieChart2State extends State<PieChartSample2> {
                     show: false,
                   ),
                   sectionsSpace: 0,
-                  centerSpaceRadius: 40,
+                  centerSpaceRadius: MediaQuery.of(context).size.height < 700 ? MediaQuery.of(context).size.height / 23 : 40,
                   sections: showingSections(),
                 ),
               ),
@@ -652,7 +935,9 @@ class PieChart2State extends State<PieChartSample2> {
       return PieChartSectionData(
         color: colors[i],
         value: widget.categoriesOrders[widget.categories[i]],
-        title: widget.categoriesOrders[widget.categories[i]].toStringAsFixed(1) + "%",
+        title:
+            widget.categoriesOrders[widget.categories[i]].toStringAsFixed(1) +
+                "%",
         radius: radius,
         titleStyle: TextStyle(
           fontSize: fontSize,
