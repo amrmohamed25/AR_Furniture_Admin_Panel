@@ -145,6 +145,22 @@ class _DashboardScreen extends State<DashboardScreen> {
                                 color: Colors.black, fontSize: 12),
                           ),
                         ),
+                        ListTile(
+                          onTap: () async {
+                            await context.read<AdminCubit>().logout(context);
+                          },
+                          horizontalTitleGap: 0.0,
+                          leading: Icon(
+                            Icons.logout,
+                            color: Colors.red,
+                            size: 12,
+                          ),
+                          title: Text(
+                            "Logout",
+                            style: TextStyle(
+                                color: Colors.black, fontSize: 12),
+                          ),
+                        ),
                       ],
                     )),
                 appBar: AppBar(
@@ -298,6 +314,21 @@ class _DashboardScreen extends State<DashboardScreen> {
                                   ),
                                   title: Text(
                                     "Orders",
+                                    style: TextStyle(
+                                        color: Colors.black, fontSize: 15),
+                                  ),
+                                ),
+                                ListTile(
+                                  onTap: () async {
+                                    await context.read<AdminCubit>().logout(context);
+                                  },
+                                  horizontalTitleGap: 0.0,
+                                  leading: Icon(
+                                    Icons.logout,
+                                    color: Colors.red,
+                                  ),
+                                  title: Text(
+                                    "Logout",
                                     style: TextStyle(
                                         color: Colors.black, fontSize: 15),
                                   ),

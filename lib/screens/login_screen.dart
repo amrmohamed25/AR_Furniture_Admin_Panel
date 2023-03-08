@@ -28,7 +28,7 @@ class _LoginScreenState extends State<LoginScreen> {
       child: BlocConsumer<LoginCubit,LoginState>(
         listener:(context,state){
           if(state is LoginSuccessState){
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>DashboardScreen(StatisticScreen())));
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>StatisticScreen()));
           }
         },
         builder:(context,state){return Form(

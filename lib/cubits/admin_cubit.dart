@@ -1,7 +1,9 @@
 import 'package:ar_furniture_admin_panel/cubits/admin_states.dart';
 import 'package:ar_furniture_admin_panel/models/furniture_model.dart';
 import 'package:ar_furniture_admin_panel/models/shared_model.dart';
+import 'package:ar_furniture_admin_panel/screens/landingPage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -925,5 +927,11 @@ class AdminCubit extends Cubit<AdminStates> {
       print("deleted!");
       emit(deletedFurnitureSucessfullyState());
     });
+  }
+
+  logout(context) async {
+    await FirebaseAuth.instance.signOut();
+    //Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>LandingPage()), (route) => false);
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>LandingPage()));
   }
 }
