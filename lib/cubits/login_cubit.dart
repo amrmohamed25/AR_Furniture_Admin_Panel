@@ -1,4 +1,5 @@
 import 'package:ar_furniture_admin_panel/cubits/login_states.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,12 +10,23 @@ class LoginCubit extends Cubit<LoginState>{
   login(email,pass,context) async{
     emit(LoadingLoginState());
     try{
-    await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: pass).then((value){
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Logging In successfully!")));
+   await FirebaseFirestore.instance.collection('admin').where("email",isEqualTo: email).get().then((value)async {
+      print("test");
+     print(value.docs);
+     if(value.docs.length!=0){
+       await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: pass).then((value){
+         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Logging In successfully!")));
 
-      emit(LoginSuccessState());
+         emit(LoginSuccessState());
 
+       });
+     }
+    else{
+     emit(LoginErrorState());
+       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Incorrect email or password")));
+     }
     });
+
     }on FirebaseAuthException catch (e) {
       emit(LoginErrorState());
       if (e.code == 'user-not-found') {

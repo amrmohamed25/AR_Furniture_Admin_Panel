@@ -6,7 +6,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import '../models/statistics_model.dart';
 import '../models/order_model.dart';
 import '../screens/add_furniture_screen.dart';
 
@@ -27,6 +27,30 @@ class AdminCubit extends Cubit<AdminStates> {
   DocumentSnapshot? _lastDocumentSearch;
   DocumentSnapshot? lastDocumentOrderId ;
   bool moreOrdersAvailable = true;
+  //Statistics
+  Map<String, List<Statistics>> statisticsData = {};
+  Map<String, dynamic> monthlyOrders = {
+    "Jan": 0,
+    "Feb": 0,
+    "Mar": 0,
+    "Apr": 0,
+    "May": 0,
+    "Jun": 0,
+    "Jul": 0,
+    "Aug": 0,
+    "Sep": 0,
+    "Oct": 0,
+    "Nov": 0,
+    "Dec": 0
+  };
+  List<String> years=[];
+  List<String> months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  Map<String, dynamic> categoriesIncome = {};
+  Map<String, dynamic> categoriesOrders = {};
+  double totalIncome = 0;
+  double totalOrders = 0;
+  double maxMonthlyOrders = 0;
+  double maxIncome = 0;
 
   getAllData() async {
     emit(LoadingAllData());
@@ -38,9 +62,10 @@ class AdminCubit extends Cubit<AdminStates> {
 
       await getFurniture(categories[i]["name"], limit: 6);
     }
-
+    await getYearsList();
     ///////// await getOrders();
     emit(LoadedAllData());
+    await getStatisticsByYear(years.last);
   }
 
   getCategories() async {
@@ -474,6 +499,83 @@ class AdminCubit extends Cubit<AdminStates> {
     if (sizeFurniture == furnitureList.length) {
       moreFurnitureAvailable = false;
     }
+  }
+
+  getYearsList() async {
+    await FirebaseFirestore.instance
+        .collection("years")
+        .get()
+        .then((value) {
+          value.docs.forEach((element) async {
+            print(element.data().values.toList()[0]);
+            for(var year in element.data().values.toList()[0]){
+              years.add(year);
+            }
+            print(years);
+          });
+        }).catchError((error) => print(error));
+  }
+
+  getStatisticsByYear(String year) async{
+    emit(LoadingStatistics());
+    print("YEARRRRRRRRRRRRRRRRRRR " + year);
+    for (int i = 0; i < categories.length; i++) {
+      categoriesIncome[categories[i]["name"]] = 0;
+      categoriesOrders[categories[i]["name"]] = 0;
+    }
+    monthlyOrders = {
+      "Jan": 0,
+      "Feb": 0,
+      "Mar": 0,
+      "Apr": 0,
+      "May": 0,
+      "Jun": 0,
+      "Jul": 0,
+      "Aug": 0,
+      "Sep": 0,
+      "Oct": 0,
+      "Nov": 0,
+      "Dec": 0
+    };
+    totalIncome = 0;
+    totalOrders = 0;
+    maxIncome = 0;
+    maxMonthlyOrders = 0;
+    double totalItems = 0;
+
+    //if(!statisticsData.containsKey(year)) {
+      await FirebaseFirestore.instance.collection("statistics").where("year", isEqualTo: year).get()
+          .then((snapshot) {
+            statisticsData[year] = [];
+            if(snapshot.docs.isNotEmpty) {
+              for (var element in snapshot.docs) {
+                Statistics tempStatistics = Statistics.fromJson(element.data());
+                statisticsData[year]?.add(tempStatistics);
+              }
+            }
+      }).catchError((error) => print("Error: " + error.toString()));
+    //}
+      statisticsData[year]?.forEach((element) {
+        totalIncome+=double.parse(element.income);
+        totalOrders+=double.parse(element.ordersNumber);
+        monthlyOrders[months[int.parse(element.month) - 1]] = double.parse(element.ordersNumber);
+        if (double.parse(element.ordersNumber) > maxMonthlyOrders) {
+          maxMonthlyOrders = double.parse(element.ordersNumber);
+        }
+        element.category.forEach((key, value) {
+          categoriesOrders[key] = categoriesOrders[key] + double.parse(value.count);
+          categoriesIncome[key] = categoriesIncome[key] + double.parse(value.payment);
+          // totalIncome = totalIncome + double.parse(value.payment);
+          totalItems = totalItems + double.parse(value.count);
+          if (double.parse(value.payment) > maxIncome) {
+            maxIncome = double.parse(value.payment);
+          }
+        });
+      });
+      categoriesOrders.forEach((key, value) {
+        categoriesOrders[key] = categoriesOrders[key] / totalItems * 100;
+      });
+      emit(LoadedStatistics());
   }
 
   updateFurniture(BuildContext context,
