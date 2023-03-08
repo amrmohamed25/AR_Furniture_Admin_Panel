@@ -25,7 +25,7 @@ class EditFurnitureScreen extends StatefulWidget {
 
 class _EditFurnitureScreenState extends State<EditFurnitureScreen> {
   var nameController = TextEditingController();
-  FileOrURL model = FileOrURL(urlController: TextEditingController());
+  // FileOrURL model = FileOrURL(urlController: TextEditingController());
   var descriptionController = TextEditingController();
   List<SharedProperties> sharedProperties = [
     // SharedProperties(
@@ -65,10 +65,11 @@ class _EditFurnitureScreenState extends State<EditFurnitureScreen> {
     // TODO: implement initState
     super.initState();
     nameController.text = widget.furniture.name;
-    model.urlController.text = widget.furniture.model;
+    // model.urlController.text = widget.furniture.model;
     descriptionController.text = widget.furniture.description ?? "";
     widget.furniture.shared.forEach((element) {
       sharedProperties.add(SharedProperties(
+        model:FileOrURL(urlController: TextEditingController()),
         color: TextEditingController(),
         colorName: TextEditingController(),
         discount: TextEditingController(),
@@ -83,6 +84,7 @@ class _EditFurnitureScreenState extends State<EditFurnitureScreen> {
       sharedProperties.last.image.urlController.text = element.image;
       sharedProperties.last.price.text = element.price;
       sharedProperties.last.quantity.text = element.quantity;
+      sharedProperties.last.model.urlController.text=element.model;
     });
   }
 
@@ -94,11 +96,12 @@ class _EditFurnitureScreenState extends State<EditFurnitureScreen> {
       listener: (context, state) {
         if (state is UploadingFurnitureSuccessState) {
           nameController.text = "";
-          model.file = null;
-          model.urlController.text = "";
+          // model.file = null;
+          // model.urlController.text = "";
           descriptionController.text = "";
           sharedProperties = [
             SharedProperties(
+              model:FileOrURL(urlController: TextEditingController()),
               color: TextEditingController(),
               colorName: TextEditingController(),
               discount: TextEditingController(),
@@ -198,56 +201,7 @@ class _EditFurnitureScreenState extends State<EditFurnitureScreen> {
                                               borderSide: BorderSide(
                                                   color: Colors.grey))),
                                     ),
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: TextFormField(
-                                            validator: (value) {
-                                              if (model.file == null) {
-                                                if (!Uri.parse(model
-                                                        .urlController.text)
-                                                    .isAbsolute) {
-                                                  return "Please enter a url or upload a model";
-                                                }
-                                              }
-                                              return null;
-                                            },
-                                            controller: model.urlController,
-                                            decoration: InputDecoration(
-                                              hintText: "3D Model or upload",
-                                              enabled: model.file == null
-                                                  ? true
-                                                  : false,
-                                              enabledBorder:
-                                                  const OutlineInputBorder(
-                                                      borderSide: BorderSide(
-                                                          color: Colors.grey)),
-                                              focusedBorder:
-                                                  const OutlineInputBorder(
-                                                      borderSide: BorderSide(
-                                                          color: Colors.grey)),
-                                            ),
-                                          ),
-                                        ),
-                                        IconButton(
-                                            onPressed: () async {
-                                              print("hello");
-                                              await getFile(model);
-                                            },
-                                            icon:
-                                                const Icon(Icons.attach_file)),
-                                        if (model.file != null)
-                                          IconButton(
-                                              onPressed: () async {
-                                                setState(() {
-                                                  model.file = null;
-                                                  model.urlController.text = "";
-                                                });
-                                                // await getImage();
-                                              },
-                                              icon: const Icon(Icons.delete)),
-                                      ],
-                                    ),
+
 
                                     // ...BlocProvider.of<AdminCubit>(context).categories.map((e) => Text(e["name"])).toList(),
                                     TextFormField(
@@ -296,6 +250,7 @@ class _EditFurnitureScreenState extends State<EditFurnitureScreen> {
                                                 setState(() {
                                                   sharedProperties
                                                       .add(SharedProperties(
+                                                    model:FileOrURL(urlController: TextEditingController()),
                                                     color:
                                                         TextEditingController(),
                                                     colorName:
@@ -350,7 +305,7 @@ class _EditFurnitureScreenState extends State<EditFurnitureScreen> {
                                                             furnitureName:
                                                                 nameController
                                                                     .text,
-                                                            model: model,
+                                                            // model: model,
                                                             furnitureDescription:
                                                                 descriptionController
                                                                     .text,
@@ -451,55 +406,7 @@ class _EditFurnitureScreenState extends State<EditFurnitureScreen> {
                                             borderSide: BorderSide(
                                                 color: Colors.grey))),
                                   ),
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: TextFormField(
-                                          validator: (value) {
-                                            if (model.file == null) {
-                                              if (!Uri.parse(
-                                                      model.urlController.text)
-                                                  .isAbsolute) {
-                                                return "Please enter a url or upload a model";
-                                              }
-                                            }
-                                            return null;
-                                          },
-                                          controller: model.urlController,
-                                          decoration: InputDecoration(
-                                            hintText: "3D Model or upload",
-                                            enabled: model.file == null
-                                                ? true
-                                                : false,
-                                            enabledBorder:
-                                                const OutlineInputBorder(
-                                                    borderSide: BorderSide(
-                                                        color: Colors.grey)),
-                                            focusedBorder:
-                                                const OutlineInputBorder(
-                                                    borderSide: BorderSide(
-                                                        color: Colors.grey)),
-                                          ),
-                                        ),
-                                      ),
-                                      IconButton(
-                                          onPressed: () async {
-                                            print("hello");
-                                            await getFile(model);
-                                          },
-                                          icon: const Icon(Icons.attach_file)),
-                                      if (model.file != null)
-                                        IconButton(
-                                            onPressed: () async {
-                                              setState(() {
-                                                model.file = null;
-                                                model.urlController.text = "";
-                                              });
-                                              // await getImage();
-                                            },
-                                            icon: const Icon(Icons.delete)),
-                                    ],
-                                  ),
+
                                   TextFormField(
                                     validator: (value) {
                                       if (value.toString().isEmpty) {
@@ -545,6 +452,7 @@ class _EditFurnitureScreenState extends State<EditFurnitureScreen> {
                                               setState(() {
                                                 sharedProperties
                                                     .add(SharedProperties(
+                                                  model:FileOrURL(urlController: TextEditingController()),
                                                   color:
                                                       TextEditingController(),
                                                   colorName:
@@ -590,7 +498,7 @@ class _EditFurnitureScreenState extends State<EditFurnitureScreen> {
                                                   .updateFurniture(context,
                                                       furnitureName:
                                                           nameController.text,
-                                                      model: model,
+                                                      // model: model,
                                                       furnitureDescription:
                                                           descriptionController
                                                               .text,
@@ -671,6 +579,56 @@ class _EditFurnitureScreenState extends State<EditFurnitureScreen> {
                     setState(() {
                       sharedProperty.image.file = null;
                       sharedProperty.image.urlController.text = "";
+                    });
+                    // await getImage();
+                  },
+                  icon: const Icon(Icons.delete)),
+          ],
+        ),
+        Row(
+          children: [
+            Expanded(
+              child: TextFormField(
+                validator: (value) {
+                  if (sharedProperty.model.file == null) {
+                    if (!Uri.parse(sharedProperty.model
+                        .urlController.text)
+                        .isAbsolute) {
+                      return "Please enter a url or upload a model";
+                    }
+                  }
+                  return null;
+                },
+                controller: sharedProperty.model.urlController,
+                decoration: InputDecoration(
+                  hintText: "3D Model or upload",
+                  enabled: sharedProperty.model.file == null
+                      ? true
+                      : false,
+                  enabledBorder:
+                  const OutlineInputBorder(
+                      borderSide: BorderSide(
+                          color: Colors.grey)),
+                  focusedBorder:
+                  const OutlineInputBorder(
+                      borderSide: BorderSide(
+                          color: Colors.grey)),
+                ),
+              ),
+            ),
+            IconButton(
+                onPressed: () async {
+                  print("hello");
+                  await getFile(sharedProperty.model);
+                },
+                icon:
+                const Icon(Icons.attach_file)),
+            if (sharedProperty.model.file != null)
+              IconButton(
+                  onPressed: () async {
+                    setState(() {
+                      sharedProperty.model.file = null;
+                      sharedProperty.model.urlController.text = "";
                     });
                     // await getImage();
                   },

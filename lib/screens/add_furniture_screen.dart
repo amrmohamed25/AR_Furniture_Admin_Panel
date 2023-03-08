@@ -22,6 +22,7 @@ class SharedProperties {
   TextEditingController colorName;
   TextEditingController discount;
   FileOrURL image;
+  FileOrURL model;
   TextEditingController price;
   TextEditingController quantity;
 
@@ -29,6 +30,7 @@ class SharedProperties {
       {required this.color,
       required this.colorName,
       required this.discount,
+        required this.model,
       required this.image,
       required this.price,
       required this.quantity});
@@ -45,11 +47,12 @@ class _AddFurnitureScreenState extends State<AddFurnitureScreen> {
   var nameController = TextEditingController();
   final Controller = TextEditingController();
   var categoryController = TextEditingController();
-  FileOrURL model = FileOrURL(urlController: TextEditingController());
+  // FileOrURL model = FileOrURL(urlController: TextEditingController());
   var descriptionController = TextEditingController();
   String value = "";
   List<SharedProperties> sharedProperties = [
     SharedProperties(
+      model:FileOrURL(urlController: TextEditingController()),
       color: TextEditingController(),
       colorName: TextEditingController(),
       discount: TextEditingController(),
@@ -95,11 +98,10 @@ class _AddFurnitureScreenState extends State<AddFurnitureScreen> {
           value="";
           nameController.text ="" ;
           categoryController.text ="";
-          model.file=null;
-          model.urlController.text="";
           descriptionController.text = "";
           sharedProperties=[
             SharedProperties(
+              model:FileOrURL(urlController: TextEditingController()),
               color: TextEditingController(),
               colorName: TextEditingController(),
               discount: TextEditingController(),
@@ -193,55 +195,7 @@ class _AddFurnitureScreenState extends State<AddFurnitureScreen> {
                                               borderSide: BorderSide(
                                                   color: Colors.grey))),
                                     ),
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: TextFormField(
-                                            validator: (value) {
-                                              if (model.file == null) {
-                                                if (!Uri.parse(
-                                                    model.urlController.text)
-                                                    .isAbsolute) {
-                                                  return "Please enter a url or upload a model";
-                                                }
-                                              }
-                                              return null;
-                                            },
-                                            controller: model.urlController,
-                                            decoration: InputDecoration(
-                                              hintText: "3D Model or upload",
-                                              enabled: model.file == null
-                                                  ? true
-                                                  : false,
-                                              enabledBorder:
-                                              const OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                      color: Colors.grey)),
-                                              focusedBorder:
-                                              const OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                      color: Colors.grey)),
-                                            ),
-                                          ),
-                                        ),
-                                        IconButton(
-                                            onPressed: () async {
-                                              print("hello");
-                                              await getFile(model);
-                                            },
-                                            icon: const Icon(Icons.attach_file)),
-                                        if (model.file != null)
-                                          IconButton(
-                                              onPressed: () async {
-                                                setState(() {
-                                                  model.file = null;
-                                                  model.urlController.text = "";
-                                                });
-                                                // await getImage();
-                                              },
-                                              icon: const Icon(Icons.delete)),
-                                      ],
-                                    ),
+
                                     Padding(
                                       padding: const EdgeInsets.all(5.0),
                                       child: Row(
@@ -315,6 +269,7 @@ class _AddFurnitureScreenState extends State<AddFurnitureScreen> {
                                                 setState(() {
                                                   sharedProperties
                                                       .add(SharedProperties(
+                                                    model:FileOrURL(urlController: TextEditingController()),
                                                     color:
                                                     TextEditingController(),
                                                     colorName:
@@ -356,7 +311,6 @@ class _AddFurnitureScreenState extends State<AddFurnitureScreen> {
                                                   .addFurniture(context,
                                                   furnitureName:
                                                   nameController.text,
-                                                  model: model,
                                                   furnitureCategory: value,
                                                   furnitureDescription:
                                                   descriptionController.text,
@@ -448,55 +402,6 @@ class _AddFurnitureScreenState extends State<AddFurnitureScreen> {
                                             borderSide: BorderSide(
                                                 color: Colors.grey))),
                                   ),
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: TextFormField(
-                                          validator: (value) {
-                                            if (model.file == null) {
-                                              if (!Uri.parse(
-                                                      model.urlController.text)
-                                                  .isAbsolute) {
-                                                return "Please enter a url or upload a model";
-                                              }
-                                            }
-                                            return null;
-                                          },
-                                          controller: model.urlController,
-                                          decoration: InputDecoration(
-                                            hintText: "3D Model or upload",
-                                            enabled: model.file == null
-                                                ? true
-                                                : false,
-                                            enabledBorder:
-                                                const OutlineInputBorder(
-                                                    borderSide: BorderSide(
-                                                        color: Colors.grey)),
-                                            focusedBorder:
-                                                const OutlineInputBorder(
-                                                    borderSide: BorderSide(
-                                                        color: Colors.grey)),
-                                          ),
-                                        ),
-                                      ),
-                                      IconButton(
-                                          onPressed: () async {
-                                            print("hello");
-                                            await getFile(model);
-                                          },
-                                          icon: const Icon(Icons.attach_file)),
-                                      if (model.file != null)
-                                        IconButton(
-                                            onPressed: () async {
-                                              setState(() {
-                                                model.file = null;
-                                                model.urlController.text = "";
-                                              });
-                                              // await getImage();
-                                            },
-                                            icon: const Icon(Icons.delete)),
-                                    ],
-                                  ),
                                   Padding(
                                     padding: const EdgeInsets.all(5.0),
                                     child: Row(
@@ -570,6 +475,7 @@ class _AddFurnitureScreenState extends State<AddFurnitureScreen> {
                                               setState(() {
                                                 sharedProperties
                                                     .add(SharedProperties(
+                                                  model:FileOrURL(urlController: TextEditingController()),
                                                   color:
                                                       TextEditingController(),
                                                   colorName:
@@ -609,7 +515,6 @@ class _AddFurnitureScreenState extends State<AddFurnitureScreen> {
                                               .addFurniture(context,
                                                   furnitureName:
                                                       nameController.text,
-                                                  model: model,
                                                   furnitureCategory: value,
                                                   furnitureDescription:
                                                       descriptionController.text,
@@ -688,6 +593,55 @@ class _AddFurnitureScreenState extends State<AddFurnitureScreen> {
                     setState(() {
                       sharedProperty.image.file = null;
                       sharedProperty.image.urlController.text = "";
+                    });
+                    // await getImage();
+                  },
+                  icon: const Icon(Icons.delete)),
+          ],
+        ),
+        Row(
+          children: [
+            Expanded(
+              child: TextFormField(
+                validator: (value) {
+                  if (sharedProperty.model.file == null) {
+                    if (!Uri.parse(
+                        sharedProperty.model.urlController.text)
+                        .isAbsolute) {
+                      return "Please enter a url or upload a model";
+                    }
+                  }
+                  return null;
+                },
+                controller: sharedProperty.model.urlController,
+                decoration: InputDecoration(
+                  hintText: "3D Model or upload",
+                  enabled: sharedProperty.model.file == null
+                      ? true
+                      : false,
+                  enabledBorder:
+                  const OutlineInputBorder(
+                      borderSide: BorderSide(
+                          color: Colors.grey)),
+                  focusedBorder:
+                  const OutlineInputBorder(
+                      borderSide: BorderSide(
+                          color: Colors.grey)),
+                ),
+              ),
+            ),
+            IconButton(
+                onPressed: () async {
+                  print("hello");
+                  await getFile(sharedProperty.model);
+                },
+                icon: const Icon(Icons.attach_file)),
+            if (sharedProperty.model.file != null)
+              IconButton(
+                  onPressed: () async {
+                    setState(() {
+                      sharedProperty.model.file = null;
+                      sharedProperty.model.urlController.text = "";
                     });
                     // await getImage();
                   },

@@ -6,7 +6,6 @@ class FurnitureModel {
   String? description;
   late String furnitureId;
   late String name;
-  late String model;
   late String category;
   List<SharedModel> shared = [];
   bool isFavorite = false;
@@ -16,7 +15,6 @@ class FurnitureModel {
     this.description,
     required this.furnitureId,
     required this.name,
-    required this.model,
     required this.category,
     required this.shared,
     required this.ratings,
@@ -26,7 +24,6 @@ class FurnitureModel {
     description = json["description"];
     furnitureId = json["furnitureId"];
     name = json["name"];
-    model = json["model"];
     category = json["category"];
     print("before");
     print(shared);
@@ -49,7 +46,6 @@ class FurnitureModel {
       "description": description,
       "furnitureId": furnitureId,
       "name": name,
-      "model": model,
       "shared": temp,
       "ratings": ratings,
     };

@@ -67,10 +67,10 @@ class _OffersScreenState extends State<OffersScreen> {
     // TODO: implement initState
     super.initState();
     nameController.text = widget.furniture.name;
-    model.urlController.text = widget.furniture.model;
     descriptionController.text = widget.furniture.description ?? "";
     widget.furniture.shared.forEach((element) {
       sharedProperties.add(SharedProperties(
+        model:FileOrURL(urlController: TextEditingController()),
         color: TextEditingController(),
         colorName: TextEditingController(),
         discount: TextEditingController(),
@@ -101,6 +101,7 @@ class _OffersScreenState extends State<OffersScreen> {
           descriptionController.text = "";
           sharedProperties = [
             SharedProperties(
+              model:FileOrURL(urlController: TextEditingController()),
               color: TextEditingController(),
               colorName: TextEditingController(),
               discount: TextEditingController(),
@@ -401,7 +402,7 @@ class _OffersScreenState extends State<OffersScreen> {
                                                   .updateFurniture(context,
                                                       furnitureName:
                                                           nameController.text,
-                                                      model: model,
+
                                                       furnitureDescription:
                                                           descriptionController
                                                               .text,
@@ -708,7 +709,7 @@ class _OffersScreenState extends State<OffersScreen> {
                                                   .updateFurniture(context,
                                                       furnitureName:
                                                           nameController.text,
-                                                      model: model,
+                                                      // model: model,
                                                       furnitureDescription:
                                                           descriptionController
                                                               .text,
