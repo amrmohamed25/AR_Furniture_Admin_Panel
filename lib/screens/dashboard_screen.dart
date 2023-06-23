@@ -42,19 +42,21 @@ class _DashboardScreen extends State<DashboardScreen> {
                         DrawerHeader(
                           child: Row(
                             children: [
-                              FlutterLogo(
-                                size: 18,
-                              ),
+                              Expanded(child: Image.asset("assets/logo.png")),
+
                               SizedBox(
                                 width: 20,
                               ),
-                              Text(
-                                "Admin Dashboard",
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.bold),
-                                textAlign: TextAlign.start,
+                              Expanded(
+                                flex: 2,
+                                child: Text(
+                                  "Admin Dashboard",
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.bold),
+                                  textAlign: TextAlign.start,
+                                ),
                               ),
                               Row()
                             ],
@@ -200,9 +202,7 @@ class _DashboardScreen extends State<DashboardScreen> {
                                 DrawerHeader(
                                   child: Row(
                                     children: [
-                                      FlutterLogo(
-                                        size: 18,
-                                      ),
+                                      Expanded(child: Image.asset("assets/logo.png")),
                                       SizedBox(
                                         width: 20,
                                       ),
