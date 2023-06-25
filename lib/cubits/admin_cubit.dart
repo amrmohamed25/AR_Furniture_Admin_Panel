@@ -111,6 +111,7 @@ class AdminCubit extends Cubit<AdminStates> {
       required List<SharedProperties> myShared}) async {
     emit(UploadingFurnitureInProgressState());
     bool doesExistInFirestore = false;
+    furnitureName = furnitureName.toLowerCase();
     await FirebaseFirestore.instance
         .collection("category")
         .doc(furnitureCategory)

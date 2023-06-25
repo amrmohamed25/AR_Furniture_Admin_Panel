@@ -84,16 +84,16 @@ class FurnitureScreenState extends State<FurnitureScreen> {
         builder: (context, state) {
           // print("Building in");
 
-          if (searchR.isEmpty || _searchController.text.toLowerCase() == '') {
+          if (_searchController.text.toLowerCase() == '') {
             filteredFurniture = BlocProvider.of<AdminCubit>(context)
                 .furnitureList
                 .where((element) =>
                     element.category == FurnitureScreen.selectedCategoryName)
                 .toList();
-          }
-          if (searchR.isEmpty || _searchController.text.toLowerCase() == '') {
             searchR = [...filteredFurniture];
           }
+
+
 
           return state is LoadingAllData || state is deletingFurnitureState
               ? Center(
@@ -390,10 +390,14 @@ class FurnitureScreenState extends State<FurnitureScreen> {
                                                             builder: (context) =>
                                                                 DashboardScreen(AddFurnitureScreen())));
                                                   },
+                                                  style:
+                                                      ElevatedButton.styleFrom(
+                                                    backgroundColor: thirdColor,
+                                                  ),
                                                   child: Row(
                                                     mainAxisSize:
                                                         MainAxisSize.max,
-                                                    children: [
+                                                    children: const [
                                                       Text(
                                                           'Add Furniture'), // <-- Text
                                                       SizedBox(
@@ -405,10 +409,6 @@ class FurnitureScreenState extends State<FurnitureScreen> {
                                                         size: 12,
                                                       ),
                                                     ],
-                                                  ),
-                                                  style:
-                                                      ElevatedButton.styleFrom(
-                                                    primary: thirdColor,
                                                   ),
                                                 ),
                                                 Expanded(
@@ -483,25 +483,24 @@ class FurnitureScreenState extends State<FurnitureScreen> {
                                                                     (context) =>
                                                                         AddFurnitureScreen()));
                                                       },
+                                                      style: ElevatedButton
+                                                          .styleFrom(
+                                                        primary: thirdColor,
+                                                      ),
                                                       child: Row(
                                                         mainAxisSize:
                                                             MainAxisSize.max,
-                                                        children: [
+                                                        children: const [
                                                           Text(
                                                               'Add Furniture'), // <-- Text
                                                           SizedBox(
                                                             width: 5,
                                                           ),
                                                           Icon(
-                                                            // <-- Icon
                                                             Icons.add,
                                                             size: 12,
                                                           ),
                                                         ],
-                                                      ),
-                                                      style: ElevatedButton
-                                                          .styleFrom(
-                                                        primary: thirdColor,
                                                       ),
                                                     ),
                                                   ],
@@ -573,7 +572,17 @@ class FurnitureScreenState extends State<FurnitureScreen> {
                                               ],
                                             ),
                                     ),
-                                    SizedBox(height: 10),
+                                    const SizedBox(height: 10),
+                                    (searchR.isEmpty)?
+                                    const Center(
+                                      child: Text(
+                                        "No items to show",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16
+                                        ),
+                                      ),
+                                    ):
                                     SingleChildScrollView(
                                       scrollDirection: Axis.horizontal,
                                       child: DataTable(
@@ -635,12 +644,10 @@ class FurnitureScreenState extends State<FurnitureScreen> {
                                                 searchR[index])),
                                       ),
                                     ),
-                                    searchR.length < 10
-                                        ? SizedBox(
+                                    const SizedBox(
                                             height: 15,
-                                          )
-                                        : Container(),
-                                    (searchR.length < 10 && BlocProvider.of<AdminCubit>(context).moreFurnitureCategory[FurnitureScreen.selectedCategoryName] == true)
+                                    ),
+                                    (searchR.isNotEmpty && BlocProvider.of<AdminCubit>(context).moreFurnitureCategory[FurnitureScreen.selectedCategoryName] == true)
                                         ? Row(
                                             mainAxisSize: MainAxisSize.max,
                                             children: [
@@ -651,25 +658,24 @@ class FurnitureScreenState extends State<FurnitureScreen> {
                                                   onPressed: () async {
                                                     await getMoreFurniture();
                                                   },
+                                                  style:
+                                                    ElevatedButton.styleFrom(
+                                                      backgroundColor: thirdColor,
+                                                  ),
                                                   child: Row(
                                                     mainAxisSize:
                                                         MainAxisSize.min,
-                                                    children: [
+                                                    children: const [
                                                       Text(
                                                           'Load more'), // <-- Text
                                                       SizedBox(
                                                         width: 5,
                                                       ),
                                                       Icon(
-                                                        // <-- Icon
                                                         Icons.refresh,
                                                         size: 12.0,
                                                       ),
                                                     ],
-                                                  ),
-                                                  style:
-                                                      ElevatedButton.styleFrom(
-                                                    primary: thirdColor,
                                                   ),
                                                 ),
                                               ),
@@ -807,13 +813,23 @@ class FurnitureScreenState extends State<FurnitureScreen> {
     );
   }
 
-  void searchItem(String query) {
+  Future<void> searchItem(String query) async {
     if (query != '') {
       final input = query.toLowerCase();
       List<FurnitureModel> suggestions = filteredFurniture.where((fur) {
         final searchTitle = fur.name.toLowerCase();
         return searchTitle.contains(input);
       }).toList();
+      if(suggestions.length < 6) {
+        int listLength = filteredFurniture.length;
+        await getMoreFurniture();
+        if(listLength != filteredFurniture.length) {
+          suggestions = filteredFurniture.where((fur) {
+            final searchTitle = fur.name.toLowerCase();
+            return searchTitle.contains(input);
+          }).toList();
+        }
+      }
       setState(() {
         searchR = [...suggestions];
       });
