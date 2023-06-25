@@ -138,6 +138,12 @@ class FurnitureScreenState extends State<FurnitureScreen> {
                                             FurnitureScreen.selectedCategoryName = BlocProvider.of<AdminCubit>(context).categories[index]["name"];
 
                                             FurnitureScreen.selectedCategoryIndex = index;
+                                            filteredFurniture = BlocProvider.of<AdminCubit>(context)
+                                                .furnitureList
+                                                .where((element) =>
+                                            element.category == FurnitureScreen.selectedCategoryName)
+                                                .toList();
+                                            searchItem(_searchController.text);
                                           });
                                           },
                                         child: Container(
@@ -647,7 +653,7 @@ class FurnitureScreenState extends State<FurnitureScreen> {
                                     const SizedBox(
                                             height: 15,
                                     ),
-                                    (searchR.isNotEmpty && BlocProvider.of<AdminCubit>(context).moreFurnitureCategory[FurnitureScreen.selectedCategoryName] == true)
+                                    ((searchR.isNotEmpty && BlocProvider.of<AdminCubit>(context).moreFurnitureCategory[FurnitureScreen.selectedCategoryName] == true && _searchController.text == "") || (BlocProvider.of<AdminCubit>(context).moreFurnitureAvailable == true && _searchController.text.toLowerCase() == BlocProvider.of<AdminCubit>(context).lastSearchbarName && BlocProvider.of<AdminCubit>(context).lastCategorySearch == FurnitureScreen.selectedCategoryName))
                                         ? Row(
                                             mainAxisSize: MainAxisSize.max,
                                             children: [

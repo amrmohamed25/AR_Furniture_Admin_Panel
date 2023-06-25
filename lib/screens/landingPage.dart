@@ -16,7 +16,7 @@ List<Widget> body(context, double width, bool isWeb){
             const SizedBox(
               height: 20,
             ),
-            const Text("Augmented Reality Furniture Admin Panel", style: TextStyle(fontFamily: "Montserrat", fontSize: 16.0),),
+            const Text("ARtful Home Application Admin Panel", style: TextStyle(fontFamily: "Montserrat", fontSize: 16.0),),
             const SizedBox(
               height: 20,
             ),
@@ -78,7 +78,25 @@ class LandingPage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Text(
-                        "AR Furniture",
+                        "AR",
+                        style: TextStyle(
+                          fontFamily: "Montserrat",
+                          fontWeight: FontWeight.bold,
+                          color: const Color(0xFF0E4732),
+                          fontSize: (MediaQuery.of(context).size.width > 800) ? 50 : 30,
+                        ),
+                      ),
+                      Text(
+                        "tful",
+                        style: TextStyle(
+                          fontFamily: "Montserrat",
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                          fontSize: (MediaQuery.of(context).size.width > 800) ? 50 : 30,
+                        ),
+                      ),
+                      Text(
+                        " Home",
                         style: TextStyle(
                           fontFamily: "Montserrat",
                           fontWeight: FontWeight.bold,
