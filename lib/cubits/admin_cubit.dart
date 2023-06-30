@@ -868,7 +868,7 @@ class AdminCubit extends Cubit<AdminStates> {
     furnitureList.removeWhere(
         (element) => element.category == categories[index]["name"]);
     for (int i = 0; i < requiredToDelete.length; i++) {
-      for (int j = 0; j < requiredToDelete[i].shared.length; i++) {
+      for (int j = 0; j < requiredToDelete[i].shared.length; j++) {
         if (requiredToDelete[i]
             .shared[j]
             .image
@@ -877,6 +877,11 @@ class AdminCubit extends Cubit<AdminStates> {
             await FirebaseStorage.instance
                 .refFromURL(requiredToDelete[i].shared[j].image)
                 .delete();
+          } catch (e) {}
+        }
+        if (requiredToDelete[i].shared[j].model.startsWith("https://firebasestorage")) {
+          try {
+            await FirebaseStorage.instance.refFromURL(requiredToDelete[i].shared[j].model).delete();
           } catch (e) {}
         }
       } //delete photos mn firebaseStorage
@@ -1003,14 +1008,6 @@ class AdminCubit extends Cubit<AdminStates> {
       }
     }
 
-    // delete le el furniture
-    await FirebaseFirestore.instance
-        .collection("category")
-        .doc(deletedFurniture.category)
-        .collection("furniture")
-        .doc(deletedFurniture.furnitureId)
-        .delete();
-
     // delete le el offer bta3 el furniture w el image bt3et el furniture
     await FirebaseFirestore.instance
         .collection("offer")
@@ -1032,6 +1029,14 @@ class AdminCubit extends Cubit<AdminStates> {
       }
     });
 
+    // delete le el furniture
+    await FirebaseFirestore.instance
+        .collection("category")
+        .doc(deletedFurniture.category)
+        .collection("furniture")
+        .doc(deletedFurniture.furnitureId)
+        .delete();
+    
     emit(deletedFurnitureSucessfullyState());
   }
 
