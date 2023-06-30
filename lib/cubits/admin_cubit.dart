@@ -275,9 +275,9 @@ class AdminCubit extends Cubit<AdminStates> {
         .doc(documentId)
         .set(newOffer);
 
+    emit(AddedOffer());
     ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: Text("offer  added successfully")));
-    emit(AddedOffer());
   }
 
   getOrders({limit = 0}) async {
