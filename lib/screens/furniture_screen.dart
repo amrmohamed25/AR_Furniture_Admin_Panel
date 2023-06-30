@@ -84,6 +84,7 @@ class FurnitureScreenState extends State<FurnitureScreen> {
         builder: (context, state) {
           // print("Building in");
 
+
           if (_searchController.text.toLowerCase() == '') {
             filteredFurniture = BlocProvider.of<AdminCubit>(context)
                 .furnitureList
@@ -93,6 +94,11 @@ class FurnitureScreenState extends State<FurnitureScreen> {
             searchR = [...filteredFurniture];
           }
 
+          if (state is DeleteCategoryLoadingState) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
 
 
           return state is LoadingAllData || state is deletingFurnitureState
@@ -252,38 +258,47 @@ class FurnitureScreenState extends State<FurnitureScreen> {
                                                       ),
                                                       Material(
                                                         color: Colors.transparent,
-                                                        borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width / 22),
+                                                        borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width / 20),
                                                         child: IconButton(
-                                                            splashRadius: MediaQuery.of(context).size.width / 22,
+                                                            splashRadius: MediaQuery.of(context).size.width / 20,
                                                             onPressed: () {
                                                               showDialog(
                                                                   context: context,
                                                                   builder: (context) {
-                                                                    return StatefulBuilder(builder: (context, setState) {
-                                                                      return AlertDialog(
-                                                                        title: Text(
-                                                                          "Warning Deleting Category",
-                                                                          style: TextStyle(color: Colors.red),
-                                                                        ),
-                                                                        content: SizedBox(
-                                                                          width: MediaQuery.of(context).size.width / 2,
-                                                                          child: Text("Are you sure do you want to delete this category?"),
-                                                                        ),
-                                                                        actions: [
-                                                                          TextButton(
+                                                                    return BlocConsumer<AdminCubit, AdminStates>(
+                                                                      listener: (context, state) {
+                                                                        if (state is DeleteCategoryLoadingState) {
+                                                                          Navigator.of(context).pop();
+                                                                        }
+                                                                      },
+                                                                      builder: (context, state) {
+                                                                        return AlertDialog(
+                                                                          title: Text(
+                                                                            "Warning Deleting Category",
+                                                                            style: TextStyle(color: Colors.red),
+                                                                          ),
+                                                                          content: SizedBox(
+                                                                            width: MediaQuery.of(context).size.width / 2,
+                                                                            child: Text("Are you sure do you want to delete this category?"),
+                                                                          ),
+                                                                          actions: [
+                                                                            TextButton(
                                                                               onPressed: () async {
                                                                                 await BlocProvider.of<AdminCubit>(context).deleteCategory(context, index);
-                                                                                Navigator.of(context).pop();
-                                                                                },
-                                                                              child: Text("Delete")),
-                                                                          TextButton(
+                                                                                // Navigator.of(context).pop();
+                                                                              },
+                                                                              child: Text("Delete"),
+                                                                            ),
+                                                                            TextButton(
                                                                               onPressed: () {
                                                                                 Navigator.of(context).pop();
-                                                                                },
-                                                                              child: Text("Cancel"))
-                                                                        ],
-                                                                      );
-                                                                    });
+                                                                              },
+                                                                              child: Text("Cancel"),
+                                                                            )
+                                                                          ],
+                                                                        );
+                                                                      },
+                                                                    );
                                                                   });
                                                               },
                                                             icon: Icon(Icons.delete)),
