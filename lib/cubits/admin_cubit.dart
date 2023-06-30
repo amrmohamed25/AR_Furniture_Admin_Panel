@@ -919,7 +919,7 @@ class AdminCubit extends Cubit<AdminStates> {
 
     await FirebaseFirestore.instance
         .collection("offer")
-        .where("category", isEqualTo: "test_amr")
+        .where("category", isEqualTo: categories[index]["name"])
         .get()
         .then((value) async {
       for (var doc in value.docs) {
@@ -982,6 +982,7 @@ class AdminCubit extends Cubit<AdminStates> {
   deleteFurniture(FurnitureModel deletedFurniture) async {
     emit(deletingFurnitureState());
 
+    // delete 3D models w el images bt3et el furniture
     for (int i = 0; i < deletedFurniture.shared.length; i++) {
       if (deletedFurniture.shared[i].image
           .startsWith("https://firebasestorage")) {
@@ -1001,16 +1002,37 @@ class AdminCubit extends Cubit<AdminStates> {
         } catch (e) {}
       }
     }
+
+    // delete le el furniture
     await FirebaseFirestore.instance
         .collection("category")
         .doc(deletedFurniture.category)
         .collection("furniture")
         .doc(deletedFurniture.furnitureId)
-        .delete()
-        .then((_) {
-      print("deleted!");
-      emit(deletedFurnitureSucessfullyState());
+        .delete();
+
+    // delete le el offer bta3 el furniture w el image bt3et el furniture
+    await FirebaseFirestore.instance
+        .collection("offer")
+        .where("salesId", isEqualTo: deletedFurniture.furnitureId)
+        .get()
+        .then((value) async {
+      for (var doc in value.docs) {
+        if (doc["img"].startsWith("https://firebasestorage")) {
+          try {
+            await FirebaseStorage.instance.refFromURL(doc["img"]).delete();
+          } catch (e) {}
+        }
+      }
+      for (var docIdToDelete in value.docs.map((e) => e.id).toList()) {
+        await FirebaseFirestore.instance
+            .collection("offer")
+            .doc(docIdToDelete)
+            .delete();
+      }
     });
+
+    emit(deletedFurnitureSucessfullyState());
   }
 
   logout(context) async {
