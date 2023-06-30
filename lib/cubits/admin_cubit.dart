@@ -80,7 +80,7 @@ class AdminCubit extends Cubit<AdminStates> {
       await getFurniture(categories[i]["name"], limit: 6);
     }
     await getYearsList();
-    ///////// await getOrders();
+    await getOrders();
     emit(LoadedAllData());
     await getStatisticsByYear(years.last);
   }
@@ -246,10 +246,32 @@ class AdminCubit extends Cubit<AdminStates> {
       required List<String> color,
       required FileOrURL image}) async {
     emit(AddingOffer());
+    var docs=await FirebaseFirestore.instance.collection("offer").where("salesId", isEqualTo: furnID).get();
 
+    var documentId;
+    if(docs.docs.isNotEmpty){
+      documentId=docs.docs[0].id;
+      for(int i=0;i<docs.docs.length;i++){
+        if(i>=1){
+          FirebaseFirestore.instance.collection("offer").doc(docs.docs[i].id).delete();
+
+        }
+        if (docs.docs[i]["img"]
+            .startsWith("https://firebasestorage")) {
+          try{
+          //if shared is stored in firebase
+          await FirebaseStorage.instance
+              .refFromURL(docs.docs[i]["img"])
+              .delete();}
+              catch(e){}
+        }
+        // FirebaseFirestore.instance.collection("offer").doc(docs.docs[i].id).delete();
+      }
+    }else{
+    documentId= await FirebaseFirestore.instance.collection("offer").doc().id;
+    }
     // get id
-    var documentId =
-        await FirebaseFirestore.instance.collection("offer").doc().id;
+
 
     // add to offers
     Map<String, dynamic> newOffer = {};
@@ -619,7 +641,7 @@ class AdminCubit extends Cubit<AdminStates> {
       {required FurnitureModel oldFurniture,
       required String furnitureName,
       required String furnitureDescription,
-      required List<SharedProperties> myShared}) async {
+      required List<SharedProperties> myShared,isOffer=false}) async {
     emit(UpdatingFurnitureInProgressState());
     bool doesExistInFirestore = false;
     await FirebaseFirestore.instance
@@ -634,11 +656,11 @@ class AdminCubit extends Cubit<AdminStates> {
           SnackBar(content: Text("$furnitureName already exists")));
       doesExistInFirestore = true;
     });
-    if (doesExistInFirestore == true) {
+    if (doesExistInFirestore == true && isOffer==false) {
       return;
     }
     // // String modelLink="";
-    // print("yarb");
+    print("yarb");
     // print(oldFurniture.model.startsWith("https://firebasestorage"));
     //
     // //TODO :COMMENT kol l t7t w agrb da bs

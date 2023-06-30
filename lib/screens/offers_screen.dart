@@ -211,19 +211,19 @@ class _OffersScreenState extends State<OffersScreen> {
                                           List<String> color = [];
                                           int flag = 0;
                                           for (int i = 0; i < sharedProperties.length; i++) {
-                                            if ((widget.furniture.shared[i].discount == '0') && (widget.furniture.shared[i].discount != sharedProperties[i].discount.text)) {
+                                            if (  (widget.furniture.shared[i].discount != sharedProperties[i].discount.text)) {
                                               flag = 1;
                                               color.add(sharedProperties[i].colorName.text);
                                             }
                                           }
-
+                                          print(flag);
                                           if (_formKey.currentState!.validate() && flag == 1) {
                                             await BlocProvider.of<AdminCubit>(context).addOffer(context, category: widget.furniture.category, furnID: widget.furniture.furnitureId, color: color, image: offerImage);
                                             await BlocProvider.of<AdminCubit>(context).updateFurniture(context,
                                                     furnitureName: widget.furniture.name,
                                                     furnitureDescription: widget.furniture.description.toString(),
                                                     myShared: sharedProperties,
-                                                    oldFurniture: widget.furniture);
+                                                    oldFurniture: widget.furniture,isOffer:true);
                                           }
                                         },
                                         child: const Text("Add Offer"))
