@@ -3,6 +3,7 @@ import 'package:ar_furniture_admin_panel/cubits/admin_cubit.dart';
 import 'package:ar_furniture_admin_panel/cubits/admin_states.dart';
 import 'package:ar_furniture_admin_panel/models/furniture_model.dart';
 import 'package:ar_furniture_admin_panel/screens/dashboard_screen.dart';
+import 'package:ar_furniture_admin_panel/screens/furniture_screen.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -224,6 +225,8 @@ class _OffersScreenState extends State<OffersScreen> {
                                                     furnitureDescription: widget.furniture.description.toString(),
                                                     myShared: sharedProperties,
                                                     oldFurniture: widget.furniture,isOffer:true);
+                                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>FurnitureScreen()));
+
                                           }
                                         },
                                         child: const Text("Add Offer"))
