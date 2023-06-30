@@ -233,6 +233,8 @@ class AdminCubit extends Cubit<AdminStates> {
         .doc(documentId)
         .set({"names": categories});
 
+    await FirebaseFirestore.instance.collection("category").doc(categoryName).set({});
+    
     ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Category $categoryName added successfully")));
     emit(AddedCategory());
@@ -862,6 +864,7 @@ class AdminCubit extends Cubit<AdminStates> {
     //4. b3d kda l offers hroo7 a3mlha delete kolha bl sowar bt3tha
     //5. kda ytb2a eny a delete document mn category
     //6. a3ml update lel names w asheel mn firestore
+    emit(DeleteCategoryLoadingState());
     List<FurnitureModel> requiredToDelete = furnitureList
         .where((element) => element.category == categories[index]["name"])
         .toList();
@@ -882,7 +885,9 @@ class AdminCubit extends Cubit<AdminStates> {
         if (requiredToDelete[i].shared[j].model.startsWith("https://firebasestorage")) {
           try {
             await FirebaseStorage.instance.refFromURL(requiredToDelete[i].shared[j].model).delete();
-          } catch (e) {}
+          } catch (e) {
+            emit(DeleteCategoryErrorState());
+          }
         }
       } //delete photos mn firebaseStorage
       await FirebaseFirestore.instance
@@ -908,7 +913,9 @@ class AdminCubit extends Cubit<AdminStates> {
               await FirebaseStorage.instance
                   .refFromURL(shared["image"])
                   .delete();
-            } catch (e) {}
+            } catch (e) {
+              emit(DeleteCategoryErrorState());
+            }
           }
         }
       }
@@ -931,7 +938,9 @@ class AdminCubit extends Cubit<AdminStates> {
         if (doc["img"].startsWith("https://firebasestorage")) {
           try {
             await FirebaseStorage.instance.refFromURL(doc["img"]).delete();
-          } catch (e) {}
+          } catch (e) {
+            emit(DeleteCategoryErrorState());
+          }
         }
       }
       for (var docIdToDelete in value.docs.map((e) => e.id).toList()) {
@@ -959,9 +968,9 @@ class AdminCubit extends Cubit<AdminStates> {
           .set({"names": tempMap});
     }).then((value) {
       categories.removeAt(index);
-      emit(UpdatedCategorySuccessState());
+      emit(DeleteCategorySuccessState());
     }).catchError((error) {
-      emit(UpdatedCategoryErrorState());
+      emit(DeleteCategoryErrorState());
     });
   }
 
