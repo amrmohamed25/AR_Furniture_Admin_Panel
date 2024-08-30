@@ -88,3 +88,7 @@ environment:
    flutter run -d chrome
    ```
 ```
+
+### Admin Demo
+https://github.com/user-attachments/assets/9d24697e-cf03-4091-91c1-cfe241a0b94a
+
